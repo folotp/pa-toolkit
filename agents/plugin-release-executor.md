@@ -33,13 +33,13 @@ Compute `NEW` from `CUR` and the bump (`none` → `NEW=CUR`). Everything below u
 1. Clean tree: `git status --porcelain` empty. Branch is `main` unless PA named another.
 2. `main` is in sync: `git fetch origin && git status -sb` shows no ahead/behind.
 3. Tag is free: `git rev-parse -q --verify "refs/tags/v$NEW"` fails **and** `gh release view "v$NEW" -R "$REPO"` fails. A used tag is never reused or overwritten; bump instead.
-4. Repo-specific gates: read the target repo's `CLAUDE.md` for release pre-flight lines, and if `.claude/agents/release-readiness.md` exists, dispatch it (`subagent_type: "release-readiness"`) and require GO. Run what they list (e.g. organon: `./scripts/kepano-check-upstream.sh --no-fetch`).
+4. Repo-specific gates: read the target repo's `CLAUDE.md` for release pre-flight lines, and run what they list (e.g. organon: `./scripts/kepano-check-upstream.sh --no-fetch`). If `.claude/agents/release-readiness.md` exists, it is repo-local and usually not dispatchable from this plugin: `Read` it and run its read-only gates yourself, skipping any gate that writes. Require every gate to pass.
 5. Validate: dispatch `plugin-dev:plugin-validator` on the repo root. Any critical issue stops the release. If a sub-agent can't be dispatched from here (4 or 5), stop and say so; PA runs it from the main session and re-invokes. A gate is never skipped silently.
 6. `.gitignore` contains `*.plugin`.
 
 ## 2. Dry-run stops here
 
-If `dry-run: true`: run `bash "$PKG" "<repo root>" --dry`, then print, without executing, the version edit, commit message, tag, `gh release create` command, and the marketplace action from step 7 (entry JSON to add, or "existing entry → auto-bump expected"). End with `DRY-RUN COMPLETE — nothing written`.
+If `dry-run: true`: run `bash "$PKG" "<repo root>" --dry`, then print the resolved identity (`NAME`, `REPO`, `CUR → NEW`, archive file name) as the first lines of the report, then, without executing, the version edit, commit message, tag, `gh release create` command, and the marketplace action from step 7 (entry JSON to add, or "existing entry → auto-bump expected"). End with `DRY-RUN COMPLETE — nothing written`.
 
 ## 3. Version bump (skip when bump = none)
 

@@ -17,7 +17,9 @@ Pierre-André's personal Claude plugin for Claude Code and Cowork. It holds cros
   - FIN — `99 - Méta/AI/Claude/Finance Bootstrap.md`
   - SD — `99 - Méta/Système documentaire/ADR/Index — SD-ADR.md`
 
-  **Triggering.** In Cowork, subagents only run on explicit request: « passe ça au gatekeeper », « est-ce que ça mérite une DEC », "run the decision gatekeeper". In Claude Code it may also trigger proactively on policy-shaped proposals.
+  **Triggering.** Explicit requests work everywhere: « passe ça au gatekeeper », « est-ce que ça mérite une DEC », "run the decision gatekeeper". In Claude Code it may also trigger proactively on policy-shaped proposals. In Cowork, proactive use happens when the domain profile directs it, as the FIN profile does.
+
+  **Transparency.** A subagent's reply goes only to the session that called it. So the calling session must tell PA it is consulting the gatekeeper and show the output block verbatim. The agent's description and the FIN profile both say so. The block always starts with `decision-gatekeeper — <prefix>`.
 
 - **`plugin-release-executor`** (sonnet): the release runbook, dispatched only by the `plugin-release` skill.
 

@@ -1,6 +1,6 @@
 {
   "name": "pa-toolkit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Pierre-André's personal Claude toolkit (Code + Cowork). decision-gatekeeper: a read-only, domain-agnostic agent that triages a proposed change against a domain's decision records (covered / new / supersede / other note type / operational), driven by the \"Profil de gouvernance des décisions\" it reads from the Organon vault on every call. Six fin-* skills for PocketSmith categorization, vacation management and Rogers invoices. plugin-release: a generalized, user-only release runbook for any of PA's plugins (package, tag, GitHub Release with .plugin asset, marketplace entry). No bundled .mcp.json — uses the Organon MCP each surface already provides.",
   "author": {
     "name": "Pierre-André Folot"

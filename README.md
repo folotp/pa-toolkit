@@ -31,7 +31,7 @@ Pierre-André's personal Claude plugin for Claude Code and Cowork. It holds cros
 | `fin-pocketsmith-categorize-apple` | description-triggered | Categorize/split APPLE.COM/BILL charges from receipts in Apple Mail |
 | `fin-pocketsmith-categorize-netflix` | description-triggered | Split the monthly Netflix charge into its two fixed shares |
 | `fin-pocketsmith-categorize-rogers` | description-triggered | Split Rogers wireless charges per line from the invoice |
-| `fin-pocketsmith-manage-vacation` | description-triggered | Full vacation lifecycle in PocketSmith (label, categorization, close, Épicerie prorata) |
+| `fin-pocketsmith-manage-vacation` | description-triggered | Full vacation lifecycle in PocketSmith (label, categorization, close, Alimentation prorata) |
 | `fin-rogers-download-invoice` | description-triggered | Download and archive Rogers invoice PDFs |
 | `plugin-release` | user-only: `/pa-toolkit:plugin-release` | Release any of PA's plugins (see below) |
 

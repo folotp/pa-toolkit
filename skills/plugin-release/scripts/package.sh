@@ -8,7 +8,8 @@
 #   bash package.sh [<repo-root>]         # build at repo root (default: git toplevel of cwd)
 #   bash package.sh [<repo-root>] --dry   # list contents only
 #
-# Reads name and version from <repo-root>/.claude-plugin/plugin.json.
+# Reads name and version from <repo-root>/plugin.json, or .claude-plugin/plugin.json
+# for plugins without a root manifest.
 
 set -euo pipefail
 
@@ -33,7 +34,8 @@ if [[ -z "$REPO_ROOT" ]]; then
     REPO_ROOT="$(git rev-parse --show-toplevel)"
 fi
 REPO_ROOT="$(cd "$REPO_ROOT" && pwd)"
-MANIFEST="${REPO_ROOT}/.claude-plugin/plugin.json"
+MANIFEST="${REPO_ROOT}/plugin.json"
+[[ -f "$MANIFEST" ]] || MANIFEST="${REPO_ROOT}/.claude-plugin/plugin.json"
 
 require_tool() {
     command -v "$1" >/dev/null 2>&1 || {

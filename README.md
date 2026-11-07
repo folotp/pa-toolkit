@@ -43,8 +43,8 @@ The `fin-*` skills were migrated verbatim from PA's account skills. Their MCP to
 ## Install
 
 ```text
-/plugin marketplace add folotp/claude-marketplace
-/plugin install pa-toolkit@folotp-marketplace
+/plugin marketplace add folotp/pa-marketplace
+/plugin install pa-toolkit@pa-marketplace
 /reload-plugins
 ```
 
@@ -71,7 +71,7 @@ No change to this repo is needed.
 - runs the pre-flight: clean tree, free tag, repo-specific gates from the target's `CLAUDE.md` / `release-readiness`, `plugin-dev:plugin-validator`;
 - builds `<name>-v<version>.plugin` with `skills/plugin-release/scripts/package.sh`;
 - pushes main before tagging and creates the GitHub Release with `--notes-file`;
-- adds the entry to `folotp/claude-marketplace` by PR, or, if the entry already exists, lets the marketplace's auto-bump workflow re-pin it.
+- adds the entry to `folotp/pa-marketplace` by PR, or, if the entry already exists, lets the marketplace's auto-bump workflow re-pin it.
 
 Safeguards:
 - run a dry-run first;

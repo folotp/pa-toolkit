@@ -18,8 +18,8 @@
 ## Install / update
 
 ```
-/plugin marketplace update folotp-marketplace
-/plugin install <name>@folotp-marketplace
+/plugin marketplace update pa-marketplace
+/plugin install <name>@pa-marketplace
 ```
 
 ## Verification

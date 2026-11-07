@@ -81,6 +81,7 @@ EXCLUDES=(
     '.env.*'
     '**/.env'
     '**/.env.*'
+    '*/.claude/*'
 )
 
 ZIP_EXCLUDE_ARGS=()
@@ -89,7 +90,8 @@ for pattern in "${EXCLUDES[@]}"; do
 done
 
 # .claude/ is repo-local tooling and never ships, except .claude/agents/ when a
-# repo keeps plugin agents there (organon does).
+# repo keeps plugin agents there (organon does). Nested .claude/ dirs (e.g.
+# skills/.claude/ from harness write tracking) are dropped via EXCLUDES.
 build() {
     local out="$1"
     zip -r -q -X "$out" . "${ZIP_EXCLUDE_ARGS[@]}" -x '.claude/*' -x '.claude/**/*'
@@ -120,4 +122,4 @@ echo "size:   $(du -h "$ARCHIVE" | awk '{print $1}')"
 echo "files:  $(unzip -l "$ARCHIVE" | tail -1 | awk '{print $2}')"
 echo
 echo "verify (must be empty):"
-unzip -l "$ARCHIVE" | grep -E '(eval-workspace|__pycache__|\.DS_Store|\.git/)' || echo "  (clean)"
+unzip -l "$ARCHIVE" | grep -E '(eval-workspace|__pycache__|\.DS_Store|\.git/|/\.claude/)' || echo "  (clean)"

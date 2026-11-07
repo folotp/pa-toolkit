@@ -1,6 +1,6 @@
 ---
 name: plugin-release
-description: Cut a release of any of PA's Claude plugins (pa-toolkit, organon, …) — version bump in `.claude-plugin/plugin.json`, `.plugin` archive, tag, GitHub Release with the asset, and the `folotp/claude-marketplace` entry. User-only (`/pa-toolkit:plugin-release`). Plugin name comes from `plugin.json`, repo from `git remote get-url origin`; nothing is hardcoded. Dispatches to the `plugin-release-executor` agent.
+description: Cut a release of any of PA's Claude plugins (pa-toolkit, organon, …) — version bump in `.claude-plugin/plugin.json`, `.plugin` archive, tag, GitHub Release with the asset, and the `folotp/pa-marketplace` entry. User-only (`/pa-toolkit:plugin-release`). Plugin name comes from `plugin.json`, repo from `git remote get-url origin`; nothing is hardcoded. Dispatches to the `plugin-release-executor` agent.
 argument-hint: "[patch|minor|major|none] [repo-path] [--dry-run]"
 disable-model-invocation: true
 allowed-tools:

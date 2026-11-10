@@ -60,6 +60,26 @@ class ReleaseTests(unittest.TestCase):
             self.assertEqual(result['dry_run'], dry)
             self.assertEqual(self.git('status', '--porcelain'), before)
 
+    def test_extension_preserves_literal_braces_in_both_commands_and_modes(self):
+        import shutil
+        # Replacement values are paths and must not be expanded a second time.
+        selected = Path(self.temp.name) / 'packager {output}' / 'package.sh'
+        selected.parent.mkdir()
+        shutil.copy2(self.packager, selected)
+        self.packager = selected
+        self.extension(['python3', '-c',
+            "import json, sys; assert {'valid': True}['valid']; assert json.loads(sys.argv[1]) == {'message': '{literal}'}; assert sys.argv[2] == '{unknown}'; assert sys.argv[3] == 'regex{2,4}'",
+            '{"message":"{literal}"}', '{unknown}', 'regex{2,4}'])
+        config = json.loads((self.root / 'config/release.json').read_text())
+        config['package'].append('{"package":"literal"}')
+        self.write('config/release.json', json.dumps(config))
+        script = self.root / 'package.py'
+        script.write_text(script.read_text() + "assert sys.argv[3] == '{\"package\":\"literal\"}'\n")
+        for dry in (True, False):
+            with self.subTest(dry=dry):
+                result = release.execute(self.root, self.output, self.packager, dry)
+                self.assertEqual(result['dry_run'], dry)
+
     def test_failed_required_extension_blocks_both_modes(self):
         self.extension(['python3', '-c', 'raise SystemExit(9)'])
         for dry in (True, False):

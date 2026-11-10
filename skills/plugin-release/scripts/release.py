@@ -3,6 +3,7 @@
 import argparse
 import json
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import tempfile
@@ -39,7 +40,8 @@ def execute(root, output, packager, dry_run=False):
         stage = Path(temp)
         values = {'packager': str(packager), 'output': str(stage)}
         def command(key):
-            return [arg.format(**values) for arg in extension[key]]
+            return [re.sub(r'\{(packager|output)\}', lambda match: values[match.group(1)], arg)
+                    for arg in extension[key]]
         if extension is not None:
             run(command('preflight'), root)
             run(command('package'), root)

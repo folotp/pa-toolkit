@@ -67,6 +67,15 @@ class ReleaseTests(unittest.TestCase):
                 release.execute(self.root, self.output, self.packager, dry)
         self.assertFalse(self.output.exists())
 
+    def test_nonobject_extension_never_falls_back_in_either_mode(self):
+        for content in ('null', '[]', 'true', '0', '"extension"'):
+            self.write('config/release.json', content)
+            for dry in (True, False):
+                with self.subTest(content=content, dry=dry):
+                    with self.assertRaisesRegex(ValueError, 'must be an object'):
+                        release.execute(self.root, self.output, self.packager, dry)
+                    self.assertFalse(self.output.exists())
+
     def test_bad_extension_never_falls_back(self):
         self.write('config/release.json', '{"schema_version":99}')
         with self.assertRaises(ValueError):

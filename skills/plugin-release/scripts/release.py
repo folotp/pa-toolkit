@@ -23,7 +23,11 @@ def execute(root, output, packager, dry_run=False):
     if any('/' in v or '\\' in v or v in ('.', '..') for v in (name, version)):
         raise ValueError('Invalid archive identity')
     config = root / 'config/release.json'
-    extension = json.loads(config.read_text()) if config.exists() else None
+    extension = None
+    if config.exists():
+        extension = json.loads(config.read_text())
+        if not isinstance(extension, dict):
+            raise ValueError('Release extension must be an object')
     if extension is not None:
         if extension.get('schema_version') != 1:
             raise ValueError('Unsupported release extension version')

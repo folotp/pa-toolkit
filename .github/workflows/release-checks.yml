@@ -18,7 +18,7 @@ jobs:
           # Keep the protected context stable; explicitly select Apple Silicon.
           # Capacity failures must stay visible, without an implicit Intel fallback.
           - os: macos-latest
-            runner: macos-26
+            runner: macos-15
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4

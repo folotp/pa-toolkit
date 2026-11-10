@@ -114,7 +114,7 @@ The existing `Release checks (ubuntu-latest)` and `Release checks (macos-latest)
 contexts run the full release dry-run on PRs and main pushes with read-only permissions.
 The extension reaches the same `check()` as local/index use, then verifies a real ZIP.
 No local hook, AI client, vault, finance account or personal data is needed.
-The historical macos-latest context explicitly selects the standard `macos-26`
+The historical macos-latest context explicitly selects the standard `macos-15`
 Apple Silicon runner. An early platform assertion verifies both RUNNER_ARCH=ARM64
 and uname's arm64 result. Capacity failures remain visible; there is no Intel
 fallback. Context names and the full gate remain unchanged. uv 0.13.7

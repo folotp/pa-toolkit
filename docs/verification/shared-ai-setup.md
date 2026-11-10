@@ -204,9 +204,11 @@ bootstrap requirement, keeps this validation active. Workflow YAML does not modi
 server settings. Live protection was reread and remained strict/enforced.
 
 A follow-up requested Apple Silicon CI rather than retaining that Intel workaround.
-The active workflow now uses explicit `macos-26`, preserving the protected context
+The active workflow now uses explicit `macos-15`, preserving the protected context
 name, and asserts RUNNER_ARCH=ARM64 plus uname=arm64 before validation. There is no
-fallback to Intel. Results for this follow-up are linked in PR #24; capacity failures
+fallback to Intel. An explicit macos-26 follow-up was also queued without acquiring
+a runner; macos-15 is the alternative supported Apple Silicon image selected for
+this verification. Results for this follow-up are linked in PR #24; capacity failures
 are reported as failures/pending, never treated as completed validation.
 
 #10's YAML defect is fixed and every agent/skill is now strictly parsed. #14's wider

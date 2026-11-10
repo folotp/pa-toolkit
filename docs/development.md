@@ -68,7 +68,7 @@ The driver selects `config/release.json`: full check once, then a real archive.
 Normal `scripts/dev check` verifies the package selection/link contract without
 creating that archive. OS-specific bootstrap steps are declared in the workflow.
 
-Hosted macOS uses explicit `macos-26` Apple Silicon and verifies reported/actual
+Hosted macOS uses explicit `macos-15` Apple Silicon and verifies reported/actual
 ARM64 architecture before checks. The required historical status context remains
 `Release checks (macos-latest)`. No Intel fallback masks a capacity failure.
 

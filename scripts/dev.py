@@ -78,7 +78,13 @@ def source_files():
     are not lint inputs. Package selection is independently restricted to tracked files.
     """
     names = run("git", "ls-files", "--cached", "--others", "--exclude-standard", "-z", capture=True)
-    return sorted({ROOT / n for n in names.split("\0") if n and (ROOT / n).is_file()})
+    paths = sorted({ROOT / n for n in names.split("\0") if n and (ROOT / n).is_file()})
+    for path in paths:
+        require(
+            path.resolve().is_relative_to(ROOT.resolve()),
+            f"External source symlink: {path}; source checks/format must stay in this checkout",
+        )
+    return paths
 
 
 def frontmatter(path):
@@ -448,10 +454,7 @@ def check_staged():
     caller's index/worktree. checkout-index preserves staged modes and deletions.
     The temporary index is reset to the exported tree so file discovery sees additions.
     """
-    require(
-        git("branch", "--show-current") not in ("", "main"),
-        "Commit from a named feature branch, not main/detached HEAD",
-    )
+    branch_guard().check_branch(git("branch", "--show-current"))
     tree = git("write-tree")  # Unmerged index fails before any export.
     with tempfile.TemporaryDirectory(prefix="toolkit-index-") as temp:
         run("git", "checkout-index", "--all", "--prefix", temp + os.sep)
@@ -556,15 +559,23 @@ def install_hooks(uninstall=False):
         print(f"{'Removed' if uninstall else 'Installed'} {path}")
 
 
-def pre_push(stream):
-    """Reuse the generic main-destination policy; no second branch policy copy."""
-    import importlib.util
+def branch_guard():
+    """Load the distributed generic guard so branch policy has one implementation."""
+    import types
 
     path = ROOT / "skills/plugin-release/scripts/branch-guard.py"
-    spec = importlib.util.spec_from_file_location("branch_guard", path)
-    guard = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(guard)
-    guard.check_push(stream)
+    # Executing trusted source directly avoids writing __pycache__ into a checkout
+    # during lightweight hooks or staged export, without changing global Python flags.
+    guard = types.ModuleType("toolkit_branch_guard")
+    guard.__file__ = str(path)
+    exec(compile(path.read_bytes(), str(path), "exec"), guard.__dict__)
+
+    return guard
+
+
+def pre_push(stream):
+    """Reuse the generic main-destination policy; no second branch policy copy."""
+    branch_guard().check_push(stream)
 
 
 def hook_paths(payload):
@@ -592,7 +603,9 @@ def hook_paths(payload):
         names = [inputs.get("file_path")]
     else:
         raise ValueError("Unsupported edit payload; use Git/CI for other editing paths")
-    cwd = Path(payload.get("cwd", str(ROOT)))
+    cwd_value = payload.get("cwd", str(ROOT))
+    require(text_value(cwd_value), "Hook cwd must be an absolute path string")
+    cwd = Path(cwd_value)
     require(cwd.is_absolute(), "Hook cwd must be absolute")
     paths = []
     for name in names:
@@ -658,10 +671,7 @@ def hook(event):
     paths = hook_paths(payload)
     if event == "edit":
         # The repository rule is branch/worktree isolation, not immutable content.
-        require(
-            git("branch", "--show-current") not in ("", "main"),
-            "Edit in a named feature worktree; see scripts/dev worktree and AGENTS.md",
-        )
+        branch_guard().check_branch(git("branch", "--show-current"), action="edit")
         return
     feedback = []
     for path in paths:
@@ -673,8 +683,10 @@ def hook(event):
             elif path.suffix == ".json":
                 parse_json(path.read_text())
             elif path.suffix == ".sh" or path == ROOT / "scripts/dev":
-                feedback.append(advisory(["shfmt", "-i", "4", "-ci", "-d", str(path)]))
-                feedback.append(advisory(["shellcheck", "-x", "--severity=warning", str(path)]))
+                feedback.append("shfmt: " + advisory(["shfmt", "-i", "4", "-ci", "-d", str(path)]))
+                feedback.append(
+                    "ShellCheck: " + advisory(["shellcheck", "-x", "--severity=warning", str(path)])
+                )
         except (ValueError, SyntaxError, OSError) as error:
             feedback.append(str(error))
     message = (

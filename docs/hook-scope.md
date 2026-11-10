@@ -40,8 +40,10 @@ absolute payload cwd, dot segments and symlinks are resolved, and paths outside 
 active root fail. These are edit-path checks, not a full patch grammar implementation.
 Tool execution remains responsible for patch validity.
 
-Arbitrary shell writes, MCP writes, nested orchestration and hosted/cloud editing paths
-are outside these matchers. Native repository hooks on those surfaces are unverified.
+The installed Codex 0.167.0 code-mode host delivered canonical apply_patch hooks
+even when the native patch was invoked through functions.exec; that specific path
+was verified with a real two-file patch. Arbitrary shell writes, MCP writes, other
+nested orchestration and hosted/cloud editing paths are outside the verified scope. Native repository hooks on those surfaces are unverified.
 Use mandatory Git index checking and required Linux/macOS CI for every committed path.
 No claim of hook coverage follows from configuration parsing, user trust or a model's
 statement that advice changed the file: inspect actual event delivery and file bytes.

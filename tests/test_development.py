@@ -37,6 +37,10 @@ class RepositoryTests(unittest.TestCase):
         self.git("init", "-q", "-b", "main")
         self.git("config", "user.email", "test@example.invalid")
         self.git("config", "user.name", "Fixture")
+        self.write(
+            "skills/plugin-release/scripts/branch-guard.py",
+            (SOURCE / "skills/plugin-release/scripts/branch-guard.py").read_text(),
+        )
         self.write("ordinary.py", "value = 1\n")
         self.commit()
         self.git("switch", "-q", "-c", "chore/test")
@@ -231,6 +235,31 @@ class RepositoryTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "unsupported"):
             dev.validate_fields({"new": True}, {}, {}, "fixture")
 
+    def test_full_component_schema_accepts_legacy_claude_and_rejects_defects(self):
+        # Exercise the real schema over all current components, including the
+        # Claude-only invocation controls that portable skills-ref would reject.
+        for name in (
+            ".claude-plugin/plugin.json",
+            *[str(p.relative_to(SOURCE)) for p in (SOURCE / "skills").glob("*/SKILL.md")],
+            *[str(p.relative_to(SOURCE)) for p in (SOURCE / "agents").glob("*.md")],
+        ):
+            self.write(name, (SOURCE / name).read_text())
+        dev.specs()
+        release_skill = self.root / "skills/plugin-release/SKILL.md"
+        original = release_skill.read_text()
+        release_skill.write_text(
+            original.replace("disable-model-invocation: true", 'disable-model-invocation: "true"')
+        )
+        with self.assertRaisesRegex(ValueError, "disable-model-invocation"):
+            dev.specs()
+        release_skill.write_text(original)
+        manifest = self.root / ".claude-plugin/plugin.json"
+        identity = json.loads(manifest.read_text())
+        identity["version"] = "01.2.3"
+        manifest.write_text(json.dumps(identity))
+        with self.assertRaisesRegex(ValueError, "SemVer"):
+            dev.specs()
+
     def test_links_reference_images_encoded_targets_and_examples(self):
         self.write("space name.md", "exists")
         self.write(
@@ -281,6 +310,18 @@ class RepositoryTests(unittest.TestCase):
             with self.subTest(payload=payload), self.assertRaises(ValueError):
                 dev.hook_paths(payload)
 
+    def test_malformed_cwd_and_external_source_symlinks_fail(self):
+        for cwd in (None, [], {}, 12, ""):
+            payload = {"tool_name": "Edit", "cwd": cwd, "tool_input": {"file_path": "ordinary.py"}}
+            with self.subTest(cwd=cwd), self.assertRaisesRegex(ValueError, "cwd"):
+                dev.hook_paths(payload)
+        outside = Path(self.temp.name) / "outside.py"
+        outside.write_text("private = 1\n")
+        (self.root / "escape.py").symlink_to(outside)
+        with self.assertRaisesRegex(ValueError, "External source symlink"):
+            dev.source_files()
+        self.assertEqual(outside.read_text(), "private = 1\n")
+
     def test_feedback_is_bounded_and_does_not_rewrite(self):
         path = self.write("fixture.sh", "#!/bin/bash\nif true;then echo after;fi\n")
         original = path.read_bytes()
@@ -312,6 +353,21 @@ class RepositoryTests(unittest.TestCase):
             dev.subprocess, "run", return_value=subprocess.CompletedProcess([], 1, "")
         ):
             self.assertIn("failed without diagnostic", dev.advisory(["fixture"]))
+
+    def test_worktree_command_uses_named_branch_and_explicit_destination(self):
+        destination = Path(self.temp.name) / "new worktree with spaces"
+        with patch("sys.argv", ["dev.py", "worktree", "feat/example", str(destination)]):
+            dev.main()
+        branch = subprocess.check_output(
+            ["git", "branch", "--show-current"], cwd=destination, text=True
+        ).strip()
+        self.assertEqual(branch, "feat/example")
+        self.assertEqual(self.git("branch", "--show-current"), "chore/test")
+        with (
+            patch("sys.argv", ["dev.py", "worktree", "unprefixed", str(destination)]),
+            self.assertRaisesRegex(ValueError, "prefix"),
+        ):
+            dev.main()
 
     def test_session_launch_normalizes_subdirectory_and_preserves_arguments(self):
         launcher = self.root / "scripts/dev"

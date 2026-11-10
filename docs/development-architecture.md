@@ -39,7 +39,8 @@ verification, Markdown links, README inventory, package-contract/link closure an
 all infrastructure tests. Required failures stop execution. Format is an explicit
 write operation. Lightweight client feedback checks syntax/shell style; it does not
 replace the complete gate. The Git index and CI independently cover shell/MCP/hosted
-writes outside native edit matchers.
+writes outside native edit matchers. Current Codex code-mode native apply_patch
+delivery was tested separately from arbitrary nested orchestration.
 
 ## Reuse and intentional differences from Organon
 

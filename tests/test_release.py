@@ -4,6 +4,7 @@ import importlib.util
 import json
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -146,6 +147,28 @@ class ReleaseTests(unittest.TestCase):
         )
         with self.assertRaises(ValueError):
             release.execute(self.root, self.output, self.packager)
+
+    def test_cli_removes_stale_receipt_before_required_failure(self):
+        receipt = Path(self.temp.name) / "old success.json"
+        receipt.write_text('{"archive":"stale.plugin"}')
+        self.write("untracked.txt", "dirty source")
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(ROOT / "skills/plugin-release/scripts/release.py"),
+                str(self.root),
+                "--output",
+                str(self.output),
+                "--result",
+                str(receipt),
+            ],
+            capture_output=True,
+            text=True,
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("clean tree", result.stderr)
+        self.assertFalse(receipt.exists())
+        self.assertFalse(self.output.exists())
 
     def test_broken_extension_symlink_does_not_select_fallback(self):
         (self.root / "config").mkdir()

@@ -15,6 +15,14 @@ def git(*args):
     return subprocess.check_output(["git", *args], text=True).strip()
 
 
+def check_branch(branch, action="commit"):
+    """One named-feature policy shared by generic Git and toolkit lifecycle guards."""
+    if branch in ("", "main"):
+        raise ValueError(
+            f"Use a named feature worktree to {action}; main/detached HEAD is blocked."
+        )
+
+
 def check_push(stream):
     """Reject a main destination in Git's four-field pre-push input.
 
@@ -42,8 +50,10 @@ def main():
     parser.add_argument("event", choices=["install", "pre-commit", "pre-push"])
     args = parser.parse_args()
     if args.event == "pre-commit":
-        if git("branch", "--show-current") in ("", "main"):
-            parser.exit(1, "Commit on a named feature branch, never main/detached HEAD.\n")
+        try:
+            check_branch(git("branch", "--show-current"))
+        except ValueError as error:
+            parser.exit(1, str(error) + "\n")
     elif args.event == "pre-push":
         try:
             check_push(sys.stdin)

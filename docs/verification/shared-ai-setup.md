@@ -203,6 +203,12 @@ declared minimum and Linux pin to actionlint 1.7.12, with its declared Go 1.25
 bootstrap requirement, keeps this validation active. Workflow YAML does not modify
 server settings. Live protection was reread and remained strict/enforced.
 
+A follow-up requested Apple Silicon CI rather than retaining that Intel workaround.
+The active workflow now uses explicit `macos-26`, preserving the protected context
+name, and asserts RUNNER_ARCH=ARM64 plus uname=arm64 before validation. There is no
+fallback to Intel. Results for this follow-up are linked in PR #24; capacity failures
+are reported as failures/pending, never treated as completed validation.
+
 #10's YAML defect is fixed and every agent/skill is now strictly parsed. #14's wider
 skill authoring/semantic audit remains separate. #19's generic direct-packager cleanup
 is not claimed complete; this toolkit extension stages only tracked explicit runtime

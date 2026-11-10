@@ -15,13 +15,20 @@ jobs:
         include:
           - os: ubuntu-latest
             runner: ubuntu-latest
-          # Preserve the protected context's historical name while selecting a
-          # standard Intel host: ARM macos-latest exhausted runner capacity.
+          # Keep the protected context stable; explicitly select Apple Silicon.
+          # Capacity failures must stay visible, without an implicit Intel fallback.
           - os: macos-latest
-            runner: macos-15-intel
+            runner: macos-26
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4
+      - name: Verify macOS Apple Silicon runner
+        if: runner.os == 'macOS'
+        run: |
+          toolkit_machine_arch="$(uname -m)"
+          printf 'Runner OS=%s architecture=%s machine=%s\n' "$RUNNER_OS" "$RUNNER_ARCH" "$toolkit_machine_arch"
+          test "$RUNNER_ARCH" = ARM64
+          test "$toolkit_machine_arch" = arm64
       - uses: astral-sh/setup-uv@v6
         with:
           version: '0.13.7'

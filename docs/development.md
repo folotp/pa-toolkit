@@ -58,6 +58,43 @@ disable the sandbox or remove gates to make diagnostics green. Offline use requi
 an already populated permitted cache/environment (`uv sync --locked --offline`).
 The lightweight hook paths do not sync dependencies or make network requests.
 
+## Local checks, hosted CI and specification versions
+
+Local `scripts/dev check`, the installed staged Git hook and hosted CI all reach
+one `check()` implementation. The staged hook exports the actual Git index first.
+For the exact hosted scope locally, run the release-driver dry-run from a clean
+checkout with output/receipt paths outside source (see the release example below).
+The driver selects `config/release.json`: full check once, then a real archive.
+Normal `scripts/dev check` verifies the package selection/link contract without
+creating that archive. OS-specific bootstrap steps are declared in the workflow.
+
+Hosted macOS uses explicit `macos-26` Apple Silicon and verifies reported/actual
+ARM64 architecture before checks. The required historical status context remains
+`Release checks (macos-latest)`. No Intel fallback masks a capacity failure.
+
+GitHub independently reruns checks on PR updates and main pushes. A successful local
+run does not publish a GitHub check status or replace either required hosted result.
+Dependency caches may avoid downloads; they are not trusted test-result receipts.
+No cross-machine/cross-commit validation reuse is implemented here; #20 remains
+separate and cannot weaken exact-commit release verification.
+
+The mandatory component gate is a repository-owned, reviewed Claude-compatible
+contract in `scripts/dev.py`, with strict YAML/JSON and supported field predicates.
+It does **not** fetch upstream specifications on each run or assert compliance with
+whatever is newest upstream. It also does not apply the portable Agent Plugins
+schema to this legacy Claude manifest. Optional `claude plugin validate` tests the
+installed client version and is not a mandatory/latest-spec certification.
+
+A future upstream-spec update/drift check needs explicit source versions, an update
+policy and compatibility profiles. The official
+[Agent Skills specification](https://agentskills.io/specification),
+[Agent Plugins specification](https://agent-plugins.org/),
+[Claude skills reference](https://code.claude.com/docs/en/skills) and
+[Claude plugin manifest reference](https://code.claude.com/docs/en/plugins-reference)
+are separate contracts. Keep the existing Claude invocation controls/tool arrays
+and `.claude-plugin/plugin.json` source until an intentional migration is reviewed.
+#14's broader skill-guideline audit is still separate from structural validation.
+
 ## Worktrees and sessions
 
 ```sh

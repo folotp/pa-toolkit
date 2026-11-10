@@ -114,9 +114,10 @@ The existing `Release checks (ubuntu-latest)` and `Release checks (macos-latest)
 contexts run the full release dry-run on PRs and main pushes with read-only permissions.
 The extension reaches the same `check()` as local/index use, then verifies a real ZIP.
 No local hook, AI client, vault, finance account or personal data is needed.
-The historical macos-latest context currently selects the standard macos-15-intel
-runner after hosted ARM capacity prevented job acquisition. Context names and the
-full gate are unchanged; local Apple Silicon acceptance complements Intel CI. uv 0.13.7
+The historical macos-latest context explicitly selects the standard `macos-26`
+Apple Silicon runner. An early platform assertion verifies both RUNNER_ARCH=ARM64
+and uname's arm64 result. Capacity failures remain visible; there is no Intel
+fallback. Context names and the full gate remain unchanged. uv 0.13.7
 and managed Python 3.11 are selected; shell tools enforce supported minimums. Linux
 bootstraps actionlint v1.7.12 with Go; Go is not a project/runtime gate. macOS uses
 Homebrew actionlint. Python transitive dependencies are hash locked.

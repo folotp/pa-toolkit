@@ -113,7 +113,10 @@ explicit archive receipts and failure propagation retain regression coverage.
 The existing `Release checks (ubuntu-latest)` and `Release checks (macos-latest)`
 contexts run the full release dry-run on PRs and main pushes with read-only permissions.
 The extension reaches the same `check()` as local/index use, then verifies a real ZIP.
-No local hook, AI client, vault, finance account or personal data is needed. uv 0.13.7
+No local hook, AI client, vault, finance account or personal data is needed.
+The historical macos-latest context currently selects the standard macos-15-intel
+runner after hosted ARM capacity prevented job acquisition. Context names and the
+full gate are unchanged; local Apple Silicon acceptance complements Intel CI. uv 0.13.7
 and managed Python 3.11 are selected; shell tools enforce supported minimums. Linux
 bootstraps actionlint v1.7.7 with Go; Go is not a project/runtime gate. macOS uses
 Homebrew actionlint. Python transitive dependencies are hash locked.

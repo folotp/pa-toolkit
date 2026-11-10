@@ -190,8 +190,14 @@ read-only permissions, and runs the actual generic release dry-run on Linux/macO
 Linux passed the initial implementation. macOS was initially queued waiting for a
 hosted runner. The PR Checks tab records results for each exact head revision; final
 status and run links are included in the PR handoff rather than treating a queued
-job as passed. Workflow YAML does
-not modify server settings. Live protection was reread and remained strict/enforced.
+job as passed. The initial ARM job eventually failed before running any steps with
+"The job was not acquired by Runner of type hosted even after multiple attempts";
+annotations explicitly cited macOS ARM capacity. The workflow now maps the historical
+macos-latest context to the standard `macos-15-intel` runner while retaining exactly
+the same full gate and required context names. Local Apple Silicon checks also pass.
+The supported Intel label was verified against the
+[official runner reference](https://docs.github.com/en/actions/reference/runners/github-hosted-runners).
+Workflow YAML does not modify server settings. Live protection was reread and remained strict/enforced.
 
 #10's YAML defect is fixed and every agent/skill is now strictly parsed. #14's wider
 skill authoring/semantic audit remains separate. #19's generic direct-packager cleanup

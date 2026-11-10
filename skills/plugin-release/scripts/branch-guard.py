@@ -10,10 +10,19 @@ MARKER = '# managed-by: pa-toolkit branch-guard'
 
 
 def git(*args):
+    """Read Git metadata in the invoking repository, not the driver’s own checkout."""
     return subprocess.check_output(['git', *args], text=True).strip()
 
 
 def main():
+    """Install managed launchers or enforce Git’s pre-commit/pre-push contracts.
+
+    pre-commit rejects main/detached HEAD. pre-push reads Git’s four-field ref updates
+    from stdin and checks the remote destination, even when pushing a feature HEAD.
+    Installation resolves shared/custom hooks paths and checks both destinations
+    before writing either file; any unmanaged hook requires manual integration.
+    Launchers retain this script’s absolute path: reinstall before removing or moving
+    the source checkout. Server-side branch protection is the independent merge gate."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('event', choices=['install', 'pre-commit', 'pre-push'])
     args = parser.parse_args()
@@ -22,10 +31,12 @@ def main():
             parser.exit(1, 'Commit on a named feature branch, never main/detached HEAD.\n')
     elif args.event == 'pre-push':
         for line in sys.stdin:
+            # Git sends: local_ref local_sha remote_ref remote_sha, one per update.
             fields = line.split()
             if len(fields) == 4 and fields[2] == 'refs/heads/main':
                 parser.exit(1, 'Direct main push blocked; merge a pull request.\n')
     else:
+        # Preflight every destination before mutating the shared hooks directory.
         for event in ('pre-commit', 'pre-push'):
             path = Path(git('rev-parse', '--path-format=absolute', '--git-path', 'hooks/' + event))
             if path.exists() and MARKER not in path.read_text():

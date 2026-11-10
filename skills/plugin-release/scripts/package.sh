@@ -4,6 +4,10 @@
 # The .plugin archive is a zip of the plugin tree minus build/eval/git noise.
 # Distribution is via GitHub Release asset (the .plugin is gitignored).
 #
+# Release callers use release.py, which selects the target extension first.
+# This low-level command does no clean-tree check, schema validation or publishing;
+# its --dry option lists a temporary archive, not the full release preflight.
+#
 # Usage:
 #   bash package.sh [<repo-root>]         # build at repo root (default: git toplevel of cwd)
 #   bash package.sh [<repo-root>] --dry   # list contents only
@@ -37,6 +41,7 @@ REPO_ROOT="$(cd "$REPO_ROOT" && pwd)"
 MANIFEST="${REPO_ROOT}/plugin.json"
 [[ -f "$MANIFEST" ]] || MANIFEST="${REPO_ROOT}/.claude-plugin/plugin.json"
 
+# Fail before packaging if an essential archive tool is unavailable.
 require_tool() {
     command -v "$1" >/dev/null 2>&1 || {
         echo "error: required tool not on PATH: $1" >&2
@@ -92,8 +97,10 @@ for pattern in "${EXCLUDES[@]}"; do
 done
 
 # .claude/ is repo-local tooling and never ships, except .claude/agents/ when a
-# repo keeps plugin agents there (organon does). Nested .claude/ dirs (e.g.
+# legacy repo keeps plugin agents there. Current Organon stages root agents/.
+# Nested .claude/ dirs (e.g.
 # skills/.claude/ from harness write tracking) are dropped via EXCLUDES.
+# Write one ZIP from the selected directory; retain the legacy agents exception.
 build() {
     local out="$1"
     zip -r -q -X "$out" . "${ZIP_EXCLUDE_ARGS[@]}" -x '.claude/*' -x '.claude/**/*'

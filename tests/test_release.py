@@ -1,3 +1,4 @@
+"""Exercise release contracts in disposable fixtures; never publish or use a vault."""
 import importlib.util
 import json
 from pathlib import Path

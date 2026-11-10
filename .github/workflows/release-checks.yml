@@ -6,6 +6,7 @@ on:
 permissions:
   contents: read
 jobs:
+  # Required protection contexts are Release checks (<matrix.os>); preserve names.
   checks:
     name: Release checks (${{ matrix.os }})
     strategy:
@@ -23,4 +24,6 @@ jobs:
       - name: Install tools (macOS)
         if: runner.os == 'macOS'
         run: brew install jq
+      # Portable fixtures exercise both extension/fallback and dry-run/build.
+      # A repository-specific integration dry-run belongs to the consumer CI.
       - run: python3 -m unittest discover -s tests -v

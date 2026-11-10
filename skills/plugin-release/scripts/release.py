@@ -11,10 +11,22 @@ import zipfile
 
 
 def run(argv, root):
+    """Execute argv without shell evaluation in the target repository; fail nonzero."""
     subprocess.run(argv, cwd=root, check=True)
 
 
 def execute(root, output, packager, dry_run=False):
+    """Validate and build a release candidate, returning an explicit archive receipt.
+
+    root is a reviewed plugin repository; packager is an explicit package.sh path.
+    When config/release.json exists it must declare valid preflight/package argv.
+    Only an absent extension selects the tracked-HEAD fallback. Extension commands
+    are trusted repository code and may have side effects; review them before use.
+    All modes build and verify a real temporary ZIP. dry_run returns archive=None
+    and a planned absolute path without creating output; build retains only the
+    verified candidate in output. Temporary staging is removed on every exit.
+    The CLI owns the clean-tree gate; direct callers must establish that prerequisite.
+    This function never commits, tags, pushes, publishes or changes marketplace pins."""
     root, output, packager = (Path(p).expanduser().resolve() for p in (root, output, packager))
     manifest = root / 'plugin.json'
     if not manifest.is_file():
@@ -40,6 +52,7 @@ def execute(root, output, packager, dry_run=False):
         stage = Path(temp)
         values = {'packager': str(packager), 'output': str(stage)}
         def command(key):
+            # One pass preserves Python/JSON braces and tokens inside inserted paths.
             return [re.sub(r'\{(packager|output)\}', lambda match: values[match.group(1)], arg)
                     for arg in extension[key]]
         if extension is not None:
@@ -61,6 +74,8 @@ def execute(root, output, packager, dry_run=False):
             raise ValueError('Package contract must produce exactly one archive')
         if not built.is_file():
             raise ValueError('Package contract did not produce expected archive: ' + str(built))
+        # Inventory equality is repository-specific (e.g. Organon’s wrapper).
+        # The generic driver verifies integrity, safe entry paths and identity.
         with zipfile.ZipFile(built) as archive:
             if archive.testzip() is not None:
                 raise ValueError('Corrupt release archive')
@@ -79,6 +94,11 @@ def execute(root, output, packager, dry_run=False):
 
 
 def main():
+    """Enforce a clean source tree and write the JSON receipt only after success.
+
+    Remove any prior receipt first so failure cannot expose stale success to an
+    uploader. Output/receipt destinations are explicitly caller-selected; use paths
+    outside source. Required failures exit 1, and publication remains in the runbook."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('repo', type=Path)
     parser.add_argument('--output', type=Path, required=True)

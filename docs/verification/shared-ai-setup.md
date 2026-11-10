@@ -43,7 +43,7 @@ managed CPython 3.11.18. Launcher Python 3.9 was probed independently with
 managed interpreter and imports. Project Python libraries are pinned/hash locked.
 
 `./scripts/dev check` and `./scripts/dev check --staged` run the same complete gate.
-The regression suite has 43 tests, including existing extension/fallback and brace
+The regression suite has 44 tests, including existing extension/fallback and brace
 contracts plus index isolation, real parser failures, staged additions/deletions/modes,
 inherited Git-variable isolation, unmerged/main/detached denial, unmanaged/custom/shared
 hooks, exact legacy migration, symlink preservation, component schemas, package bytes,
@@ -197,7 +197,11 @@ macos-latest context to the standard `macos-15-intel` runner while retaining exa
 the same full gate and required context names. Local Apple Silicon checks also pass.
 The supported Intel label was verified against the
 [official runner reference](https://docs.github.com/en/actions/reference/runners/github-hosted-runners).
-Workflow YAML does not modify server settings. Live protection was reread and remained strict/enforced.
+Intel macOS then passed the full gate and archive dry-run. Linux correctly rejected
+the new official runner label under the older actionlint 1.7.7 pin. Upgrading the
+declared minimum and Linux pin to actionlint 1.7.12, with its declared Go 1.25
+bootstrap requirement, keeps this validation active. Workflow YAML does not modify
+server settings. Live protection was reread and remained strict/enforced.
 
 #10's YAML defect is fixed and every agent/skill is now strictly parsed. #14's wider
 skill authoring/semantic audit remains separate. #19's generic direct-packager cleanup

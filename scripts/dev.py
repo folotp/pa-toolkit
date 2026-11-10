@@ -24,7 +24,14 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 MARKER = "# managed-by: pa-toolkit scripts/dev v1"
 LEGACY_MARKER = "# managed-by: pa-toolkit branch-guard"
-SEMVER = r"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?"
+# SemVer prerelease numeric identifiers cannot have leading zeroes; build metadata
+# may. Identifiers cannot be empty (including between dots or after a suffix).
+SEMVER = (
+    r"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)"
+    r"(?:-(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*)"
+    r"(?:\.(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*))*)?"
+    r"(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?"
+)
 
 
 def require(condition, message):

@@ -32,7 +32,7 @@
     "flag": "--version"
   },
   "actionlint": {
-    "minimum": "1.7.7",
+    "minimum": "1.7.12",
     "flag": "-version"
   }
 }

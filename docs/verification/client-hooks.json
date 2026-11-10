@@ -1,7 +1,7 @@
 {
   "date": "2026-11-10",
   "scope": "Sanitized actual client event records; disposable fixture paths replaced with <worktree>.",
-  "source_sha256": "2ecc6daa453ca8303386166b3b612a50abc58a35a7ddbcafefde4a791ed7b3d3",
+  "source_sha256": "44d1467950c3e69b9c248f5e7b700e7db522cae9a085160d13236f6517a9a0be",
   "guard_sha256": "d9b2fa368e86af3b2fa6700d101c72fa1635aee8a3278a780352ba074e02d5b3",
   "clients": {
     "claude": {

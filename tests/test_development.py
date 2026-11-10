@@ -5,6 +5,7 @@ import importlib.util
 import io
 import json
 import os
+import re
 from pathlib import Path
 import shlex
 import shutil
@@ -259,6 +260,27 @@ class RepositoryTests(unittest.TestCase):
         manifest.write_text(json.dumps(identity))
         with self.assertRaisesRegex(ValueError, "SemVer"):
             dev.specs()
+
+    def test_semver_prerelease_and_build_identifier_boundaries(self):
+        for version in (
+            "0.1.4",
+            "1.2.3-rc.1",
+            "1.2.3-0",
+            "1.2.3-1a.2",
+            "1.2.3+001.build",
+            "1.2.3-rc.1+build.07",
+        ):
+            self.assertIsNotNone(re.fullmatch(dev.SEMVER, version), version)
+        for version in (
+            "01.2.3",
+            "1.2.3-01",
+            "1.2.3-",
+            "1.2.3+",
+            "1.2.3-a..b",
+            "1.2.3+build.",
+            "1.2.3.4",
+        ):
+            self.assertIsNone(re.fullmatch(dev.SEMVER, version), version)
 
     def test_links_reference_images_encoded_targets_and_examples(self):
         self.write("space name.md", "exists")

@@ -8,7 +8,7 @@ Changing this checkout does not publish or update installed plugins.
 
 Required minimum executable versions are in `config/toolchain.json`: Git 2.31,
 uv 0.13.7, Bash 3.2, jq 1.6, Zip 3.0, UnZip 6.0, shfmt 3.6, ShellCheck 0.9 and
-actionlint 1.7.7. Git supplies archive/tree transport; no standalone tar command is
+actionlint 1.7.12. Git supplies archive/tree transport; no standalone tar command is
 used by the toolkit extension. The generic release fallback still requires tar.
 Claude, Codex, GitHub CLI and Go are optional development/session/bootstrap tools,
 not required content checks. Publication separately needs GitHub authentication.
@@ -36,8 +36,8 @@ Linux bootstrap (Ubuntu 24.04 or newer):
 sudo apt-get update
 sudo apt-get install -y git bash jq zip unzip shfmt shellcheck
 # Install uv 0.13.7 using Astral's official installation method.
-# Install actionlint >=1.7.7 using its official release binary, or with Go:
-go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.7
+# Install actionlint >=1.7.12 using its official release binary, or with Go:
+go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.12
 # Put the chosen actionlint binary on PATH.
 uv sync --locked
 ./scripts/dev doctor

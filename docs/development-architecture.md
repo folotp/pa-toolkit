@@ -118,7 +118,7 @@ The historical macos-latest context currently selects the standard macos-15-inte
 runner after hosted ARM capacity prevented job acquisition. Context names and the
 full gate are unchanged; local Apple Silicon acceptance complements Intel CI. uv 0.13.7
 and managed Python 3.11 are selected; shell tools enforce supported minimums. Linux
-bootstraps actionlint v1.7.7 with Go; Go is not a project/runtime gate. macOS uses
+bootstraps actionlint v1.7.12 with Go; Go is not a project/runtime gate. macOS uses
 Homebrew actionlint. Python transitive dependencies are hash locked.
 
 Server protection is separate: PRs, strict required matrix checks, admin enforcement,

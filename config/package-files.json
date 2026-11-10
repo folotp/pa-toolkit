@@ -1,0 +1,20 @@
+[
+  ".claude-plugin/plugin.json",
+  "README.md",
+  "AGENTS.md",
+  "agents/decision-gatekeeper.md",
+  "agents/plugin-release-executor.md",
+  "skills/fin-pocketsmith-categorize-amazon/SKILL.md",
+  "skills/fin-pocketsmith-categorize-apple/SKILL.md",
+  "skills/fin-pocketsmith-categorize-netflix/SKILL.md",
+  "skills/fin-pocketsmith-categorize-rogers/SKILL.md",
+  "skills/fin-pocketsmith-manage-vacation/SKILL.md",
+  "skills/fin-rogers-download-invoice/SKILL.md",
+  "skills/plugin-release/SKILL.md",
+  "skills/plugin-release/references/development.md",
+  "skills/plugin-release/references/release-notes-template.md",
+  "skills/plugin-release/references/runbook.md",
+  "skills/plugin-release/scripts/branch-guard.py",
+  "skills/plugin-release/scripts/package.sh",
+  "skills/plugin-release/scripts/release.py"
+]

@@ -22,7 +22,7 @@ DRY=0
 for arg in "$@"; do
     case "$arg" in
         --dry) DRY=1 ;;
-        -h|--help)
+        -h | --help)
             sed -n '2,10p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
             exit 0
             ;;
@@ -51,12 +51,21 @@ require_tool() {
 require_tool jq
 require_tool zip
 
-[[ -f "$MANIFEST" ]] || { echo "error: $MANIFEST not found" >&2; exit 2; }
+[[ -f "$MANIFEST" ]] || {
+    echo "error: $MANIFEST not found" >&2
+    exit 2
+}
 
 NAME="$(jq -r '.name' "$MANIFEST")"
 VERSION="$(jq -r '.version' "$MANIFEST")"
-[[ -n "$NAME" && "$NAME" != "null" ]] || { echo "error: .name missing from $MANIFEST" >&2; exit 2; }
-[[ -n "$VERSION" && "$VERSION" != "null" ]] || { echo "error: .version missing from $MANIFEST" >&2; exit 2; }
+[[ -n "$NAME" && "$NAME" != "null" ]] || {
+    echo "error: .name missing from $MANIFEST" >&2
+    exit 2
+}
+[[ -n "$VERSION" && "$VERSION" != "null" ]] || {
+    echo "error: .version missing from $MANIFEST" >&2
+    exit 2
+}
 
 ARCHIVE="${REPO_ROOT}/${NAME}-v${VERSION}.plugin"
 
@@ -93,7 +102,7 @@ EXCLUDES=(
 
 ZIP_EXCLUDE_ARGS=()
 for pattern in "${EXCLUDES[@]}"; do
-    ZIP_EXCLUDE_ARGS+=( -x "$pattern" )
+    ZIP_EXCLUDE_ARGS+=(-x "$pattern")
 done
 
 # .claude/ is repo-local tooling and never ships, except .claude/agents/ when a

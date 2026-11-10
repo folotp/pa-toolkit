@@ -66,12 +66,17 @@ No change to this repo is needed.
 
 ## Releasing (any of PA's plugins)
 
-`/pa-toolkit:plugin-release [patch|minor|major|none] [repo-path] [--dry-run]` dispatches `plugin-release-executor`, which:
-- reads the plugin name from `.claude-plugin/plugin.json` and the repo from `git remote get-url origin`;
-- runs the pre-flight: clean tree, free tag, repo-specific gates from the target's `CLAUDE.md` / `release-readiness`, `plugin-dev:plugin-validator`;
-- builds `<name>-v<version>.plugin` with `skills/plugin-release/scripts/package.sh`;
-- pushes main before tagging and creates the GitHub Release with `--notes-file`;
-- adds the entry to `folotp/pa-marketplace` by PR, or, if the entry already exists, lets the marketplace's auto-bump workflow re-pin it.
+`/pa-toolkit:plugin-release [patch|minor|major|none] [repo-path] [--dry-run]`
+uses the agent-neutral [shared release runbook](skills/plugin-release/references/runbook.md).
+Claude dispatches a thin executor; other agents follow the same runbook directly.
+The generic driver selects a target repository extension (or tracked-HEAD fallback),
+runs mandatory checks and verifies a real temporary archive. Its explicit JSON receipt
+carries the retained archive path; dry-runs return a null archive.
+
+For this repository, `config/release.json` runs the full shared development gate once,
+then builds only the reviewed runtime inventory. Publishing separately requires the
+exact release commit already merged to remote main, tag availability and authorization.
+Marketplace changes follow their own PR workflow.
 
 Safeguards:
 - run a dry-run first;
@@ -81,13 +86,27 @@ Safeguards:
 
 This repo does not ship a `notify-marketplace.yml` workflow yet. Without it the marketplace cron picks up new releases within 30 minutes. Adding it needs a `MARKETPLACE_DISPATCH_TOKEN` secret; see the marketplace README.
 
+## Development
+
+`./scripts/dev doctor`, `./scripts/dev check`, `./scripts/dev check --staged` and
+explicit `./scripts/dev format` serve humans, agents, Git and Linux/macOS CI.
+Development requires no vault/finance connection or AI client. Setup, dependency
+policy, architecture, native-hook limits, CI ownership and recovery live in the
+[development runbook](https://github.com/folotp/pa-toolkit/blob/main/docs/development.md),
+[architecture guide](https://github.com/folotp/pa-toolkit/blob/main/docs/development-architecture.md)
+and [verification report](https://github.com/folotp/pa-toolkit/blob/main/docs/verification/shared-ai-setup.md).
+Development configuration and adapters are excluded from the distributed plugin.
+
 ## Layout
 
 ```
 .claude-plugin/plugin.json      version source of truth (semver)
 agents/                         decision-gatekeeper, plugin-release-executor
 skills/fin-*/SKILL.md           six finance skills
-skills/plugin-release/          SKILL.md shim, scripts/package.sh, references/release-notes-template.md
+skills/plugin-release/          shared release driver, packager, runbook and Claude shim
+scripts/dev                    shared developer interface (source only)
+config/                        toolchain, runtime inventory and release extension (source only)
+docs/                          architecture, setup, client limits and evidence (source only)
 ```
 
 Tracked in Organon as SD-BL-0066.

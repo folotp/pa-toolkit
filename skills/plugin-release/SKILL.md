@@ -1,15 +1,19 @@
 ---
 name: plugin-release
-description: Cut a release of any of PA's Claude plugins (pa-toolkit, organon, …) — version bump in `.claude-plugin/plugin.json`, `.plugin` archive, tag, GitHub Release with the asset, and the `folotp/pa-marketplace` entry. User-only (`/pa-toolkit:plugin-release`). Plugin name comes from `plugin.json`, repo from `git remote get-url origin`; nothing is hardcoded. Dispatches to the `plugin-release-executor` agent.
+description: Cut a release of any of PA's Claude plugins (pa-toolkit, organon, …) — version bump in canonical `plugin.json` (legacy Claude manifest fallback), `.plugin` archive, tag, GitHub Release with the asset, and the `folotp/pa-marketplace` entry. User-only (`/pa-toolkit:plugin-release`). Plugin name comes from `plugin.json`, repo from `git remote get-url origin`; nothing is hardcoded. Dispatches to the `plugin-release-executor` agent.
 argument-hint: "[patch|minor|major|none] [repo-path] [--dry-run]"
 disable-model-invocation: true
 allowed-tools:
   - Agent
+  - Bash
+  - Read
 ---
 
 # plugin-release
 
-Routing shim. Its only action is to dispatch the `pa-toolkit:plugin-release-executor` sub-agent, which holds the one and only copy of the release runbook (`agents/plugin-release-executor.md` in pa-toolkit). A release pushes tags and publishes a GitHub Release, so it always goes through the executor, never inline.
+The shared procedure is [references/runbook.md](references/runbook.md); deterministic preflight/build operations are in `scripts/release.py`. Run only when explicitly requested by the user. Publishing still needs explicit authorization.
+
+On Claude, dispatch the thin executor below. On Codex or another agent without `Agent`, read the same runbook and execute it directly, using an explicit pa-toolkit checkout/root. No Claude sub-agent or plugin-validator is a mandatory portable dependency. In either route the driver automatically selects the target repository's extension for both dry-run and build.
 
 ## How to dispatch
 
@@ -32,5 +36,6 @@ Agent({
 
 ## Resources
 
-- `scripts/package.sh <repo-root> [--dry]` — builds `<name>-v<version>.plugin` at the repo root.
+- `scripts/release.py <repo-root> --output <directory> --result <receipt.json> [--dry-run] [--packager <path>]` — portable preflight and verified archive contract.
+- `scripts/package.sh` — low-level generic archive implementation; release callers use the driver.
 - `references/release-notes-template.md` — Release body template.

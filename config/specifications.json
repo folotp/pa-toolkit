@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "skills_repository": "https://github.com/agentskills/agentskills.git",
+  "plugins_repository": "https://github.com/agentplugins/agent-plugins-spec.git",
+  "plugin_status_path": "README.md",
+  "plugin_schema_template": "schemas/{version}/plugin.schema.json",
+  "manifest": ".claude-plugin/plugin.json",
+  "skills": "skills",
+  "profile": "claude",
+  "prose_sources": {
+    "agent-skills": "https://agentskills.io/specification.md",
+    "agents-md": "https://raw.githubusercontent.com/agentsmd/agents.md/main/README.md",
+    "claude-skills": "https://code.claude.com/docs/en/skills.md",
+    "claude-plugins": "https://code.claude.com/docs/en/plugins-reference.md",
+    "claude-agents": "https://code.claude.com/docs/en/sub-agents.md",
+    "copilot-instructions": "https://docs.github.com/en/copilot/concepts/prompting-and-context/custom-instructions",
+    "antigravity-rules": "https://antigravity.google/docs/rules/"
+  }
+}

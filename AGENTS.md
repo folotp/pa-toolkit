@@ -33,7 +33,7 @@ Use `./scripts/dev doctor`, `./scripts/dev check` and `./scripts/dev check --sta
 Run the full gate before committing; Git validates the actual index separately.
 `./scripts/dev format` is an explicit source write. Lifecycle feedback never formats.
 Create worktrees with `./scripts/dev worktree feat/example /explicit/path`; start
-Claude/Codex with `./scripts/dev session claude|codex` from that checkout, including
+a supported client with `./scripts/dev session claude|codex|copilot|antigravity` from that checkout, including
 when invoking the launcher from a subdirectory. Preserve other sessions' checkouts.
 
 Development uses locked Python dependencies (`uv sync --locked`), Bash 3.2-compatible
@@ -60,3 +60,13 @@ release driver from a clean worktree. This repository's `config/release.json` se
 its shared full gate and runtime package command. The general runbook/driver remains
 the only release implementation; require exact merged remote-main identity again
 before an authorized tag. Development adapters/configuration/environments never ship.
+
+## Supported development agents
+
+Supported targets are Codex, Claude Code, GitHub Copilot and Google Antigravity,
+plus GitHub Actions CI for deterministic repository validation. Capabilities and
+observed test coverage differ by client/surface; consult the
+[supported-agent contract](https://github.com/folotp/pa-toolkit/blob/main/docs/supported-agents.md)
+and [reusable acceptance plan](https://github.com/folotp/pa-toolkit/blob/main/docs/agent-test-plan.md).
+Client files point here; they do not redefine repository policy. Native hooks need
+actual delivery evidence and never replace the staged-index/required-CI gates.

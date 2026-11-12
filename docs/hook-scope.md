@@ -50,12 +50,13 @@ statement that advice changed the file: inspect actual event delivery and file b
 
 Codex CLI 0.167.0 previously selected hook definitions from the primary checkout when
 started in a linked worktree. Inspect `/hooks` and review/trust exact definitions.
-Do not change global trust/project settings to test new definitions. In disposable
-reviewed automation only, official invocation-local hooks configuration and
-`--dangerously-bypass-hook-trust` can select vetted definitions without persistent
-trust changes; keep the tool sandbox enabled. The production session launcher adds
-neither of these flags. After merge, update primary main so ordinary discovery sees
-the tracked adapters. Current task observations are in the verification report.
+Do not change global trust/project settings to test new definitions. The current acceptance runner never bypasses hook trust or changes global/project
+trust settings. Missing native event delivery is BLOCKED and retains the actual
+Git/index/CI fallback. Earlier 2026-11-10 invocation-local trust-bypass recordings
+are historical and do not certify this no-bypass acceptance route. After merge,
+update primary main so ordinary discovery sees the tracked adapters. See the
+[reusable plan](agent-test-plan.md) and [current report](verification/supported-agents.md).
+
 
 ## Official contracts
 

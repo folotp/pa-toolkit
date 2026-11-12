@@ -8,9 +8,13 @@ if [[ "${1:-}" == session ]]; then
     shift
     client="${1:-}"
     case "$client" in
-        claude | codex) shift ;;
+        claude | codex | copilot) shift ;;
+        antigravity)
+            client=agy
+            shift
+            ;;
         *)
-            echo 'Usage: scripts/dev session claude|codex [client arguments]' >&2
+            echo 'Usage: scripts/dev session claude|codex|copilot|antigravity [client arguments]' >&2
             exit 2
             ;;
     esac

@@ -21,7 +21,8 @@ use Python 3.9+ stdlib; managed checks require the repository's Python 3.11+ env
 | `snapshots` | Actual-index export and isolated Git subprocess environment; caller owns branch authorization |
 | `hooks` | Native edit path normalization and all-destination installation preflight; caller owns recognized bodies and path policy |
 | `planning` | Declarative gate execution, complete Git diff, conservative impact selection and hosted baseline proof |
-| `specifications` | Official skills-ref API, vendored official schema, explicit Claude profile and online drift detection |
+| `specifications` | Reproducible baseline, explicit Claude profile and optional frozen-inventory audit |
+| `live_specs` | Current official revision/publication resolution, live schema/reference validation and provenance |
 
 Adapters provide repository paths, gates and policy; the SDK never guesses a sibling
 checkout or embeds vault, finance, protected-reference or marketplace rules. The
@@ -55,34 +56,48 @@ Official normative text: [Agent Skills](https://agentskills.io/specification),
 [Claude subagents](https://code.claude.com/docs/en/sub-agents), and
 [Agent Plugins](https://github.com/agentplugins/agent-plugins-spec).
 
-`./scripts/dev spec-freshness` downloads public data only, compares reviewed hashes
-and stable publication status, and fails on drift, HTTP failures or unavailable
-network. A higher working draft is not a published release. Full-page hashes
-intentionally detect editorial changes as well as normative changes; they can
-require maintenance without a validator change. There is no automatic repinning or
-execution of downloaded source. Local/index/full/main/release checks include this
-gate. Weekly and manually dispatched CI also run full validation.
+### Live authoritative specifications
 
-To refresh a failed contract:
+`./scripts/dev spec-live` is a required gate on local full/index checks, PRs,
+main, scheduled/manual CI and release preflight. It reads
+`config/specifications.json`, resolves the official Agent Skills and Agent Plugins
+repositories' current HEADs online, reads the publisher's current-published-release
+statement, and downloads that version's schema from the resolved immutable revision.
+A higher working draft is not selected. There is no hard-coded latest version.
 
-1. Run `./scripts/dev spec-review` for candidate URLs, hashes and byte counts. It is
-   read-only and is not a successful freshness result. Fetch/read the affected
-   official page separately; do not execute downloaded code.
-2. Review normative fields, types, layout and upstream validator/dependency changes
-   against the adapter and pinned official implementation. Keep intentional local
-   restrictions explicit. When no old page bytes are available, review the current
-   contract; do not claim to have identified the exact editorial diff.
-3. Update only reviewed inventory entries/date in
-   `tools/pa-devtools/src/pa_devtools/vendor/specifications.json`. For code/schema
-   changes, update dependency pin/lock or vendored schema/license together with
-   applicable regressions and docs. Never run the old recovery prototype as a fix.
-4. Run specs, freshness, full and actual-index checks and review the normal PR diff.
+It validates manifest fields against that newly fetched schema, using the schema's
+declared supported JSON Schema dialect. Claude mode reports its temporary current
+`$schema` envelope; it still does not certify a portable package layout. Skill
+metadata has only explicitly supported Claude extensions projected out and tool
+arrays normalized; unknown core fields reach the official validator. The current
+`skills-ref` is installed by uv from the newly resolved official commit into an
+isolated invocation environment and executes with credentials removed. This is
+upstream executable code from the configured official authority, not downloaded
+code treated merely as data. Official validator/dependency changes apply immediately;
+network, installation, changed API/schema or new requirement failures fail the gate.
+No pinned/cached success result substitutes; uv may cache immutable source/dependencies.
 
-On 2026-11-12, the Claude skills page's hash differed from the 2026-11-10 inventory.
-The current frontmatter and external-distribution sections were reviewed; existing
-supported fields remain valid. Its full-page hash was refreshed without expanding
-the accepted field set or changing skills-ref. The subagent reference was added to
-cover agent field predicates. No exact old/new page diff is claimed.
+The live authority catalogue also fetches current Agent Skills, AGENTS.md, Claude
+skills/plugin/subagent, Copilot instruction and Antigravity rule guidance. Prose-only
+sources are recorded with URL/hash and explicitly labelled semantic **MANUAL_REVIEW**.
+A fetched page proves availability, not automated natural-language compliance.
+Repository-specific instruction separation, naming and governance checks remain
+separate policy, not an invented official schema. Toolkit has no marketplace manifest:
+marketplace conformance is NOT APPLICABLE here; consumer marketplace adoption must
+use the relevant current official marketplace contract and its authoritative validator.
+
+CI retains `official-specifications-*` JSON artifacts with resolved revisions,
+published schema version, source URLs/hashes, adaptations, results and limits.
+`PA_SPEC_REPORT` selects an external receipt path; stdout also retains provenance.
+Receipts are evidence, never cross-run release attestations or skip authorization.
+
+The original pinned skills-ref/schema still supports reproducible local baseline
+validation and catches stricter repository policy. `spec-freshness` remains an
+optional frozen-inventory drift audit; `spec-review` reports candidate hashes without
+writing pins. Neither stands in for the required live check. Editorial changes to
+prose no longer require repinning merely to unblock CI; changes needing adapter or
+policy updates still require normal tests/docs/PR review. Do not auto-rewrite the
+legacy manifest, user invocation controls or protected content.
 
 ## Selective CI trust and execution
 
@@ -98,7 +113,7 @@ and executes that plan. Reduction requires all of the following:
   substitute. API/history/policy failures select the full path.
 
 Known docs-only and runtime metadata/version changes omit unaffected code/tests.
-Doctor, specs, online freshness, links, inventory and package-contract remain required.
+Doctor, baseline specs, live official specifications, links, inventory and package-contract remain required.
 Runtime changes still build and verify the real allowlisted ZIP; development docs
 with unchanged runtime inputs omit archive generation. Code paths select lint/tests;
 engine, gate policy, tests, workflows and unknown paths force full validation.

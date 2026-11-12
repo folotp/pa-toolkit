@@ -397,17 +397,23 @@ class RepositoryTests(unittest.TestCase):
         shutil.copy2(SOURCE / "scripts/dev", launcher)
         fake_bin = self.root / "fake-bin"
         fake_bin.mkdir()
-        client = fake_bin / "codex"
-        client.write_text('#!/bin/sh\nprintf "%s\\n" "$PWD" "$@"\n')
-        client.chmod(0o755)
-        output = subprocess.check_output(
-            [str(launcher), "session", "codex", "--example", "argument with spaces"],
-            cwd=launcher.parent,
-            env=dict(os.environ, PATH=str(fake_bin) + os.pathsep + os.environ["PATH"]),
-            text=True,
-        )
-        self.assertEqual(Path(output.splitlines()[0]).resolve(), self.root.resolve())
-        self.assertEqual(output.splitlines()[1:], ["--example", "argument with spaces"])
+        for requested, executable in (
+            ("codex", "codex"),
+            ("claude", "claude"),
+            ("copilot", "copilot"),
+            ("antigravity", "agy"),
+        ):
+            client = fake_bin / executable
+            client.write_text('#!/bin/sh\nprintf "%s\\n" "$PWD" "$@"\n')
+            client.chmod(0o755)
+            output = subprocess.check_output(
+                [str(launcher), "session", requested, "--example", "argument with spaces"],
+                cwd=launcher.parent,
+                env=dict(os.environ, PATH=str(fake_bin) + os.pathsep + os.environ["PATH"]),
+                text=True,
+            )
+            self.assertEqual(Path(output.splitlines()[0]).resolve(), self.root.resolve())
+            self.assertEqual(output.splitlines()[1:], ["--example", "argument with spaces"])
 
     def test_package_excludes_untracked_ignored_development_and_local_clutter(self):
         self.write(".gitignore", "*.bak\ndist/\n")

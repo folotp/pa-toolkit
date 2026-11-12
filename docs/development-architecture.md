@@ -53,8 +53,9 @@ remains in the existing driver/runbook.
 The official skills-ref core and Agent Plugins schema validate explicit profiles.
 Strict raw YAML and toolkit invariants remain required. Claude-only fields are
 validated and their projection is reported; the legacy package is not certified
-portable. Online freshness fails on upstream drift or unavailable network. See the
-[reviewed refresh procedure](shared-devtools.md#specification-profiles-and-reviewed-refresh).
+portable. The required live gate resolves current authoritative versions online and fails on
+unavailable sources or invalid current contracts. See the
+[live-specification procedure](shared-devtools.md#live-authoritative-specifications).
 
 Kepano provenance pins, protected references, resync tokens, connector inventories,
 vault lints, commands/Gemini bundles and token-scenario baselines are absent from this

@@ -10,7 +10,7 @@ Required minimum executable versions are in `config/toolchain.json`: Git 2.31,
 uv 0.13.7, Bash 3.2, jq 1.6, Zip 3.0, UnZip 6.0, shfmt 3.6, ShellCheck 0.9 and
 actionlint 1.7.12. Git supplies archive/tree transport; no standalone tar command is
 used by the toolkit extension. The generic release fallback still requires tar.
-Claude, Codex, GitHub CLI and Go are optional development/session/bootstrap tools,
+Claude Code, Codex, Copilot, Antigravity, GitHub CLI and Go are optional development/session/bootstrap tools,
 not required content checks. Publication separately needs GitHub authentication.
 
 Launcher `python3` must be 3.9+. uv selects managed Python 3.11 using `.python-version`;
@@ -18,8 +18,11 @@ the project supports Python 3.11-3.15. Do not reject Apple's launcher Python jus
 because it is older than managed Python. Doctor prints the executing interpreter
 and independently probes the managed interpreter/imports. PyYAML 6.0.3,
 Markdown-it-py 4.2.0 and Ruff 0.14.10 plus the mdurl transitive dependency are exact
-and hash-locked in `uv.lock`. No skill-reference, JSON-schema, tokenizer, Node, vault
-or finance dependency is needed for these actual gates.
+and hash-locked in `uv.lock`. The SDK checks extra includes pinned official
+skills-ref and jsonschema for reproducible baseline validation. The live-spec gate
+also resolves the current official validator into an isolated invocation environment;
+see [live specifications](shared-devtools.md#live-authoritative-specifications).
+No vault, finance, tokenizer or AI client is required for deterministic gates.
 
 macOS bootstrap (Homebrew):
 
@@ -75,25 +78,17 @@ ARM64 architecture before checks. The required historical status context remains
 GitHub independently reruns checks on PR updates and main pushes. A successful local
 run does not publish a GitHub check status or replace either required hosted result.
 Dependency caches may avoid downloads; they are not trusted test-result receipts.
-No cross-machine/cross-commit validation reuse is implemented here; #20 remains
-separate and cannot weaken exact-commit release verification.
+Compatible full-main evidence permits conservative PR impact selection only.
+Release attestation reuse is not implemented; #20 cannot weaken exact-commit release verification.
 
-The mandatory component gate is a repository-owned, reviewed Claude-compatible
-contract in `scripts/dev.py`, with strict YAML/JSON and supported field predicates.
-It does **not** fetch upstream specifications on each run or assert compliance with
-whatever is newest upstream. It also does not apply the portable Agent Plugins
-schema to this legacy Claude manifest. Optional `claude plugin validate` tests the
-installed client version and is not a mandatory/latest-spec certification.
-
-A future upstream-spec update/drift check needs explicit source versions, an update
-policy and compatibility profiles. The official
-[Agent Skills specification](https://agentskills.io/specification),
-[Agent Plugins specification](https://agent-plugins.org/),
-[Claude skills reference](https://code.claude.com/docs/en/skills) and
-[Claude plugin manifest reference](https://code.claude.com/docs/en/plugins-reference)
-are separate contracts. Keep the existing Claude invocation controls/tool arrays
-and `.claude-plugin/plugin.json` source until an intentional migration is reviewed.
-#14's broader skill-guideline audit is still separate from structural validation.
+The baseline component gate checks strict YAML/JSON and repository/client policy.
+The required `spec-live` gate independently resolves the current official skills
+reference validator and published plugin schema online, records revisions/hashes and
+applies them to actual metadata/manifest fields. Vendored pins do not substitute for
+this live validation. Current prose-only authorities (including AGENTS.md) are fetched
+and identified as requiring semantic review; no fictional schema certification is
+claimed. See the [authoritative-spec contract](shared-devtools.md#live-authoritative-specifications).
+#14's broader semantic skill audit remains separate.
 
 ## Worktrees and sessions
 
@@ -101,7 +96,7 @@ and `.claude-plugin/plugin.json` source until an intentional migration is review
 ./scripts/dev worktree feat/example /explicit/disposable/path
 cd /explicit/disposable/path/scripts
 ./dev session claude
-# Or ./dev session codex [client arguments]
+# Or ./dev session codex|copilot|antigravity [client arguments]
 ```
 
 Worktree creation starts a new named branch from local main; fetch/verify main before
@@ -126,7 +121,7 @@ Review project hooks in the client before relying on them.
 | `scripts/dev release-check` | Clean-tree requirement plus full gate, selected by the release extension |
 | `scripts/dev install-hooks [--uninstall]` | Safe shared/custom Git hook installation/removal |
 | `scripts/dev worktree <branch> <destination>` | New feat/fix/chore/perf/docs branch and linked worktree |
-| `scripts/dev session claude\|codex [args]` | Client launch at this checkout's root |
+| `scripts/dev session claude\|codex\|copilot\|antigravity [args]` | Client launch at this checkout's root |
 
 Run `python3 -m unittest discover -s tests -v` with the locked environment active before
 committing release infrastructure changes (or `uv run --locked python -m unittest
@@ -142,7 +137,7 @@ excluding them from the gate. No validation defects are grandfathered silently.
   explicit field types. Release remains user-only; gatekeeper tools remain unpinned.
 - Skills preserve documented Claude `argument-hint`, boolean invocation controls,
   string/array `allowed-tools`, model, context/agent, license/compatibility/metadata.
-  Agent tools/disallowedTools, model/color, permissionMode, maxTurns, skills, memory,
+  Agent tools/disallowedTools, model/color, maxTurns, skills, memory,
   background and isolation have explicit predicates. New hooks/MCP sub-config fields
   are not silently accepted: add a tested contract before introducing them.
 - Manifest: legacy location only, required identity/description, SemVer, author and
@@ -219,6 +214,12 @@ Read the [SDK and CI contract](shared-devtools.md) for official skills-ref use,
 Claude versus portable profiles, reviewed online specification refresh, standalone
 wheel installation, conservative baseline proof and consumer adoption. Use
 `./scripts/dev spec-review` to inspect candidate hashes without changing pins;
-`./scripts/dev spec-freshness` must pass after reviewed updates. Main/releases remain
+`./scripts/dev spec-live` resolves and validates current official contracts. The
+frozen `spec-freshness` audit remains optional for baseline maintenance. Main/releases remain
 full. `./scripts/dev plan --base <SHA>` explains PR selection; unavailable compatible
 hosted baseline proof selects full validation.
+
+
+Supported agent targets, capabilities and blockers are in [supported agents](supported-agents.md).
+The [reusable test plan](agent-test-plan.md) and stdlib `scripts/verify-agent.py`
+provide repeatable live acceptance; native-client evidence is separate from CI.

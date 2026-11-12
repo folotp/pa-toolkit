@@ -59,6 +59,7 @@ jobs:
       - name: Select conservative PR gates or full validation
         env:
           GH_TOKEN: ${{ github.token }}
+          PA_SPEC_REPORT: ${{ runner.temp }}/pa-latest-specs.json
           TOOLKIT_EVENT: ${{ github.event_name }}
           TOOLKIT_BASE: ${{ github.event.pull_request.base.sha }}
         run: |
@@ -67,3 +68,10 @@ jobs:
           else
             ./scripts/dev ci --full
           fi
+      - name: Retain resolved official specification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: official-specifications-${{ matrix.os }}
+          path: ${{ runner.temp }}/pa-latest-specs.json
+          if-no-files-found: warn

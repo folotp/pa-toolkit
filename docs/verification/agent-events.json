@@ -1,0 +1,112 @@
+{
+  "codex": {
+    "client": "codex",
+    "version": "codex-cli 0.167.2",
+    "status": "BLOCKED",
+    "source_commit": "18fd53de84d6c3d2a1c91060850b9edab486e490",
+    "fixture_observer": true,
+    "launcher_from_subdirectory": true,
+    "exit": 0,
+    "discovery": "PASS",
+    "native_edit_bytes": "PASS",
+    "native_delivery": "BLOCKED: missing native event witnesses; inspect client hook trust/discovery",
+    "feedback_non_mutating": "NOT_PROVEN",
+    "source_commit_unchanged": true,
+    "events": [],
+    "detached_denial": "NOT_RUN",
+    "tested_source_hashes": {
+      ".claude/settings.json": "93aa65d89a953416e7a968aa94b510215bf0e789e8b7d5aa81b921031ef62e8d",
+      ".codex/hooks.json": "1b9e09691cf03c9bd30a25cef0b6958a6fa5c771f87bee52d48ae9fc307d6681",
+      "scripts/dev": "d9a69e0900aecfa2f281a542c5b6453e206e40206b62a0af4ebde78d7742a5cb",
+      "scripts/dev.py": "5feef10db811c7c4bc79fa25fd20a8b39e6355464bb9077524c53a7245c38443",
+      "tools/pa-devtools/src/pa_devtools/hooks.py": "6b48db19e6369f4709e5c96c9aeeaed934f64e0c81f3f3f95b1f092b98e8bb71"
+    }
+  },
+  "claude": {
+    "client": "claude",
+    "version": "2.1.322 (Claude Code)",
+    "status": "PASS",
+    "source_commit": "18fd53de84d6c3d2a1c91060850b9edab486e490",
+    "fixture_observer": true,
+    "launcher_from_subdirectory": true,
+    "exit": 0,
+    "discovery": "PASS",
+    "native_edit_bytes": "PASS",
+    "native_delivery": "PASS",
+    "feedback_non_mutating": "PASS",
+    "source_commit_unchanged": true,
+    "events": [
+      {
+        "event": "start",
+        "tool": null,
+        "exit": 0,
+        "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch chore/acceptance-claude. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+        "stderr": ""
+      },
+      {
+        "event": "edit",
+        "tool": "Edit",
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "event": "feedback",
+        "tool": "Edit",
+        "exit": 0,
+        "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"PostToolUse\", \"additionalContext\": \"pa-toolkit edit feedback (advisory; files unchanged; run scripts/dev format explicitly): shfmt: diff <fixture>/smoke.sh.orig <fixture>/smoke.sh\\n--- <fixture>/smoke.sh.orig\\n+++ <fixture>/smoke.sh\\n@@ -1,2 +1,2 @@\\n #!/usr/bin/env bash\\n-if true;then echo after;fi\\n+if true; then echo after; fi\\n\\nShellCheck: passed\"}}\n",
+        "stderr": ""
+      },
+      {
+        "event": "edit",
+        "tool": "Edit",
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "event": "feedback",
+        "tool": "Edit",
+        "exit": 0,
+        "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"PostToolUse\", \"additionalContext\": \"pa-toolkit edit feedback (advisory; files unchanged; run scripts/dev format explicitly): Expecting value: line 1 column 12 (char 11)\"}}\n",
+        "stderr": ""
+      },
+      {
+        "event": "stop",
+        "tool": null,
+        "exit": 0,
+        "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+        "stderr": ""
+      },
+      {
+        "event": "start",
+        "tool": null,
+        "exit": 0,
+        "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch DETACHED. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+        "stderr": ""
+      },
+      {
+        "event": "edit",
+        "tool": "Edit",
+        "exit": 2,
+        "stdout": "",
+        "stderr": "Use a named feature worktree to edit; main/detached HEAD is blocked."
+      },
+      {
+        "event": "stop",
+        "tool": null,
+        "exit": 0,
+        "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+        "stderr": ""
+      }
+    ],
+    "detached_denial": "PASS",
+    "tested_source_hashes": {
+      ".claude/settings.json": "93aa65d89a953416e7a968aa94b510215bf0e789e8b7d5aa81b921031ef62e8d",
+      ".codex/hooks.json": "1b9e09691cf03c9bd30a25cef0b6958a6fa5c771f87bee52d48ae9fc307d6681",
+      "scripts/dev": "d9a69e0900aecfa2f281a542c5b6453e206e40206b62a0af4ebde78d7742a5cb",
+      "scripts/dev.py": "a5d242c86bade39ca59e85d3bca2d6430af62ac15694437afa0e3e4ee48455f6",
+      "tools/pa-devtools/src/pa_devtools/hooks.py": "6b48db19e6369f4709e5c96c9aeeaed934f64e0c81f3f3f95b1f092b98e8bb71"
+    }
+  }
+}

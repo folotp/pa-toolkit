@@ -26,7 +26,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools/pa-devtools/src"))
 from pa_devtools import source as shared_source
 from pa_devtools import planning, snapshots, hooks as shared_hooks
-from pa_devtools import specifications
+from pa_devtools import specifications, live_specs
 
 MARKER = "# managed-by: pa-toolkit scripts/dev v1"
 LEGACY_MARKER = "# managed-by: pa-toolkit branch-guard"
@@ -234,6 +234,8 @@ def inventory():
         (ROOT / "CLAUDE.md").read_text().strip() == "@AGENTS.md",
         "CLAUDE.md must import the canonical contract only",
     )
+    for name in ("AGENTS.md", "CLAUDE.md", ".github/copilot-instructions.md"):
+        require(not (ROOT / name).is_symlink(), f"Instruction file must not be a symlink: {name}")
     print("inventory: passed")
 
 
@@ -402,7 +404,7 @@ def run_gate(name):
     actions = {
         "doctor": doctor,
         "specs": specs,
-        "spec-freshness": specifications.check_latest,
+        "spec-live": lambda: live_specs.check(ROOT, os.environ.get("PA_SPEC_REPORT")),
         "code": lint,
         "links": links,
         "inventory": inventory,
@@ -737,6 +739,7 @@ def main():
             "plan",
             "_gate",
             "spec-freshness",
+            "spec-live",
             "spec-review",
             "check",
             "check-staged",
@@ -795,6 +798,8 @@ def main():
     elif command == "_gate":
         require(len(args.extra) == 1, "Use _gate <declared name>")
         run_gate(args.extra[0])
+    elif command == "spec-live":
+        live_specs.check(ROOT)
     elif command == "spec-review":
         print(json.dumps(specifications.review_sources(), indent=2))
     elif command == "spec-freshness":

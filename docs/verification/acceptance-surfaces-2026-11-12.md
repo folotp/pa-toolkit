@@ -27,11 +27,11 @@ other available surfaces is pending PA's usage clarification, not excluded by de
 | Codex desktop/local computer session | NOT RUN | NOT RUN | NOT RUN | NOT RUN | Current task uses local computer tools, but that is not a controlled fixture acceptance recording |
 | Codex IDE / hosted | NOT RUN, selection pending | NOT RUN | NOT RUN; check adapter applicability | NOT RUN | Do not extrapolate local hooks into hosted orchestration |
 | Claude Code CLI print | Fresh merged-source PASS root/subdirectory | Fresh PASS; two native sequential edits | Fresh main and detached PASS | Independent concurrent runs PASS; linked concurrency NOT RUN; prerequisite fixtures unit-tested | Shell/MCP native edit coverage unproven |
-| Claude Code interactive terminal | NOT RUN | NOT RUN | NOT RUN | NOT RUN | CLI print does not certify interactive UI |
+| Claude Code interactive terminal | BLOCKED at folder trust prompt | NOT RUN | NOT RUN | Explicit native prerequisite observed | Selected “No, exit”; no trust settings changed |
 | Claude Code desktop / IDE / web | NOT RUN, selection pending | NOT RUN | NOT RUN; check adapter applicability | NOT RUN | Claude.app and VS Code installed; installation alone proves no integration/authentication |
 | Antigravity CLI | Recorded PASS | Recorded smoke PASS | N/A, no adapter | Recorded overlapping linked edits PASS | App/IDE excluded by explicit selection |
 | Copilot hosted cloud agent | BLOCKED | BLOCKED | N/A local hook parity | Task create 403 on renewed attempt | No actual task created; no service activation authorized |
-| Copilot GitHub PR review | Separate reviewer scenario | Separate reviewer scenario | N/A local hook parity | Prior 422 ACTOR_INELIGIBLE | Retry against this PR, inspect actual submitted review |
+| Copilot GitHub PR review | Separate reviewer scenario | Separate reviewer scenario | N/A local hook parity | Fresh PR #31 422 ACTOR_INELIGIBLE | No actual submitted Copilot review; entitlement/policy alternatives unresolved |
 
 G01–G03 and E02 failure controls are deterministic fixture coverage, not native
 model proof. S01–S03 require live-source receipts plus manual semantic review limits.
@@ -93,3 +93,12 @@ Each completed discovery, exact edits, diagnostics/non-mutation and main/detache
 denial. This establishes concurrent independent-repository sessions, not linked
 worktree concurrency or interactive/Desktop behavior. The receipt records the
 source snapshot with documentation WIP hashes separately from clean-main recordings.
+
+A genuine Claude interactive terminal launch (without `-p`) reached the native
+folder-trust prompt in a new independent fixture. The default “No, exit” was
+selected; exit 1 and unchanged `ordinary.txt` confirm no edit scenario ran. This
+is a concrete access prerequisite, not a native-hook failure or an interactive
+acceptance pass. An initial invocation rejected `--no-session-persistence` because
+that option only supports print mode; retry omitted it. No trust was granted.
+The dedicated Copilot review request on PR #31 returned HTTP 422 with
+`failure_reason: ACTOR_INELIGIBLE`, matching the prior failure on #30.

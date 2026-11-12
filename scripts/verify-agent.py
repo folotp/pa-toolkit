@@ -61,6 +61,20 @@ def git(root, *args):
     return subprocess.check_output(["git", *args], cwd=root, text=True).strip()
 
 
+def working_tree_changes(root):
+    """List staged, unstaged and non-ignored untracked paths without quoting loss.
+
+    Disable rename folding so both old and new paths remain visible. NUL-delimited
+    porcelain preserves spaces/newlines and exposes index changes even when the
+    working file has been restored to HEAD bytes.
+    """
+    output = subprocess.check_output(
+        ["git", "status", "--porcelain=v1", "-z", "--untracked-files=all", "--no-renames"],
+        cwd=root,
+    )
+    return sorted({os.fsdecode(record[3:]) for record in output.split(b"\0") if record})
+
+
 def export(source, root):
     """Copy tracked/nonignored sources, excluding environments and user-local settings."""
     names = subprocess.check_output(

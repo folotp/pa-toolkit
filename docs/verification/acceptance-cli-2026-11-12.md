@@ -140,9 +140,16 @@ Review found the same precedence issue in concurrent-session aggregation. Both r
 now use one status combiner: an observed FAIL outranks BLOCKED, unknown/empty evidence
 cannot pass, and concurrent PASS requires overlap and independent branches. Regressions
 cover mixed session outcomes, timeouts, non-overlap and changed branches.
+The following review identified untracked extra files missing from the concurrency
+check. The runner now records staged, unstaged and non-ignored untracked paths using
+NUL-delimited Git status before cleanup; either checkout's extra file forces FAIL.
+A deterministic stub-client regression verifies both the valid control and unexpected
+files (including nested paths and whitespace/newline filenames). This regression is
+not a fresh native Antigravity recording; earlier model receipts retain their original
+source identities and change-detection limits.
 
 The required current-official-spec gate, conservative PR selection and full
-main/release validation are preserved. Full source/index gates and installed pre-commit/pre-push passed with 84 tests;
+main/release validation are preserved. Full source/index gates and installed pre-commit/pre-push passed with 86 tests;
 [current-head CI belongs to PR #30](https://github.com/folotp/pa-toolkit/pull/30). No merge, release/tag, marketplace action, trust change,
 vault write, CodeQL implementation, other-repository rollout or deployment occurred.
 Issue #23 stays open for the outstanding applicable requirements, including hosted

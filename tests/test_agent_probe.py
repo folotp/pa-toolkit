@@ -231,6 +231,16 @@ class LinkedFixtureTests(unittest.TestCase):
             str(self.linked),
         )
 
+    def test_changed_paths_include_both_index_layers_and_staged_rename_paths(self):
+        (self.source / "tracked.txt").write_text("staged change\n")
+        probe.git(self.source, "add", "tracked.txt")
+        (self.source / "tracked.txt").write_text("original\n")
+        probe.git(self.source, "mv", ".codex/hooks.json", ".codex/renamed hooks.json")
+        self.assertEqual(
+            probe.working_tree_changes(self.source),
+            [".codex/hooks.json", ".codex/renamed hooks.json", "tracked.txt"],
+        )
+
     def test_wip_export_and_branch_restore_preserve_fixture_and_index(self):
         before = probe.git(self.linked, "write-tree")
         (self.source / "tracked.txt").write_text("selected WIP\n")

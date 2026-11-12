@@ -129,7 +129,7 @@ with tempfile.TemporaryDirectory(prefix="pa-agy-concurrent-") as tmp:
         edits = (root / "ordinary.txt").read_text() == expected
         discovery = marker in result.stdout
         branch = probe.git(root, "branch", "--show-current")
-        diff = probe.git(root, "diff", "--name-only").splitlines()
+        diff = probe.working_tree_changes(root)
         status = probe.antigravity_result(result.returncode, discovery, edits, observed, errors)
         if (
             sorted(diff) != ["AGENTS.md", "ordinary.txt"]

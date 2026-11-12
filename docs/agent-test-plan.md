@@ -112,7 +112,9 @@ python3 scripts/verify-agent-concurrency.py --output /outside/source/antigravity
 ```
 
 The runner requires actual native edit events, exact bytes, distinct unchanged branches,
-overlapping execution windows and no extra modified paths. Timeouts are BLOCKED. It
+overlapping execution windows and no extra staged, unstaged or non-ignored untracked
+paths. NUL-delimited Git status retains unusual filenames and both rename paths in
+the receipt before fixture cleanup. Timeouts are BLOCKED. It
 uses the existing shared probe helpers; no native Antigravity hook coverage is inferred.
 
 For Codex, inspect actual `hooks/list` project sources and `config/read` layer state.

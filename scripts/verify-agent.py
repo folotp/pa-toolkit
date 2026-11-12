@@ -250,6 +250,26 @@ def positive_result(events, edits, discovery, client_exit, blockers=()):
     return "PASS", delivery, "PASS"
 
 
+def aggregate_status(statuses):
+    """Observed failures outrank unavailable scenarios; only all-PASS can pass."""
+    values = set(statuses)
+    if "FAIL" in values:
+        return "FAIL"
+    return "PASS" if values == {"PASS"} else "BLOCKED"
+
+
+def concurrent_status(results, overlap, independent):
+    """Combine actual session outcomes without hiding failures behind timeouts.
+
+    A changed branch is an observed failure. Overlap can only be certified when
+    sessions otherwise pass; unavailable sessions remain blocked, never passing.
+    """
+    status = aggregate_status(result["status"] for result in results)
+    if not independent or (status == "PASS" and overlap <= 0):
+        return "FAIL"
+    return status
+
+
 def probe(source, client, timeout, linked=None):
     blockers = prerequisites()
     if blockers:
@@ -433,8 +453,7 @@ def probe(source, client, timeout, linked=None):
                         "BLOCKED: main belongs to the preserved primary checkout; "
                         "independent fixture requires user project/hook review"
                     )
-                    if evidence["status"] == "PASS":
-                        evidence["status"] = "BLOCKED"
+                    evidence["status"] = aggregate_status([evidence["status"], "BLOCKED"])
                     continue
                 git(root, *switch)
                 offset = len(witness.read_text().splitlines())
@@ -467,8 +486,7 @@ def probe(source, client, timeout, linked=None):
                         evidence["status"] = "FAIL"
                 except subprocess.TimeoutExpired:
                     evidence[branch + "_denial"] = "BLOCKED: timeout"
-                    if evidence["status"] != "FAIL":
-                        evidence["status"] = "BLOCKED"
+                    evidence["status"] = aggregate_status([evidence["status"], "BLOCKED"])
 
         return evidence
 

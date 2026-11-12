@@ -136,9 +136,13 @@ The next review also found that a later blocked main scenario overwrote an obser
 detached guard failure. The aggregate now preserves FAIL; a probe-level regression
 simulates changed forbidden bytes after passing positive scenarios and asserts FAIL,
 including when an independent fixture's later main scenario times out.
+Review found the same precedence issue in concurrent-session aggregation. Both runners
+now use one status combiner: an observed FAIL outranks BLOCKED, unknown/empty evidence
+cannot pass, and concurrent PASS requires overlap and independent branches. Regressions
+cover mixed session outcomes, timeouts, non-overlap and changed branches.
 
 The required current-official-spec gate, conservative PR selection and full
-main/release validation are preserved. Full source/index gates and installed pre-commit/pre-push passed with 83 tests;
+main/release validation are preserved. Full source/index gates and installed pre-commit/pre-push passed with 84 tests;
 [current-head CI belongs to PR #30](https://github.com/folotp/pa-toolkit/pull/30). No merge, release/tag, marketplace action, trust change,
 vault write, CodeQL implementation, other-repository rollout or deployment occurred.
 Issue #23 stays open for the outstanding applicable requirements, including hosted

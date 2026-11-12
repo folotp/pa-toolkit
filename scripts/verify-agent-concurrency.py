@@ -159,15 +159,7 @@ with tempfile.TemporaryDirectory(prefix="pa-agy-concurrent-") as tmp:
         results[0]["branch"] == "chore/acceptance-agy-a"
         and results[1]["branch"] == "chore/acceptance-agy-b"
     )
-    report["status"] = (
-        "BLOCKED"
-        if any(r["status"] == "BLOCKED" for r in results)
-        else "PASS"
-        if all(r["status"] == "PASS" for r in results)
-        and overlap > 0
-        and report["independent_branches"]
-        else "FAIL"
-    )
+    report["status"] = probe.concurrent_status(results, overlap, report["independent_branches"])
     report["cleanup"] = (
         "Runner-owned disposable repository/worktree removed; source and pre-existing worktrees untouched"
     )

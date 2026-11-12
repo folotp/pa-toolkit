@@ -154,6 +154,25 @@ class PositiveAcceptanceTests(unittest.TestCase):
 
 
 class AntigravityAcceptanceTests(unittest.TestCase):
+    def test_concurrent_failures_outrank_blocked_sessions(self):
+        for statuses, overlap, independent, expected in (
+            (["FAIL", "BLOCKED"], 1, True, "FAIL"),
+            (["BLOCKED", "FAIL"], 1, True, "FAIL"),
+            (["PASS", "BLOCKED"], 1, True, "BLOCKED"),
+            (["PASS", "PASS"], 1, True, "PASS"),
+            (["PASS", "PASS"], 0, True, "FAIL"),
+            (["PASS", "BLOCKED"], 0, True, "BLOCKED"),
+            (["PASS", "BLOCKED"], 1, False, "FAIL"),
+            ([], 1, True, "BLOCKED"),
+        ):
+            with self.subTest(statuses=statuses, overlap=overlap, independent=independent):
+                self.assertEqual(
+                    probe.concurrent_status(
+                        [{"status": s} for s in statuses], overlap, independent
+                    ),
+                    expected,
+                )
+
     def test_only_structured_tool_names_are_retained(self):
         events = [
             {"content": [{"type": "tool_use", "name": "edit_file"}]},

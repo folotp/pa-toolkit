@@ -69,6 +69,30 @@ class PositiveAcceptanceTests(unittest.TestCase):
             self.assertTrue(result["main_denial"].startswith("BLOCKED"))
             self.assertEqual(result["status"], "FAIL")
 
+            # Independent mode can reach main after a failed detached edit; a later
+            # timeout must not hide that already observed regression either.
+            calls.clear()
+            (root / "AGENTS.md").write_text("Fixture instructions\n")
+
+            def main_timeout(argv, cwd, env, timeout):
+                if len(calls) == 3:
+                    raise subprocess.TimeoutExpired("codex", timeout)
+                return client(argv, cwd, env, timeout)
+
+            with (
+                patch.object(probe, "fixture", return_value=nullcontext((root, {}))),
+                patch.object(probe, "git", return_value="fixture-head"),
+                patch.object(probe, "prerequisites", return_value=[]),
+                patch.object(probe.shutil, "which", return_value="codex"),
+                patch.object(probe.subprocess, "check_output", return_value="codex fixture"),
+                patch.object(probe, "run_client", side_effect=main_timeout),
+            ):
+                result = probe.probe(root, "codex", 1)
+            self.assertEqual(result["diagnostics"], "PASS")
+            self.assertEqual(result["detached_denial"], "FAIL")
+            self.assertEqual(result["main_denial"], "BLOCKED: timeout")
+            self.assertEqual(result["status"], "FAIL")
+
     def events(self):
         return [
             {"event": "start", "exit": 0},

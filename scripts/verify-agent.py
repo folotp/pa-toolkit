@@ -467,7 +467,8 @@ def probe(source, client, timeout, linked=None):
                         evidence["status"] = "FAIL"
                 except subprocess.TimeoutExpired:
                     evidence[branch + "_denial"] = "BLOCKED: timeout"
-                    evidence["status"] = "BLOCKED"
+                    if evidence["status"] != "FAIL":
+                        evidence["status"] = "BLOCKED"
 
         return evidence
 

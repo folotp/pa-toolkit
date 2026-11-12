@@ -134,7 +134,8 @@ Two dedicated regressions preserve fixture bytes for staged removal and staged r
 This review is Codex evidence, not the outstanding Copilot acceptance requirement.
 The next review also found that a later blocked main scenario overwrote an observed
 detached guard failure. The aggregate now preserves FAIL; a probe-level regression
-simulates changed forbidden bytes after passing positive scenarios and asserts FAIL.
+simulates changed forbidden bytes after passing positive scenarios and asserts FAIL,
+including when an independent fixture's later main scenario times out.
 
 The required current-official-spec gate, conservative PR selection and full
 main/release validation are preserved. Full source/index gates and installed pre-commit/pre-push passed with 83 tests;

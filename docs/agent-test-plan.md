@@ -27,6 +27,8 @@ Codex and Claude Code remain in scope for thorough acceptance. A successful CLI
 runner certifies only its recorded scenarios, source bytes and product version.
 It cannot close interactive, desktop, IDE or hosted coverage by implication.
 GitHub Copilot means GitHub-hosted cloud agent and PR review, never a local Mac model.
+PA subsequently selected Codex desktop and Claude Code cloud via desktop or web
+beyond the existing CLI suites. Keep local/hosted execution receipts separate.
 
 Maintain the [surface matrix](verification/acceptance-surfaces-2026-11-12.md) alongside
 this catalogue. Discover installed/available entry points and establish PA's intended

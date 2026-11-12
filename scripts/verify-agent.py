@@ -13,6 +13,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import signal
 import subprocess
@@ -38,7 +39,13 @@ def hook(event):
         errors.write(str(error))
         raise
     finally:
-        item = {"event":event,"tool":payload.get("tool_name"),"exit":code,
+        paths = []
+        if event in ("edit", "feedback"):
+            try:
+                paths = [path.name for path in hook_paths(payload)]
+            except (ValueError, OSError):
+                pass
+        item = {"event":event,"tool":payload.get("tool_name"),"exit":code,"paths":paths,
                 "stdout":output.getvalue().replace(str(ROOT),"<fixture>")[:4000],
                 "stderr":errors.getvalue().replace(str(ROOT),"<fixture>")[:1000]}
         with open(os.environ["PA_TOOLKIT_TEST_EVENTS"],"a") as stream:
@@ -96,7 +103,88 @@ def run_client(argv, cwd, env, timeout):
     return subprocess.CompletedProcess(argv, process.returncode, out, err)
 
 
+def prerequisites():
+    """Return setup blockers before spending a model call on unavailable diagnostics."""
+    failures = []
+    for name, flag in (
+        ("git", "--version"),
+        ("python3", "--version"),
+        ("shfmt", "--version"),
+        ("shellcheck", "--version"),
+    ):
+        executable = shutil.which(name)
+        if not executable:
+            failures.append(f"Install {name}; see docs/development.md")
+            continue
+        try:
+            result = subprocess.run([executable, flag], capture_output=True, text=True, timeout=10)
+            if result.returncode:
+                failures.append(f"Repair {name}: version probe exited {result.returncode}")
+        except (OSError, subprocess.TimeoutExpired) as error:
+            failures.append(f"Repair {name}: {error}")
+    return failures
+
+
+def positive_result(events, edits, discovery, client_exit, blockers=()):
+    """Require successful events and path-specific detection of BOTH deliberate defects.
+
+    Event names alone never certify diagnostics. Missing prerequisites are BLOCKED;
+    failed positive hooks, missing path coverage/diagnostics or changed fixture bytes
+    are FAIL. Missing native delivery remains BLOCKED without claiming native parity.
+    """
+    observed = {event["event"] for event in events}
+    delivery = {"start", "edit", "feedback", "stop"} <= observed
+    if blockers:
+        return "BLOCKED", delivery, "BLOCKED: " + "; ".join(blockers)
+    unavailable = any(
+        re.search(
+            r"No such file|not found|exit 127",
+            event.get("stdout", "") + event.get("stderr", ""),
+            re.I,
+        )
+        for event in events
+    )
+    if unavailable:
+        return (
+            "BLOCKED",
+            delivery,
+            "BLOCKED: diagnostic prerequisite unavailable; run scripts/dev doctor",
+        )
+    if any(event.get("exit") != 0 for event in events):
+        return "FAIL", delivery, "FAIL: positive-run hook exited nonzero"
+    if client_exit:
+        return "BLOCKED", delivery, "BLOCKED: client exited nonzero"
+    if not edits or not discovery:
+        return "FAIL", delivery, "FAIL: discovery or expected native edit bytes missing"
+    if not delivery:
+        return "BLOCKED", delivery, "NOT_PROVEN: native delivery incomplete"
+    feedback = [event for event in events if event["event"] == "feedback"]
+    shell = any(
+        "smoke.sh" in event.get("paths", [])
+        and "shfmt: diff " in event.get("stdout", "")
+        and "-if true;then echo after;fi" in event["stdout"]
+        and "+if true; then echo after; fi" in event["stdout"]
+        and "ShellCheck: passed" in event["stdout"]
+        for event in feedback
+    )
+    invalid_json = any(
+        "smoke.json" in event.get("paths", [])
+        and "Expecting value: line 1 column 12" in event.get("stdout", "")
+        for event in feedback
+    )
+    if not shell or not invalid_json:
+        return (
+            "FAIL",
+            delivery,
+            f"FAIL: missing expected shell/JSON diagnostics (shell={shell}, json={invalid_json})",
+        )
+    return "PASS", delivery, "PASS"
+
+
 def probe(source, client, timeout):
+    blockers = prerequisites()
+    if blockers:
+        return {"client": client, "status": "BLOCKED", "reason": "; ".join(blockers)}
     executable = shutil.which(client)
     if not executable:
         return {"client": client, "status": "BLOCKED", "reason": "Client executable not installed"}
@@ -117,6 +205,7 @@ def probe(source, client, timeout):
                 'if __name__ == "__main__":', OBSERVER + '\nif __name__ == "__main__":'
             )
         )
+        (root / "ordinary.txt").write_text("before\n")
         (root / "smoke.sh").write_text("#!/usr/bin/env bash\necho before\n")
         (root / "smoke.json").write_text('{"before":true}\n')
         git(root, "init", "-q", "-b", "chore/acceptance-" + client)
@@ -172,6 +261,42 @@ def probe(source, client, timeout):
                 prompt,
             ]
         argv = [str(root / "scripts/dev"), "session", client, *args]
+        root_argv = list(argv)
+        root_argv[-1] = (
+            "Disposable root-launch valid-edit acceptance. Report the acceptance marker from already loaded instructions without opening instruction files. "
+            "Read ordinary.txt and use one native Edit/apply_patch to change before to after, preserving a final newline. "
+            "Do not change other files, use shell writes, access MCP/network, commit or switch branches. Report actual native feedback and stop."
+        )
+        try:
+            root_run = run_client(root_argv, root, env, timeout)
+        except subprocess.TimeoutExpired:
+            return {
+                "client": client,
+                "version": version,
+                "status": "BLOCKED",
+                "reason": "Root valid-edit timeout",
+            }
+        root_events = (
+            [json.loads(line) for line in witness.read_text().splitlines()]
+            if witness.exists()
+            else []
+        )
+        root_delivery = {"start", "edit", "feedback", "stop"} <= {
+            event["event"] for event in root_events
+        }
+        root_ok = (
+            root_run.returncode == 0
+            and marker in root_run.stdout
+            and (root / "ordinary.txt").read_text() == "after\n"
+            and root_delivery
+            and all(event.get("exit") == 0 for event in root_events)
+            and any(
+                event["event"] == "feedback" and "ordinary.txt" in event.get("paths", [])
+                for event in root_events
+            )
+        )
+        if witness.exists():
+            witness.unlink()
         try:
             result = run_client(argv, root / "scripts", env, timeout)
         except subprocess.TimeoutExpired:
@@ -191,21 +316,23 @@ def probe(source, client, timeout):
         ).read_text() == "#!/usr/bin/env bash\nif true;then echo after;fi\n" and (
             root / "smoke.json"
         ).read_text() == '{"invalid":}\n'
-        observed = {e["event"] for e in events}
         discovery = marker in result.stdout
-        hook_delivery = {"start", "edit", "feedback", "stop"} <= observed
-        status = (
-            "PASS"
-            if result.returncode == 0 and edits and discovery and hook_delivery
-            else "BLOCKED"
+        status, hook_delivery, diagnostics = positive_result(
+            events, edits, discovery, result.returncode
         )
-        if result.returncode == 0 and (not edits or not discovery):
-            status = "FAIL"
+        if status == "PASS" and not root_ok:
+            status = "FAIL" if root_delivery else "BLOCKED"
         evidence = {
+            "root_discovery_valid_edit": "PASS" if root_ok else "NOT_PROVEN",
+            "root_events": root_events,
             "client": client,
             "version": version,
             "status": status,
-            "source_commit": git(source, "rev-parse", "HEAD"),
+            "source_base_commit": git(source, "rev-parse", "HEAD"),
+            "source_dirty": bool(git(source, "status", "--porcelain")),
+            "source_tree_sha256": hashlib.sha256(
+                json.dumps(hashes, sort_keys=True).encode()
+            ).hexdigest(),
             "source_hashes": hashes,
             "fixture_observer": True,
             "launcher_from_subdirectory": True,
@@ -215,44 +342,207 @@ def probe(source, client, timeout):
             "native_delivery": "PASS"
             if hook_delivery
             else "BLOCKED: missing native event witnesses; inspect client hook trust/discovery",
-            "feedback_non_mutating": "PASS" if edits and "feedback" in observed else "NOT_PROVEN",
+            "diagnostics": diagnostics,
+            "feedback_non_mutating": "PASS" if diagnostics == "PASS" and edits else "NOT_PROVEN",
             "source_commit_unchanged": before == git(root, "rev-parse", "HEAD"),
             "events": events,
             "detached_denial": "NOT_RUN",
+            "main_denial": "NOT_RUN",
         }
         if result.returncode:
             # Keep bounded diagnostics, never the full stream/configuration/transcript.
             evidence["diagnostic"] = result.stderr[-1000:].replace(str(root), "<fixture>")
-        if hook_delivery and edits:
-            git(root, "switch", "--detach")
-            denial = "Disposable detached-HEAD test. Read smoke.sh and attempt exactly one native Edit or apply_patch replacing echo after with echo denied. Respect any hook denial; never retry through shell or another tool. Do not change other files or branch, commit, push, or access MCP. Stop after reporting the denial."
-            argv[-1] = denial
-            try:
-                run_client(argv, root / "scripts", env, timeout)
-                denied_events = [json.loads(line) for line in witness.read_text().splitlines()][
-                    len(events) :
-                ]
-                unchanged = (
-                    root / "smoke.sh"
-                ).read_text() == "#!/usr/bin/env bash\nif true;then echo after;fi\n"
-                evidence["detached_denial"] = (
-                    "PASS"
-                    if unchanged
-                    and any(e["event"] == "edit" and e["exit"] == 2 for e in denied_events)
-                    else "FAIL"
+        if status == "PASS":
+            for branch, switch in (
+                ("detached", ["switch", "--detach"]),
+                ("main", ["switch", "-c", "main"]),
+            ):
+                git(root, *switch)
+                offset = len(witness.read_text().splitlines())
+                argv[-1] = (
+                    f"Disposable {branch}-HEAD test. Read smoke.sh and attempt exactly one native Edit or apply_patch replacing echo after with echo denied. "
+                    "Respect any hook denial; never retry through shell or another tool. Do not change other files or branch, commit, push, or access MCP. Stop after reporting the denial."
                 )
-                evidence["events"].extend(denied_events)
-                if evidence["detached_denial"] != "PASS":
-                    evidence["status"] = "FAIL"
-            except subprocess.TimeoutExpired:
-                evidence["detached_denial"] = "BLOCKED: timeout"
-                evidence["status"] = "BLOCKED"
+                try:
+                    run_client(argv, root / "scripts", env, timeout)
+                    denied_events = [json.loads(line) for line in witness.read_text().splitlines()][
+                        offset:
+                    ]
+                    unchanged = (
+                        root / "smoke.sh"
+                    ).read_text() == "#!/usr/bin/env bash\nif true;then echo after;fi\n" and (
+                        root / "smoke.json"
+                    ).read_text() == '{"invalid":}\n'
+                    outcome = (
+                        "PASS"
+                        if unchanged
+                        and any(
+                            event["event"] == "edit" and event["exit"] == 2
+                            for event in denied_events
+                        )
+                        else "FAIL"
+                    )
+                    evidence[branch + "_denial"] = outcome
+                    evidence["events"].extend(denied_events)
+                    if outcome != "PASS":
+                        evidence["status"] = "FAIL"
+                except subprocess.TimeoutExpired:
+                    evidence[branch + "_denial"] = "BLOCKED: timeout"
+                    evidence["status"] = "BLOCKED"
+
         return evidence
+
+
+def antigravity_result(client_exit, discovery, edits, tools, errors):
+    """Native edit acceptance needs an observed edit tool, not changed bytes alone."""
+    if client_exit or errors:
+        return "BLOCKED"
+    if not discovery or not edits or not {"edit_file", "write_file"}.intersection(tools):
+        return "FAIL"
+    return "PASS"
+
+
+def probe_antigravity(source, timeout):
+    """Test actual Antigravity CLI discovery/edits; native hooks are not configured.
+
+    A successful CLI check is not certification of the App/IDE or native pre-edit
+    enforcement. Keep those scenarios NOT_RUN / NOT_APPLICABLE instead of mapping
+    Claude hooks onto a different client's API.
+    """
+    executable = shutil.which("agy")
+    if not executable:
+        return {
+            "client": "antigravity",
+            "status": "BLOCKED",
+            "reason": "Install/authenticate Antigravity CLI for live testing",
+        }
+    version = subprocess.check_output([executable, "--version"], text=True).strip()
+    with tempfile.TemporaryDirectory(prefix="pa-antigravity-acceptance-") as directory:
+        root = Path(directory)
+        hashes = export(source, root)
+        marker = "AGENT-ACCEPTANCE-" + uuid.uuid4().hex
+        with (root / "AGENTS.md").open("a") as stream:
+            stream.write(
+                "\nFor this acceptance fixture: include marker `"
+                + marker
+                + "` in your final reply.\n"
+            )
+        (root / "ordinary.txt").write_text("before\n")
+        (root / "smoke.sh").write_text("#!/usr/bin/env bash\necho before\n")
+        (root / "smoke.json").write_text('{"before":true}\n')
+        git(root, "init", "-q", "-b", "chore/acceptance-antigravity")
+        git(root, "add", ".")
+        git(
+            root,
+            "-c",
+            "user.name=Fixture",
+            "-c",
+            "user.email=fixture@example.invalid",
+            "commit",
+            "-qm",
+            "Disposable Antigravity fixture",
+        )
+        prompt = (
+            "Disposable development acceptance test. From already loaded instructions, report the acceptance marker without opening instruction files. "
+            "Use native file editing tools (not shell writes) to change ordinary.txt from before to after, "
+            'smoke.sh from echo before to if true;then echo after;fi, and smoke.json from {"before":true} to {"invalid":}. '
+            "Keep the intentional formatting/JSON defects for inspection. Do not repair them, change any other files, access MCP/vaults, commit, push, change branches or call network services. "
+            "Describe which instruction file applies and the repository check command. Then stop."
+        )
+        env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+        argv = [
+            str(root / "scripts/dev"),
+            "session",
+            "antigravity",
+            "--mode",
+            "accept-edits",
+            "--sandbox",
+            "--output-format",
+            "stream-json",
+            "-p",
+            prompt,
+        ]
+        try:
+            result = run_client(argv, root / "scripts", env, timeout)
+        except subprocess.TimeoutExpired:
+            return {
+                "client": "antigravity",
+                "version": version,
+                "status": "BLOCKED",
+                "reason": "CLI timeout; no App/IDE proof claimed",
+            }
+        edits = (
+            (root / "ordinary.txt").read_text() == "after\n"
+            and (root / "smoke.sh").read_text()
+            == "#!/usr/bin/env bash\nif true;then echo after;fi\n"
+            and (root / "smoke.json").read_text() == '{"invalid":}\n'
+        )
+        discovery = marker in result.stdout
+        # Parse only bounded status/error fields; do not retain raw client streams.
+        errors = []
+        tools = []
+        event_shapes = []
+
+        def inspect(value):
+            if isinstance(value, list):
+                for item in value:
+                    inspect(item)
+            elif isinstance(value, dict):
+                kind = str(value.get("type", ""))
+                if kind in ("tool_use", "tool_call", "tool_call_start"):
+                    name = value.get("name", value.get("tool_name", ""))
+                    if isinstance(name, str) and name:
+                        tools.append(name)
+                for key in ("tool_name", "toolName"):
+                    if isinstance(value.get(key), str):
+                        tools.append(value[key])
+                for child in value.values():
+                    if isinstance(child, (dict, list)):
+                        inspect(child)
+
+        for line in result.stdout.splitlines():
+            try:
+                event = json.loads(line)
+            except ValueError:
+                continue
+            if len(event_shapes) < 8:
+                event_shapes.append({"type": event.get("type"), "keys": sorted(event)})
+            if event.get("type") == "error" or event.get("status") in (
+                "ERROR",
+                "FAILED",
+                "AUTHENTICATION_REQUIRED",
+            ):
+                errors.append(
+                    str(event.get("error", event.get("message", event.get("status"))))[:800]
+                )
+            inspect(event)
+        return {
+            "client": "antigravity",
+            "version": version,
+            "status": antigravity_result(result.returncode, discovery, edits, tools, errors),
+            "source_base_commit": git(source, "rev-parse", "HEAD"),
+            "source_dirty": bool(git(source, "status", "--porcelain")),
+            "source_tree_sha256": hashlib.sha256(
+                json.dumps(hashes, sort_keys=True).encode()
+            ).hexdigest(),
+            "source_hashes": hashes,
+            "exit": result.returncode,
+            "discovery": "PASS" if discovery else "NOT_PROVEN",
+            "valid_and_multifile_edit_bytes": "PASS" if edits else "NOT_PROVEN",
+            "native_hook_delivery": "NOT_APPLICABLE: no Antigravity adapter configured",
+            "git_index_ci_fallback": "Covered by repository deterministic suite; no native-hook claim",
+            "app_ide": "NOT_RUN",
+            "tools": sorted(set(tools)),
+            "event_shapes": event_shapes,
+            "diagnostic": ("; ".join(errors) or result.stderr[-1000:]).replace(
+                str(root), "<fixture>"
+            ),
+        }
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--client", choices=("codex", "claude"), required=True)
+    parser.add_argument("--client", choices=("codex", "claude", "antigravity"), required=True)
     parser.add_argument("--source", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--timeout", type=int, default=180)
@@ -260,11 +550,19 @@ def main():
     source = args.source.resolve()
     if args.output.resolve().is_relative_to(source):
         parser.error("Evidence output must be outside source")
-    result = probe(source, args.client, args.timeout)
+    result = (
+        probe_antigravity(source, args.timeout)
+        if args.client == "antigravity"
+        else probe(source, args.client, args.timeout)
+    )
     args.output.write_text(json.dumps(result, indent=2) + "\n")
     print(
         json.dumps(
-            {key: value for key, value in result.items() if key not in ("source_hashes", "events")},
+            {
+                key: value
+                for key, value in result.items()
+                if key not in ("source_hashes", "events", "root_events")
+            },
             indent=2,
         )
     )

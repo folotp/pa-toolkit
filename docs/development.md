@@ -121,7 +121,7 @@ Review project hooks in the client before relying on them.
 | `scripts/dev release-check` | Clean-tree requirement plus full gate, selected by the release extension |
 | `scripts/dev install-hooks [--uninstall]` | Safe shared/custom Git hook installation/removal |
 | `scripts/dev worktree <branch> <destination>` | New feat/fix/chore/perf/docs branch and linked worktree |
-| `scripts/dev session claude\|codex\|copilot\|antigravity [args]` | Client launch at this checkout's root |
+| `scripts/dev session claude\|codex\|antigravity [args]` | Client launch at this checkout's root |
 
 Run `python3 -m unittest discover -s tests -v` with the locked environment active before
 committing release infrastructure changes (or `uv run --locked python -m unittest

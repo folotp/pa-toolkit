@@ -400,7 +400,6 @@ class RepositoryTests(unittest.TestCase):
         for requested, executable in (
             ("codex", "codex"),
             ("claude", "claude"),
-            ("copilot", "copilot"),
             ("antigravity", "agy"),
         ):
             client = fake_bin / executable

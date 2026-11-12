@@ -54,28 +54,41 @@ From the selected checkout, with the desired client already authenticated:
 ```sh
 python3 scripts/verify-agent.py --client codex --output /outside/source/codex.json
 python3 scripts/verify-agent.py --client claude --output /outside/source/claude.json
+python3 scripts/verify-agent.py --client antigravity --output /outside/source/antigravity.json
 ```
 
 The stdlib runner exports tracked/nonignored current source into an independent
-repository, adds random instruction marker and shell/JSON fixtures, then starts the
+repository, adds random instruction marker and text/shell/JSON fixtures, then starts the
 real client through `scripts/dev session` from a subdirectory. It wraps `hook()`
 only inside the disposable fixture to retain bounded actual event output. It never
 adds invocation-local trust overrides. The evidence distinguishes the observer from
-unchanged production source and records source hashes. Raw streams remain in memory;
+unchanged production source and records source base/WIP state, a source-tree digest and per-file hashes. Raw streams remain in memory;
 only sanitized selected evidence is saved. Temporary repositories are removed.
 
-The positive run covers discovery, native edits, feedback and start/stop. Detached
-native denial runs only after native delivery is witnessed. Hook trust/discovery
+Claude/Codex probes test root-launch valid text edits, subdirectory-launch shell/JSON
+defects and path-specific diagnostics, plus successful positive hook exits. Merely
+seeing event names cannot pass: both expected defects must be identified and bytes
+must remain unchanged. Missing tools return BLOCKED with a setup remedy; missing
+expected diagnostics return FAIL. Detached and main native denials run only after
+successful native discovery/diagnostics. The Antigravity CLI probe tests actual
+discovery and native text/multi-file edits; no native hook adapter is configured,
+so native-hook scenarios are NOT APPLICABLE and App/IDE scenarios remain separate. Hook trust/discovery
 blockers are reported without a bypass or persistent trust change. Exit 0 requires
 all implemented native scenarios; partial/BLOCKED/FAIL returns nonzero. Model calls
 are optional live acceptance, not part of the deterministic unittest/CI gate.
 
-Copilot/Antigravity manual execution uses the same fixture operations and statuses:
-open a separately selected disposable checkout in the exact CLI/IDE/cloud product,
-verify the instruction reference and marker, perform A02-A04, record supported native
-hooks or explicit Git/CI fallback, then run applicable G/E/S/P scenarios. Do not claim
-Claude/Codex JSON hook configuration applies to either product. Record unavailable
-clients/auth and IDE-only controls as blockers. Do not silently install clients.
+Copilot acceptance is GitHub-hosted: select the PR branch in a cloud-agent task,
+verify its instruction context/check commands, inspect its changes and test execution,
+and separately request/inspect Copilot PR code review. Repository instruction support
+varies by hosted feature. No Mac CLI installation or local hook test is required.
+A successful GitHub Actions run alone is not Copilot behavior evidence. Do not enable
+paid services, assign live work or claim a hosted model run without recording it.
+
+Antigravity App/IDE testing opens a disposable checkout in the exact product and
+repeats the same instruction/edit scenarios, recording actual version/permissions
+and supported hooks or Git/CI fallback. CLI results do not certify an App/IDE session.
+Unavailable authentication, model quota, browser-only controls or native adapters
+must remain explicit blockers/NOT RUN. Do not silently install or upgrade clients.
 
 ## Hosted CI procedure
 

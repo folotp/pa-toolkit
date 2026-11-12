@@ -3,7 +3,6 @@
     "client": "codex",
     "version": "codex-cli 0.167.2",
     "status": "BLOCKED",
-    "source_commit": "18fd53de84d6c3d2a1c91060850b9edab486e490",
     "fixture_observer": true,
     "launcher_from_subdirectory": true,
     "exit": 0,
@@ -14,6 +13,10 @@
     "source_commit_unchanged": true,
     "events": [],
     "detached_denial": "NOT_RUN",
+    "source_base_commit": "18fd53de84d6c3d2a1c91060850b9edab486e490",
+    "source_dirty": true,
+    "source_tree_sha256": "b88009fe2d2048f334f09f865ccfcb1d8983ba9707e2bef1984434861ff165b0",
+    "provenance_note": "Historical pre-28014f6 WIP probe; base commit is not the tested PR head. Not rerun for the review correction.",
     "tested_source_hashes": {
       ".claude/settings.json": "93aa65d89a953416e7a968aa94b510215bf0e789e8b7d5aa81b921031ef62e8d",
       ".codex/hooks.json": "1b9e09691cf03c9bd30a25cef0b6958a6fa5c771f87bee52d48ae9fc307d6681",
@@ -23,23 +26,13 @@
     }
   },
   "claude": {
-    "client": "claude",
-    "version": "2.1.322 (Claude Code)",
-    "status": "PASS",
-    "source_commit": "18fd53de84d6c3d2a1c91060850b9edab486e490",
-    "fixture_observer": true,
-    "launcher_from_subdirectory": true,
-    "exit": 0,
-    "discovery": "PASS",
-    "native_edit_bytes": "PASS",
-    "native_delivery": "PASS",
-    "feedback_non_mutating": "PASS",
-    "source_commit_unchanged": true,
-    "events": [
+    "root_discovery_valid_edit": "PASS",
+    "root_events": [
       {
         "event": "start",
         "tool": null,
         "exit": 0,
+        "paths": [],
         "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch chore/acceptance-claude. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
         "stderr": ""
       },
@@ -47,6 +40,9 @@
         "event": "edit",
         "tool": "Edit",
         "exit": 0,
+        "paths": [
+          "ordinary.txt"
+        ],
         "stdout": "",
         "stderr": ""
       },
@@ -54,6 +50,62 @@
         "event": "feedback",
         "tool": "Edit",
         "exit": 0,
+        "paths": [
+          "ordinary.txt"
+        ],
+        "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"PostToolUse\", \"additionalContext\": \"pa-toolkit edit feedback (advisory; files unchanged; run scripts/dev format explicitly): structural edit accepted; run scripts/dev check for the full gate\"}}\n",
+        "stderr": ""
+      },
+      {
+        "event": "stop",
+        "tool": null,
+        "exit": 0,
+        "paths": [],
+        "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+        "stderr": ""
+      }
+    ],
+    "client": "claude",
+    "version": "2.1.322 (Claude Code)",
+    "status": "PASS",
+    "source_base_commit": "28014f6ee762b1142526c0219968376a7d5b9924",
+    "source_dirty": true,
+    "source_tree_sha256": "c1badfe20cb073a10c5ff742685cc72d0ecf7de148c47df832acd8d9f69a3307",
+    "fixture_observer": true,
+    "launcher_from_subdirectory": true,
+    "exit": 0,
+    "discovery": "PASS",
+    "native_edit_bytes": "PASS",
+    "native_delivery": "PASS",
+    "diagnostics": "PASS",
+    "feedback_non_mutating": "PASS",
+    "source_commit_unchanged": true,
+    "events": [
+      {
+        "event": "start",
+        "tool": null,
+        "exit": 0,
+        "paths": [],
+        "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch chore/acceptance-claude. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+        "stderr": ""
+      },
+      {
+        "event": "edit",
+        "tool": "Edit",
+        "exit": 0,
+        "paths": [
+          "smoke.sh"
+        ],
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "event": "feedback",
+        "tool": "Edit",
+        "exit": 0,
+        "paths": [
+          "smoke.sh"
+        ],
         "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"PostToolUse\", \"additionalContext\": \"pa-toolkit edit feedback (advisory; files unchanged; run scripts/dev format explicitly): shfmt: diff <fixture>/smoke.sh.orig <fixture>/smoke.sh\\n--- <fixture>/smoke.sh.orig\\n+++ <fixture>/smoke.sh\\n@@ -1,2 +1,2 @@\\n #!/usr/bin/env bash\\n-if true;then echo after;fi\\n+if true; then echo after; fi\\n\\nShellCheck: passed\"}}\n",
         "stderr": ""
       },
@@ -61,6 +113,9 @@
         "event": "edit",
         "tool": "Edit",
         "exit": 0,
+        "paths": [
+          "smoke.json"
+        ],
         "stdout": "",
         "stderr": ""
       },
@@ -68,6 +123,9 @@
         "event": "feedback",
         "tool": "Edit",
         "exit": 0,
+        "paths": [
+          "smoke.json"
+        ],
         "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"PostToolUse\", \"additionalContext\": \"pa-toolkit edit feedback (advisory; files unchanged; run scripts/dev format explicitly): Expecting value: line 1 column 12 (char 11)\"}}\n",
         "stderr": ""
       },
@@ -75,6 +133,7 @@
         "event": "stop",
         "tool": null,
         "exit": 0,
+        "paths": [],
         "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
         "stderr": ""
       },
@@ -82,6 +141,7 @@
         "event": "start",
         "tool": null,
         "exit": 0,
+        "paths": [],
         "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch DETACHED. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
         "stderr": ""
       },
@@ -89,6 +149,9 @@
         "event": "edit",
         "tool": "Edit",
         "exit": 2,
+        "paths": [
+          "smoke.sh"
+        ],
         "stdout": "",
         "stderr": "Use a named feature worktree to edit; main/detached HEAD is blocked."
       },
@@ -96,17 +159,70 @@
         "event": "stop",
         "tool": null,
         "exit": 0,
+        "paths": [],
+        "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+        "stderr": ""
+      },
+      {
+        "event": "start",
+        "tool": null,
+        "exit": 0,
+        "paths": [],
+        "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch main. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+        "stderr": ""
+      },
+      {
+        "event": "edit",
+        "tool": "Edit",
+        "exit": 2,
+        "paths": [
+          "smoke.sh"
+        ],
+        "stdout": "",
+        "stderr": "Use a named feature worktree to edit; main/detached HEAD is blocked."
+      },
+      {
+        "event": "stop",
+        "tool": null,
+        "exit": 0,
+        "paths": [],
         "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
         "stderr": ""
       }
     ],
     "detached_denial": "PASS",
+    "main_denial": "PASS",
     "tested_source_hashes": {
       ".claude/settings.json": "93aa65d89a953416e7a968aa94b510215bf0e789e8b7d5aa81b921031ef62e8d",
       ".codex/hooks.json": "1b9e09691cf03c9bd30a25cef0b6958a6fa5c771f87bee52d48ae9fc307d6681",
-      "scripts/dev": "d9a69e0900aecfa2f281a542c5b6453e206e40206b62a0af4ebde78d7742a5cb",
-      "scripts/dev.py": "a5d242c86bade39ca59e85d3bca2d6430af62ac15694437afa0e3e4ee48455f6",
+      "scripts/dev": "0183d20f1eeec9e5f79d8b86866cf160db6a1b766ffa2953c4ab2ae2f7688a5e",
+      "scripts/dev.py": "5feef10db811c7c4bc79fa25fd20a8b39e6355464bb9077524c53a7245c38443",
       "tools/pa-devtools/src/pa_devtools/hooks.py": "6b48db19e6369f4709e5c96c9aeeaed934f64e0c81f3f3f95b1f092b98e8bb71"
+    }
+  },
+  "antigravity": {
+    "client": "antigravity",
+    "version": "1.5.7",
+    "status": "PASS",
+    "source_base_commit": "28014f6ee762b1142526c0219968376a7d5b9924",
+    "source_dirty": true,
+    "source_tree_sha256": "55850020df7b3e95b1902d593f96d4c81f628b514428dc170b862f37dec7f375",
+    "exit": 0,
+    "discovery": "PASS",
+    "valid_and_multifile_edit_bytes": "PASS",
+    "native_hook_delivery": "NOT_APPLICABLE: no Antigravity adapter configured",
+    "git_index_ci_fallback": "Covered by repository deterministic suite; no native-hook claim",
+    "app_ide": "NOT_RUN",
+    "tools": [
+      "edit_file",
+      "read_file"
+    ],
+    "diagnostic": "",
+    "tested_source_hashes": {
+      "AGENTS.md": "de695f1b668107a22416f91e9a56159de88aa3c6f30bc7289de754d5b7946de3",
+      "scripts/dev": "0183d20f1eeec9e5f79d8b86866cf160db6a1b766ffa2953c4ab2ae2f7688a5e",
+      "scripts/dev.py": "5feef10db811c7c4bc79fa25fd20a8b39e6355464bb9077524c53a7245c38443",
+      "scripts/verify-agent.py": "d0fc1e7e914efd08dcc0cad3900b821cac7e091aae342a36fa0a16e5f8c64701"
     }
   }
 }

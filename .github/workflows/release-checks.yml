@@ -1,10 +1,14 @@
 name: Release infrastructure
 on:
   pull_request:
+  schedule:
+    - cron: '23 11 * * 1'
+  workflow_dispatch:
   push:
     branches: [main]
 permissions:
   contents: read
+  actions: read
 jobs:
   # These exact names are live required protection contexts. Coordinate any rename.
   checks:
@@ -22,6 +26,8 @@ jobs:
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Verify macOS Apple Silicon runner
         if: runner.os == 'macOS'
         run: |
@@ -48,10 +54,16 @@ jobs:
       - name: Install actionlint (Linux)
         if: runner.os == 'Linux'
         run: go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.12
-      # The generic driver executes config/release.json: full shared check exactly
-      # once, then real allowlisted archive verification. Never tag/upload from CI.
-      - name: Full gate and real release dry-run
+      # No path filter: required contexts always report. Missing history/API/policy
+      # compatibility falls back to the same full generic release dry-run.
+      - name: Select conservative PR gates or full validation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TOOLKIT_EVENT: ${{ github.event_name }}
+          TOOLKIT_BASE: ${{ github.event.pull_request.base.sha }}
         run: |
-          python3 skills/plugin-release/scripts/release.py . \
-            --dry-run --output "$RUNNER_TEMP/pa-toolkit-package" \
-            --result "$RUNNER_TEMP/pa-toolkit-release-result.json"
+          if [ "$TOOLKIT_EVENT" = pull_request ]; then
+            ./scripts/dev ci --base "$TOOLKIT_BASE"
+          else
+            ./scripts/dev ci --full
+          fi

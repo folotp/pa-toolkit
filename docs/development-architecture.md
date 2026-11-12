@@ -12,14 +12,14 @@ and documentation in the same PR. No private memory or conversation is required.
 | --- | --- |
 | `scripts/dev`, `scripts/dev.py` | Checkout resolution, command dispatch, deterministic checks, index isolation, hook adaptation, diagnostics and toolkit package selection |
 | `config/toolchain.json`, `.python-version`, `pyproject.toml`, `uv.lock` | Supported executable minimums, managed interpreter and pinned/hash-locked Python dependencies |
-| `specs()` / `frontmatter()` in `scripts/dev.py` | Strict YAML, supported legacy Claude schemas and toolkit component invariants |
+| `tools/pa-devtools`, `config/development.json` | Reusable parsers/index/hooks/specifications/planning and repository-declared gates/impacts |
 | `config/package-files.json` | Explicit tracked runtime file inventory; new files require a review decision |
 | `config/release.json` | Toolkit extension selecting shared check and package commands |
 | `skills/plugin-release/scripts/release.py` and [shared runbook](../skills/plugin-release/references/runbook.md) | General release identity, extension/fallback selection, archive receipt and publication sequence |
 | `skills/plugin-release/scripts/package.sh` | Low-level generic ZIP writer; never the standalone release preflight |
 | `skills/plugin-release/scripts/branch-guard.py` | Reusable destination-aware main push policy and legacy generic guard installer |
 | `.claude/settings.json`, `.codex/hooks.json` | Optional development event bindings; no independent policy implementation |
-| `.github/workflows/release-checks.yml` | Linux/macOS full gate and real release dry-run; required status names stay stable |
+| `.github/workflows/release-checks.yml` | Conservative PR gate selection; full main/scheduled validation and real release dry-run; stable required statuses |
 
 ```mermaid
 flowchart TD
@@ -44,19 +44,17 @@ delivery was tested separately from arbitrary nested orchestration.
 
 ## Reuse and intentional differences from Organon
 
-The architecture and stable generic patterns are adapted from Organon main
-`c5a9cd8fabd2af5459ea073850204caa70ae9ad7`: self-resolving launcher, isolated index,
-Git-resolved hooks, bounded lifecycle feedback, Markdown parsing, explicit package
-selection and archive verification. The code is maintained here with local tests;
-there is no runtime adjacent-checkout dependency or new shared-engine project.
-General release orchestration is reused directly from this repository rather than
-copied. Generic push protection has one implementation, imported by scripts/dev.
+Reusable mechanics now live in the versioned `tools/pa-devtools` package; toolkit is
+its first consumer. The [SDK, specification and CI contract](shared-devtools.md)
+explains ownership, wheel installation, exact-SHA adoption and the read-only Organon/
+marketplace comparison. No adjacent checkout is imported. Generic release orchestration
+remains in the existing driver/runbook.
 
-Toolkit-specific validation preserves `.claude-plugin/plugin.json` version ownership
-and Claude-only skill fields (`argument-hint`, `disable-model-invocation`, YAML tool
-arrays). Organon's root-manifest/symlink schema and skills-ref portability restriction
-are inapplicable. New unsupported fields fail until their contracts and tests are
-reviewed. See [schema boundaries](development.md#component-and-source-gates).
+The official skills-ref core and Agent Plugins schema validate explicit profiles.
+Strict raw YAML and toolkit invariants remain required. Claude-only fields are
+validated and their projection is reported; the legacy package is not certified
+portable. Online freshness fails on upstream drift or unavailable network. See the
+[reviewed refresh procedure](shared-devtools.md#specification-profiles-and-reviewed-refresh).
 
 Kepano provenance pins, protected references, resync tokens, connector inventories,
 vault lints, commands/Gemini bundles and token-scenario baselines are absent from this
@@ -111,16 +109,14 @@ explicit archive receipts and failure propagation retain regression coverage.
 ## CI ownership and maintenance
 
 The existing `Release checks (ubuntu-latest)` and `Release checks (macos-latest)`
-contexts run the full release dry-run on PRs and main pushes with read-only permissions.
-The extension reaches the same `check()` as local/index use, then verifies a real ZIP.
-No local hook, AI client, vault, finance account or personal data is needed.
-The historical macos-latest context explicitly selects the standard `macos-15`
-Apple Silicon runner. An early platform assertion verifies both RUNNER_ARCH=ARM64
-and uname's arm64 result. Capacity failures remain visible; there is no Intel
-fallback. Context names and the full gate remain unchanged. uv 0.13.7
-and managed Python 3.11 are selected; shell tools enforce supported minimums. Linux
-bootstraps actionlint v1.7.12 with Go; Go is not a project/runtime gate. macOS uses
-Homebrew actionlint. Python transitive dependencies are hash locked.
+contexts always run with read-only contents/actions permissions. PRs select gates only
+after proving an unchanged engine/policy and successful exact-base full main-push
+workflow. Missing proof and unknown changes force the full generic release dry-run.
+Main pushes, weekly schedule, manual dispatch and releases remain full. The protected
+macos-latest name still selects macos-15 with explicit ARM64/arm64 assertions and no
+Intel fallback. Tool bootstrap remains uv 0.13.7/Python 3.11, shell tools, Linux
+Go-installed actionlint v1.7.12 and macOS Homebrew actionlint.
+See [selection and trust](shared-devtools.md#selective-ci-trust-and-execution).
 
 Server protection is separate: PRs, strict required matrix checks, admin enforcement,
 no force pushes/deletion. Never rename a required context without coordinating the

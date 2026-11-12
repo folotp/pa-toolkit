@@ -1,0 +1,24 @@
+[project]
+name = "pa-devtools"
+version = "0.1.0"
+description = "Shared, repository-configured development gates for PA's repositories"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.optional-dependencies]
+checks = [
+  "PyYAML==6.0.3",
+  "markdown-it-py==4.2.0",
+  "jsonschema==4.25.1",
+  "skills-ref @ git+https://github.com/agentskills/agentskills@83021e2be457a9b6679148719c1f6074f0ad975e#subdirectory=skills-ref",
+]
+
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pa_devtools"]
+
+[tool.hatch.metadata]
+allow-direct-references = true

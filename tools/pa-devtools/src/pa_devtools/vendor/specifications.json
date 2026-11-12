@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "agent_plugins_version": "1.0.0",
+  "skills_ref_commit": "83021e2be457a9b6679148719c1f6074f0ad975e",
+  "reviewed": "2026-11-12",
+  "sources": {
+    "agent-plugins-schema": {
+      "url": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+      "sha256": "0a4aad95ce337878ad38802ebf0daa3fde76abe3f65400c86bcbb1ec0b3ab883",
+      "file": "plugin.schema.json"
+    },
+    "agent-plugins-status": {
+      "url": "https://raw.githubusercontent.com/agentplugins/agent-plugins-spec/main/README.md",
+      "published_version": "1.0.0"
+    },
+    "agent-skills-specification": {
+      "url": "https://raw.githubusercontent.com/agentskills/agentskills/main/docs/specification.mdx",
+      "sha256": "b9079c0c10b7930e8c6a20ff2bc10cda2a3343c55185120e3f1116a1a529b220"
+    },
+    "skills-ref-validator": {
+      "url": "https://raw.githubusercontent.com/agentskills/agentskills/main/skills-ref/src/skills_ref/validator.py",
+      "sha256": "b5ee3d8537c83c959c31c2cb080a5227646ede5aea545f1ac835ed3c4645f6c5"
+    },
+    "skills-ref-parser": {
+      "url": "https://raw.githubusercontent.com/agentskills/agentskills/main/skills-ref/src/skills_ref/parser.py",
+      "sha256": "9a74c9a90eb217b82bec27570332eab74547acfbee2973c0a8bcd23f6c7bc211"
+    },
+    "skills-ref-dependencies": {
+      "url": "https://raw.githubusercontent.com/agentskills/agentskills/main/skills-ref/pyproject.toml",
+      "sha256": "4333dea52ff4a4fe87f96e5a25f2517a57127bbabb09cb30f3d9057da77a5967"
+    },
+    "claude-skill-extensions": {
+      "url": "https://code.claude.com/docs/en/skills.md",
+      "sha256": "ed902e28d24919949333416c7a9ef4bc2e4ab3a396b1e477a0808bbbaf7a3ff7"
+    },
+    "claude-plugin-profile": {
+      "url": "https://code.claude.com/docs/en/plugins-reference.md",
+      "sha256": "d78c502c30849c7405c61dce1080243d0ce2f0682310634d06d5babbf5bcfd27"
+    },
+    "claude-agent-profile": {
+      "url": "https://code.claude.com/docs/en/sub-agents.md",
+      "sha256": "47e8c8b6739a522497dd10349af0c8e9a9f56898049017aafa44f0bfeb1047b6"
+    }
+  }
+}

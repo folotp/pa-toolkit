@@ -211,3 +211,14 @@ and release-depth UX remain separate; this extension runs the full gate once for
 exact invocation/commit. #18 marketplace dispatch redesign is unchanged. #13 historical
 root archive cleanup is not performed; new release-driver output is explicit/outside
 source. None of those issues is silently closed by this implementation.
+
+
+## Shared SDK, specification refresh and PR planning
+
+Read the [SDK and CI contract](shared-devtools.md) for official skills-ref use,
+Claude versus portable profiles, reviewed online specification refresh, standalone
+wheel installation, conservative baseline proof and consumer adoption. Use
+`./scripts/dev spec-review` to inspect candidate hashes without changing pins;
+`./scripts/dev spec-freshness` must pass after reviewed updates. Main/releases remain
+full. `./scripts/dev plan --base <SHA>` explains PR selection; unavailable compatible
+hosted baseline proof selects full validation.

@@ -18,10 +18,16 @@ import shlex
 import subprocess
 import sys
 import tempfile
-from urllib.parse import unquote, urlsplit
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
+# Select this checkout's shared engine for launcher Python as well as managed runs.
+# Consumers install the same versioned package from a reviewed merged Git SHA.
+sys.path.insert(0, str(ROOT / "tools/pa-devtools/src"))
+from pa_devtools import source as shared_source
+from pa_devtools import planning, snapshots, hooks as shared_hooks
+from pa_devtools import specifications
+
 MARKER = "# managed-by: pa-toolkit scripts/dev v1"
 LEGACY_MARKER = "# managed-by: pa-toolkit branch-guard"
 # SemVer prerelease numeric identifiers cannot have leading zeroes; build metadata
@@ -35,9 +41,8 @@ SEMVER = (
 
 
 def require(condition, message):
-    """Fail a required gate with a diagnostic, never silently downgrade it."""
-    if not condition:
-        raise ValueError(message)
+    """Delegate the shared source contract; see pa_devtools.source."""
+    return shared_source.require(condition, message)
 
 
 def run(*argv, cwd=None, capture=False, env=None):
@@ -63,19 +68,8 @@ def data(name):
 
 
 def parse_json(text):
-    """Reject duplicate keys/nonfinite constants instead of hiding invalid config."""
-
-    def pairs(items):
-        result = {}
-        for key, value in items:
-            require(key not in result, f"Duplicate JSON key: {key}")
-            result[key] = value
-        return result
-
-    def constant(value):
-        raise ValueError("Nonfinite JSON constant: " + value)
-
-    return json.loads(text, object_pairs_hook=pairs, parse_constant=constant)
+    """Delegate the shared source contract; see pa_devtools.source."""
+    return shared_source.parse_json(text)
 
 
 def source_files():
@@ -95,36 +89,8 @@ def source_files():
 
 
 def frontmatter(path):
-    """Parse safe YAML with duplicate keys rejected, including nested mappings.
-
-    PyYAML's default duplicate-key overwrite would hide a malformed field. Custom
-    constructors preserve SafeLoader's rejection of arbitrary Python YAML objects.
-    """
-    import yaml
-
-    class UniqueLoader(yaml.SafeLoader):
-        pass
-
-    def mapping(loader, node, deep=False):
-        result = {}
-        for key_node, value_node in node.value:
-            key = loader.construct_object(key_node, deep=deep)
-            require(isinstance(key, str), f"{path}: YAML keys must be strings")
-            require(key not in result, f"{path}: duplicate YAML key {key}")
-            result[key] = loader.construct_object(value_node, deep=deep)
-        return result
-
-    UniqueLoader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, mapping)
-    text = path.read_text()
-    match = re.match(r"\A---\r?\n(.*?)\r?\n---(?:\r?\n|\Z)", text, re.S)
-    require(match, f"{path}: missing YAML frontmatter")
-    try:
-        result = yaml.load(match[1], Loader=UniqueLoader)
-    except yaml.YAMLError as error:
-        raise ValueError(f"{path}: invalid YAML: {error}") from error
-    require(isinstance(result, dict), f"{path}: frontmatter must be an object")
-    require(text[match.end() :].strip(), f"{path}: empty component body")
-    return result
+    """Delegate the shared source contract; see pa_devtools.source."""
+    return shared_source.frontmatter(path)
 
 
 def text_value(value):
@@ -137,7 +103,7 @@ def string_list(value):
     return text_value(value) or (isinstance(value, list) and all(text_value(v) for v in value))
 
 
-def specs():
+def specs(profile="claude"):
     """Validate the legacy Claude manifest and explicitly supported component fields.
 
     Supported fields follow Claude Code, not Organon's portable skills-ref subset.
@@ -182,8 +148,6 @@ def specs():
         "disallowedTools": string_list,
         "model": text_value,
         "color": text_value,
-        "permissionMode": lambda v: v
-        in ("default", "acceptEdits", "dontAsk", "bypassPermissions", "plan", "auto"),
         "maxTurns": lambda v: type(v) is int and v > 0,
         "skills": lambda v: isinstance(v, list) and all(text_value(x) for x in v),
         "memory": lambda v: v in ("user", "project", "local"),
@@ -218,7 +182,20 @@ def specs():
     )
     gatekeeper = frontmatter(ROOT / "agents/decision-gatekeeper.md")
     require("tools" not in gatekeeper, "Gatekeeper tools must remain surface-neutral")
-    print(f"specs: {len(skills)} skills, {len(agents)} agents; legacy Claude manifest")
+    # Official validators supplement, rather than replace, strict raw YAML/types.
+    adaptations = specifications.validate_manifest(manifest, profile)
+    for path in skills:
+        changes = specifications.validate_skill(frontmatter(path), path.parent, profile)
+        if changes:
+            print(f"{path.relative_to(ROOT)}: explicit Claude compatibility: {', '.join(changes)}")
+    if adaptations:
+        print("Manifest profile: " + "; ".join(adaptations))
+        print("Portable package layout is not claimed: legacy Claude source remains authoritative.")
+    print(
+        f"specs: official skills-ref {specifications.pins()['skills_ref_commit']}; "
+        f"Agent Plugins {specifications.pins()['agent_plugins_version']}; "
+        f"{len(skills)} skills, {len(agents)} agents; profile={profile}"
+    )
 
 
 def validate_fields(values, required, optional, label):
@@ -234,38 +211,8 @@ def validate_fields(values, required, optional, label):
 
 
 def links(paths=None, root=None):
-    """Parse Markdown links/images/reference links; skip examples, URLs and vault links.
-
-    Check relative file existence and repository containment, not network availability
-    or heading anchors. The same parser verifies shipped runtime resource links.
-    """
-    from markdown_it import MarkdownIt
-
-    root = (root or ROOT).resolve()
-    parser = MarkdownIt()
-    errors = []
-    for path in paths if paths is not None else source_files():
-        if path.suffix != ".md":
-            continue
-        for token in parser.parse(path.read_text()):
-            for child in token.children or []:
-                target = (
-                    child.attrGet("href")
-                    if child.type == "link_open"
-                    else child.attrGet("src")
-                    if child.type == "image"
-                    else None
-                )
-                if not target or target.startswith(("#", "[")) or urlsplit(target).scheme:
-                    continue
-                dest = unquote(urlsplit(target).path)
-                resolved = (path.parent / dest).resolve()
-                if dest and (not resolved.is_relative_to(root) or not resolved.exists()):
-                    errors.append(
-                        f"{path.resolve().relative_to(root)}: missing/outside link {target}"
-                    )
-    require(not errors, "\n".join(errors))
-    print("links: passed (relative files; excludes external URLs, vault links and anchors)")
+    """Apply the shared Markdown parser to this adapter's selected source/payload."""
+    return shared_source.links(source_files() if paths is None else paths, root or ROOT)
 
 
 def inventory():
@@ -443,45 +390,91 @@ def package(packager, output):
         print(destination)
 
 
+def development_policy():
+    """Load this repository's declarative gates; shared engine owns planning/execution."""
+    value = data("config/development.json")
+    planning.validate_config(value)
+    return value
+
+
+def run_gate(name):
+    """Thin adapter registry: generic engine runs named repository-owned checks."""
+    actions = {
+        "doctor": doctor,
+        "specs": specs,
+        "spec-freshness": specifications.check_latest,
+        "code": lint,
+        "links": links,
+        "inventory": inventory,
+        "package-contract": package_check,
+        "tests": lambda: run(sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v"),
+    }
+    require(name in actions, "Unknown toolkit gate: " + name)
+    actions[name]()
+
+
 def check():
-    """One complete mandatory gate for humans, agents, staged snapshots, CI, release."""
-    doctor()
-    specs()
-    lint()
-    links()
-    inventory()
-    package_check()
-    run(sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v")
+    """Run all declared gates; commits/main/releases never infer prior local success."""
+    policy = development_policy()
+    plan = planning.classify(policy, reason="full validation requested")
+    planning.execute(ROOT, policy, plan)
+
+
+def ci_plan(base=None, full=False):
+    """Select only affected PR gates after proving a compatible full main baseline."""
+    policy = development_policy()
+    paths = planning.changed_paths(ROOT, base)
+    full = full or (
+        os.environ.get("GITHUB_ACTIONS") == "true"
+        and os.environ.get("GITHUB_EVENT_NAME") != "pull_request"
+    )
+    reason = "full CI requested" if full else None
+    if not full and not planning.trusted_github_base(ROOT, base, **policy["baseline"]):
+        reason = "no compatible successful full main-push baseline"
+    return planning.classify(policy, paths, reason)
+
+
+def ci(base=None, full=False):
+    """Share the planner with humans; keep generic release preflight unconditionally full.
+
+    Full CI invokes the existing generic driver/extension, with one full gate and a
+    real archive. Reduced PR CI runs mandatory structural/freshness gates plus affected
+    checks. Runtime changes still build/verify the archive using the same package
+    command; development-doc-only changes have no changed archive inputs.
+    """
+    require(not git("status", "--porcelain"), "CI planning/execution requires a clean checkout")
+    plan = ci_plan(base, full)
+    print(json.dumps(plan, indent=2), flush=True)
+    if plan["full"]:
+        with tempfile.TemporaryDirectory(prefix="toolkit-ci-release-") as temp:
+            run(
+                sys.executable,
+                str(ROOT / "skills/plugin-release/scripts/release.py"),
+                str(ROOT),
+                "--dry-run",
+                "--output",
+                str(Path(temp) / "package"),
+                "--result",
+                str(Path(temp) / "receipt.json"),
+            )
+    else:
+        planning.execute(ROOT, development_policy(), plan)
+        if any(name in package_paths_names() for name in plan["paths"]):
+            with tempfile.TemporaryDirectory(prefix="toolkit-ci-package-") as temp:
+                package(ROOT / "skills/plugin-release/scripts/package.sh", temp)
+        else:
+            print("SKIP archive: runtime inventory/bytes unchanged from validated baseline")
+
+
+def package_paths_names():
+    """Expose selected runtime names for impact planning, without an alternate allowlist."""
+    return {path.relative_to(ROOT).as_posix() for path in package_paths()}
 
 
 def check_staged():
-    """Export the real index into a new Git repository; never read unstaged repairs.
-
-    Inherited GIT_* variables must not reconnect the temporary repository to the
-    caller's index/worktree. checkout-index preserves staged modes and deletions.
-    The temporary index is reset to the exported tree so file discovery sees additions.
-    """
+    """Apply toolkit branch policy, then the shared actual-index exporter."""
     branch_guard().check_branch(git("branch", "--show-current"))
-    tree = git("write-tree")  # Unmerged index fails before any export.
-    with tempfile.TemporaryDirectory(prefix="toolkit-index-") as temp:
-        run("git", "checkout-index", "--all", "--prefix", temp + os.sep)
-        env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
-
-        def isolated(*args):
-            run(*args, cwd=temp, env=env)
-
-        isolated("git", "init", "-q", "-b", "chore/index-snapshot")
-        isolated("git", "fetch", "-q", str(ROOT), "HEAD")
-        isolated("git", "update-ref", "HEAD", "FETCH_HEAD")
-        # Import staged tree objects (including new blobs) through a temporary index
-        # only in the source repository; no branch or real index is changed.
-        objects = git("rev-parse", "--path-format=absolute", "--git-path", "objects")
-        alternate = Path(temp) / ".git/objects/info/alternates"
-        alternate.write_text(objects + "\n")
-        isolated("git", "read-tree", tree)
-        launcher = Path(temp) / "scripts/dev"
-        require(launcher.is_file(), "Staged scripts/dev missing; update the branch")
-        isolated(str(launcher), "check")
+    snapshots.validate_index(ROOT, ["scripts/dev", "check"])
 
 
 def hook_file(event):
@@ -537,33 +530,14 @@ def hook_text(event):
 
 
 def install_hooks(uninstall=False):
-    """Preflight both destinations before writing; preserve all unmanaged hooks.
-
-    Replacing a recognized old guard upgrades its precommit behavior and retains
-    destination protection. Shared hooks affect all worktrees. Uninstall removes
-    only exact current launchers, never legacy/unmanaged hooks or hook symlinks.
-    """
-    paths = {event: hook_file(event) for event in ("pre-commit", "pre-push")}
-    for event, path in paths.items():
-        require(not path.is_symlink(), f"Preserving unmanaged hook symlink: {path}")
-        if path.exists():
-            accepted = (
-                path.read_text() == hook_text(event)
-                if uninstall
-                else recognized_hook(path.read_text(), event)
-            )
-            require(
-                accepted,
-                f"Preserving unmanaged hook: {path}; compose manually per docs/development.md",
-            )
-    for event, path in paths.items():
-        if uninstall:
-            path.unlink(missing_ok=True)
-        else:
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(hook_text(event))
-            path.chmod(0o755)
-        print(f"{'Removed' if uninstall else 'Installed'} {path}")
+    """Use shared all-destination preflight with toolkit managed-body recognition."""
+    events = ("pre-commit", "pre-push")
+    shared_hooks.install(
+        {e: hook_file(e) for e in events},
+        {e: hook_text(e) for e in events},
+        lambda event, text: recognized_hook(text, event),
+        uninstall,
+    )
 
 
 def branch_guard():
@@ -586,41 +560,8 @@ def pre_push(stream):
 
 
 def hook_paths(payload):
-    """Normalize Claude file edits and every Codex add/update/delete/move header.
-
-    Resolve cwd and symlinks; reject malformed payloads or outside-repository edits.
-    There is no toolkit protected-reference list or implicit edit authorization.
-    """
-    require(isinstance(payload, dict), "Hook payload must be an object")
-    inputs = payload.get("tool_input")
-    require(isinstance(inputs, dict), "Unsupported tool_input shape")
-    if payload.get("tool_name") == "apply_patch":
-        command = inputs.get("command")
-        require(
-            isinstance(command, str)
-            and command.startswith("*** Begin Patch\n")
-            and command.rstrip().endswith("*** End Patch"),
-            "Malformed apply_patch payload",
-        )
-        names = re.findall(
-            r"^\*\*\* (?:Add File|Update File|Delete File|Move to): (.+)$", command, re.M
-        )
-        require(names, "Patch has no supported file headers")
-    elif payload.get("tool_name") in ("Write", "Edit", "MultiEdit"):
-        names = [inputs.get("file_path")]
-    else:
-        raise ValueError("Unsupported edit payload; use Git/CI for other editing paths")
-    cwd_value = payload.get("cwd", str(ROOT))
-    require(text_value(cwd_value), "Hook cwd must be an absolute path string")
-    cwd = Path(cwd_value)
-    require(cwd.is_absolute(), "Hook cwd must be absolute")
-    paths = []
-    for name in names:
-        require(text_value(name), "Invalid edit path")
-        path = (cwd / name).resolve()
-        require(path.is_relative_to(ROOT.resolve()), f"Edit path outside repository: {path}")
-        paths.append(path)
-    return list(dict.fromkeys(paths))
+    """Normalize every native edit through the shared, root-explicit contract."""
+    return shared_hooks.hook_paths(ROOT, payload)
 
 
 def advisory(argv):
@@ -716,10 +657,8 @@ def hook(event):
 
 
 def parse_version(output):
-    """Normalize vendor tool banners; unknown formats must fail diagnostics."""
-    match = re.search(r"(\d+)\.(\d+)(?:\.(\d+))?", output)
-    require(match, "Cannot parse tool version: " + output[:160])
-    return tuple(int(x or 0) for x in match.groups())
+    """Delegate the shared source contract; see pa_devtools.source."""
+    return shared_source.parse_version(output)
 
 
 def doctor():
@@ -768,7 +707,7 @@ def doctor():
             str(ROOT),
             "python",
             "-c",
-            "import sys, yaml, markdown_it, ruff; print(sys.version.split()[0]); sys.exit(not ((3,11) <= sys.version_info < (3,16)))",
+            "import sys, yaml, markdown_it, ruff, jsonschema, skills_ref; print(sys.version.split()[0]); sys.exit(not ((3,11) <= sys.version_info < (3,16)))",
             capture=True,
         )
         print("Managed project Python/imports: " + managed.strip())
@@ -794,6 +733,11 @@ def main():
         "command",
         choices=[
             "doctor",
+            "ci",
+            "plan",
+            "_gate",
+            "spec-freshness",
+            "spec-review",
             "check",
             "check-staged",
             "format",
@@ -811,6 +755,9 @@ def main():
     )
     parser.add_argument("extra", nargs="*")
     parser.add_argument("--staged", action="store_true")
+    parser.add_argument("--base")
+    parser.add_argument("--full", action="store_true")
+    parser.add_argument("--profile", choices=["claude", "portable"], default="claude")
     parser.add_argument("--uninstall", action="store_true")
     parser.add_argument(
         "--packager", default=str(ROOT / "skills/plugin-release/scripts/package.sh")
@@ -841,10 +788,21 @@ def main():
         check_staged()
     elif command == "check":
         check()
+    elif command == "ci":
+        ci(args.base, args.full)
+    elif command == "plan":
+        print(json.dumps(ci_plan(args.base, args.full), indent=2))
+    elif command == "_gate":
+        require(len(args.extra) == 1, "Use _gate <declared name>")
+        run_gate(args.extra[0])
+    elif command == "spec-review":
+        print(json.dumps(specifications.review_sources(), indent=2))
+    elif command == "spec-freshness":
+        specifications.check_latest()
     elif command == "format":
         lint(fix=True)
     elif command == "specs":
-        specs()
+        specs(args.profile)
     elif command == "links":
         links()
     elif command == "inventory":

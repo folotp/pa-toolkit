@@ -89,7 +89,7 @@ observer. The newly created Codex linked fixture is preserved on its original br
 with intentional probe changes; it must not be reused as a clean source worktree.
 
 Two fresh Claude CLI-print suites also ran concurrently in separate disposable
-repositories, both PASS, with 34.565 seconds of overlapping invocation windows.
+repositories, both PASS, with 34.565 seconds of overlapping whole-suite windows.
 Each completed discovery, exact edits, diagnostics/non-mutation and main/detached
 denial. This establishes concurrent independent-repository sessions, not linked
 worktree concurrency or interactive/Desktop behavior. The receipt records the
@@ -121,3 +121,10 @@ submitted and no UI settings changed. These are tool access boundaries, not clie
 product failures. A permitted UI surface or user-driven fixture session is needed
 before native desktop/cloud acceptance can proceed. Do not route around the denial
 with alternate UI automation or expand permissions silently.
+
+A subsequent instrumented concurrency recording measured individual `run_client`
+subprocess intervals rather than whole suites. Both suites PASS; distinct Claude
+client processes in independent fixture repositories overlap by 11.374 seconds.
+The receipt retains every process cwd and monotonic interval, source hashes and
+native events. This proves overlapping client execution including tools, not
+simultaneous inference scheduling. Linked-worktree concurrency remains NOT RUN.

@@ -943,5 +943,551 @@
     ],
     "status": "PASS",
     "limitation": "Independent repositories only; linked-worktree concurrency remains NOT RUN"
+  },
+  "claude_concurrency_processes": {
+    "status": "PASS",
+    "client": "Claude Code CLI print",
+    "sessions": [
+      {
+        "observed_at_utc": "2026-11-12T20:41:15.410212+00:00",
+        "source_base_commit": "234f0c753f9d5b5a40691a289a5c718804f86cd1",
+        "source_dirty": false,
+        "source_tree_sha256": "5fa4a9b21d95f1319f72a75a209ff5f4125a8547b001afeb16a6f20c73bf7e2d",
+        "source_hashes": {
+          ".claude-plugin/plugin.json": "87f663bcc4735caa68d77bebfb93c97026c88986b591c09c81f161f0550b0a29",
+          ".claude/settings.json": "93aa65d89a953416e7a968aa94b510215bf0e789e8b7d5aa81b921031ef62e8d",
+          ".codex/hooks.json": "1b9e09691cf03c9bd30a25cef0b6958a6fa5c771f87bee52d48ae9fc307d6681",
+          ".github/copilot-instructions.md": "927d5196c0f62dcc75f5be16b39dee257d174bb154f27e4eedd294c2b8d29fb3",
+          ".github/workflows/release-checks.yml": "f2e169b43de369dd8e7ae8108dff6392ef8a16b171683d8cf723e437643c7ca7",
+          ".gitignore": "bcdf88d41ff19b7301c92f9f1d260e000d1532a4d8140342ef621b4c5d4678cc",
+          ".python-version": "49a506dd32096b010d75205acf3430c9ae6c40351888129499e5a5e487126c93",
+          "AGENTS.md": "de695f1b668107a22416f91e9a56159de88aa3c6f30bc7289de754d5b7946de3",
+          "CLAUDE.md": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+          "README.md": "5fa45f65a3d1328074cb8c396dea724bd12eca56e1455e2b7d797097e3de95ce",
+          "agents/decision-gatekeeper.md": "dd183c473dd784f3f4bf1b171100737ae4a055474972234e6bd26d580619bbae",
+          "agents/plugin-release-executor.md": "b052317ad50fe3c804542cc4fd21513d25e2883f966c356602c6572c98754491",
+          "config/development.json": "47b514f028e5fe3a0003ceddfceb38e2f83a2c1d81bae2f62e80206a2721758d",
+          "config/package-files.json": "15223ebe03e9a1b7f2086990a95fc45f7ab1609f1760335fa967d1ee85c2ad9e",
+          "config/release.json": "d5add0d75be3980ea9a453a92b5d53d6b25b91efa6ca86dd005714037e4f6c35",
+          "config/specifications.json": "26b8eea8fed56c81476e82f7daf4b3dd7460f741a29f2cde07c798617f887d8a",
+          "config/toolchain.json": "c5856b31e103cb97cb21c6ea2e0ebbe0899735ccfd64f633927acbb5eaf3731b",
+          "docs/agent-test-plan.md": "75b0b946eabe901951cfd9d61f92d70a81862b4d60e975f0d0846359ecd92311",
+          "docs/development-architecture.md": "56f7429759e83d493e8120b2cea5a124775568e220f05c072c896ea3b5af9dc9",
+          "docs/development.md": "bab14ac3576b56d2c32297cb4a20532a5f6809cf08d871fb15badb9752c375e6",
+          "docs/hook-scope.md": "246fa8a1e50b5c035dfe0074c2131f04f4ab9a7b5d454df2291696d19610cfac",
+          "docs/shared-devtools.md": "ed41a1f97f86622a48c06f4f1f3897839e3e53798dc0bf3686dd6aef6d0b0084",
+          "docs/supported-agents.md": "3407f10ab2f3327ca2c46e831639df88e5b38072be46b72637576d4e8489ded9",
+          "docs/verification/acceptance-cli-2026-11-12.json": "8d14926ed5ee7282eecb76fb59e876f60185840061b5416e6c63e56e92a0c061",
+          "docs/verification/acceptance-cli-2026-11-12.md": "fcaf3a907192a0409d2d2184ae61502e6c2bf085d6021b405276619c4c6541ff",
+          "docs/verification/acceptance-surfaces-2026-11-12.md": "c3d7b72d7a174b9f6dda4479a777e268284b6bd8cccf40aad52b242db65809c4",
+          "docs/verification/acceptance-surfaces-native-2026-11-12.json": "63903ac6e60aba04fd841d01cfeaad135ab0635a9facde9f7654ffb07ac9dca5",
+          "docs/verification/agent-events.json": "1c04255e6cee701a61ef3cb346b21ad4e49ef473dc76391994bc50a3a2ace758",
+          "docs/verification/client-hooks.json": "02c3260c30983f39eb4897bf718fa3e3f9250c12ed472a5031b3ddfd2ade41ea",
+          "docs/verification/shared-ai-setup.md": "fcc0d3f8636d280956efd0731f33f26e2868061e4299243ab3acb29997b8dd4b",
+          "docs/verification/shared-devtools.md": "a18f142cc7a0f86d404d3dfe0ab6c17741d99dc39211eb103a1b6df6b40fd7da",
+          "docs/verification/supported-agents.md": "c7a7c44cdd730fd190285302b557eff0a3b7bccd4bbe90b1f2f63af1f2de9b93",
+          "pyproject.toml": "cef863980fe5913241e773557ccf40db307c2f3c28e2f7c1eb40dbe80e7fffca",
+          "scripts/dev": "0183d20f1eeec9e5f79d8b86866cf160db6a1b766ffa2953c4ab2ae2f7688a5e",
+          "scripts/dev.py": "5feef10db811c7c4bc79fa25fd20a8b39e6355464bb9077524c53a7245c38443",
+          "scripts/verify-agent-concurrency.py": "df9b1bb7c6635cec8d386ea2b24cc682f97f984369be4fc6de9cf13708325aa9",
+          "scripts/verify-agent.py": "b2bc279ed60d8e93995f473b84e3f38ce32daad7ddb773afea253aa7f0577ca6",
+          "skills/fin-pocketsmith-categorize-amazon/SKILL.md": "a426a9775c7e3335fef48d7f2e4a9ffae61a5595e61006bb4ae5dbd9e5c03dc0",
+          "skills/fin-pocketsmith-categorize-apple/SKILL.md": "9f672ba2d497c65a854310fb5c2f451a0a056bbb34fb28fe2fd47f1838ac5732",
+          "skills/fin-pocketsmith-categorize-netflix/SKILL.md": "5343f8eb024db7648dc22d6ca21772c3c7e2e5d434c82f2433cef14d3c7736c4",
+          "skills/fin-pocketsmith-categorize-rogers/SKILL.md": "5ca0829c0e1efc124a14f9b126cb98dcc67d8b5da92021d77892338b0cb462a2",
+          "skills/fin-pocketsmith-manage-vacation/SKILL.md": "967b461eb36fda75bfb46f37f1444eb64e91ac8028621af32aa336e5c7cc20dc",
+          "skills/fin-rogers-download-invoice/SKILL.md": "ca5db21cd55f94a80c26bc8c4efb646e87d4e18901d7cbc55fca9aa620822373",
+          "skills/plugin-release/SKILL.md": "899a4c0fdc9f72c7c5a0a7a8170cd6d861def98a017e9f444961a4123d3d33e9",
+          "skills/plugin-release/references/development.md": "50b8d9c25750dd34ec643e4a032c94ca0d80759edef90b6c6a77d207c56cf3e6",
+          "skills/plugin-release/references/release-notes-template.md": "df9e85a9cda719542f4d9fd2e85bd293bb06cda04a031ec4fda28e20cf0ed554",
+          "skills/plugin-release/references/runbook.md": "6b4abe8785b015af8135541eb81601b9e0c49f679d2eea81c1bdbe768460f7df",
+          "skills/plugin-release/scripts/branch-guard.py": "d9b2fa368e86af3b2fa6700d101c72fa1635aee8a3278a780352ba074e02d5b3",
+          "skills/plugin-release/scripts/package.sh": "bda1afdf69d087a6b69df26e6db78ae2fbb1cffbf2bc7180cf18e40359946da9",
+          "skills/plugin-release/scripts/release.py": "337af9ea2d9d5bd8befdd65789b178aec8e67404c65003ba04592e0aa350496d",
+          "tests/test_agent_concurrency.py": "a457155282f16b541621bf3dc0a7e1f411a8e6210833cfc7ae0ee3f57ec07074",
+          "tests/test_agent_probe.py": "cb405172fdfeaeed7a20f0577710cd8d68dd0d18a2390786a28c339ca876a625",
+          "tests/test_branch_guard.py": "aed3d85409f32a62081d029cef1dd9ba149669d56161e60dd95d3820970ac7ca",
+          "tests/test_development.py": "49290ade8ff13a89ce8e4fefafb3294dad321dfef27991e678c77400a9c644e9",
+          "tests/test_live_specs.py": "4ec979a5032af464e7f50baf974cf725bc689c52675c535a89309638b87ff451",
+          "tests/test_release.py": "c4b2eb85535d5f2d48c43ce1f7b9a932b1e8d17657755dec0a547afa9fbf3593",
+          "tests/test_shared_development.py": "f8543f30017fa5998fec1f31b3e07f7f0fcb3e4b5a1da64be914ffec50a755ac",
+          "tools/pa-devtools/pyproject.toml": "2bfdafc25cf851c1f21f045ba017f353266bdbdd8f0b22f289ca109dbbc9df0a",
+          "tools/pa-devtools/src/pa_devtools/__init__.py": "942202cf33ad8538b6bc82abf0a48e3d56674abab5e9e534f684b9be0c63343a",
+          "tools/pa-devtools/src/pa_devtools/hooks.py": "6b48db19e6369f4709e5c96c9aeeaed934f64e0c81f3f3f95b1f092b98e8bb71",
+          "tools/pa-devtools/src/pa_devtools/live_specs.py": "844d1c40bc1f2e291c36d5e50050bee109a8c58cf28144d5fd4fd9b945eaac1a",
+          "tools/pa-devtools/src/pa_devtools/planning.py": "ad27a45305ce64483e0f8aba26e76423a9761656cfd7996d5684b604f2df3897",
+          "tools/pa-devtools/src/pa_devtools/snapshots.py": "cb5c89c72b7486327a369b78ae43415f37b2a9fbc6baf21f56808b0a0933f89e",
+          "tools/pa-devtools/src/pa_devtools/source.py": "cc19390043b3419e95a0b3d59e10086fecfd130b528c2da5548cab51c51e32f9",
+          "tools/pa-devtools/src/pa_devtools/specifications.py": "57bcc6cb1be8846066ac385a6a77d82ba95ae1e974f4b3ab36aacc2f388e3d39",
+          "tools/pa-devtools/src/pa_devtools/vendor/Apache-2.0.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+          "tools/pa-devtools/src/pa_devtools/vendor/NOTICE.md": "556658e19a2a3d0ce7fa044f6f22061fefb4e5060993b75bbf352b7aed99067d",
+          "tools/pa-devtools/src/pa_devtools/vendor/plugin.schema.json": "0a4aad95ce337878ad38802ebf0daa3fde76abe3f65400c86bcbb1ec0b3ab883",
+          "tools/pa-devtools/src/pa_devtools/vendor/specifications.json": "d1c6cf1d0030daf14653e8dceea81ed4da8357b9bbd66941ec234b1f2805c097",
+          "uv.lock": "dc3659e373b4a1037d68bd7353099e7ae3deb9388aeaf6696ba15e0f337b8dbb"
+        },
+        "root_discovery_valid_edit": "PASS",
+        "root_events": [
+          {
+            "event": "start",
+            "tool": null,
+            "exit": 0,
+            "paths": [],
+            "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch chore/acceptance-claude. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+            "stderr": ""
+          },
+          {
+            "event": "edit",
+            "tool": "Edit",
+            "exit": 0,
+            "paths": [
+              "ordinary.txt"
+            ],
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "event": "feedback",
+            "tool": "Edit",
+            "exit": 0,
+            "paths": [
+              "ordinary.txt"
+            ],
+            "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"PostToolUse\", \"additionalContext\": \"pa-toolkit edit feedback (advisory; files unchanged; run scripts/dev format explicitly): structural edit accepted; run scripts/dev check for the full gate\"}}\n",
+            "stderr": ""
+          },
+          {
+            "event": "stop",
+            "tool": null,
+            "exit": 0,
+            "paths": [],
+            "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+            "stderr": ""
+          }
+        ],
+        "client": "claude",
+        "version": "2.1.322 (Claude Code)",
+        "status": "PASS",
+        "fixture_mode": "independent-removed",
+        "user_configuration": "ignored",
+        "startup_signals": [],
+        "fixture_observer": true,
+        "launcher_from_subdirectory": true,
+        "exit": 0,
+        "discovery": "PASS",
+        "native_edit_bytes": "PASS",
+        "native_delivery": "PASS",
+        "diagnostics": "PASS",
+        "feedback_non_mutating": "PASS",
+        "source_commit_unchanged": true,
+        "events": [
+          {
+            "event": "start",
+            "tool": null,
+            "exit": 0,
+            "paths": [],
+            "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch chore/acceptance-claude. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+            "stderr": ""
+          },
+          {
+            "event": "edit",
+            "tool": "Edit",
+            "exit": 0,
+            "paths": [
+              "smoke.sh"
+            ],
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "event": "feedback",
+            "tool": "Edit",
+            "exit": 0,
+            "paths": [
+              "smoke.sh"
+            ],
+            "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"PostToolUse\", \"additionalContext\": \"pa-toolkit edit feedback (advisory; files unchanged; run scripts/dev format explicitly): shfmt: diff <fixture>/smoke.sh.orig <fixture>/smoke.sh\\n--- <fixture>/smoke.sh.orig\\n+++ <fixture>/smoke.sh\\n@@ -1,2 +1,2 @@\\n #!/usr/bin/env bash\\n-if true;then echo after;fi\\n+if true; then echo after; fi\\n\\nShellCheck: passed\"}}\n",
+            "stderr": ""
+          },
+          {
+            "event": "edit",
+            "tool": "Edit",
+            "exit": 0,
+            "paths": [
+              "smoke.json"
+            ],
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "event": "feedback",
+            "tool": "Edit",
+            "exit": 0,
+            "paths": [
+              "smoke.json"
+            ],
+            "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"PostToolUse\", \"additionalContext\": \"pa-toolkit edit feedback (advisory; files unchanged; run scripts/dev format explicitly): Expecting value: line 1 column 12 (char 11)\"}}\n",
+            "stderr": ""
+          },
+          {
+            "event": "stop",
+            "tool": null,
+            "exit": 0,
+            "paths": [],
+            "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+            "stderr": ""
+          },
+          {
+            "event": "start",
+            "tool": null,
+            "exit": 0,
+            "paths": [],
+            "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch DETACHED. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+            "stderr": ""
+          },
+          {
+            "event": "edit",
+            "tool": "Edit",
+            "exit": 2,
+            "paths": [
+              "smoke.sh"
+            ],
+            "stdout": "",
+            "stderr": "Use a named feature worktree to edit; main/detached HEAD is blocked."
+          },
+          {
+            "event": "stop",
+            "tool": null,
+            "exit": 0,
+            "paths": [],
+            "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+            "stderr": ""
+          },
+          {
+            "event": "start",
+            "tool": null,
+            "exit": 0,
+            "paths": [],
+            "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch main. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+            "stderr": ""
+          },
+          {
+            "event": "edit",
+            "tool": "Edit",
+            "exit": 2,
+            "paths": [
+              "smoke.sh"
+            ],
+            "stdout": "",
+            "stderr": "Use a named feature worktree to edit; main/detached HEAD is blocked."
+          },
+          {
+            "event": "stop",
+            "tool": null,
+            "exit": 0,
+            "paths": [],
+            "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+            "stderr": ""
+          }
+        ],
+        "detached_denial": "PASS",
+        "main_denial": "PASS"
+      },
+      {
+        "observed_at_utc": "2026-11-12T20:41:15.410081+00:00",
+        "source_base_commit": "234f0c753f9d5b5a40691a289a5c718804f86cd1",
+        "source_dirty": false,
+        "source_tree_sha256": "5fa4a9b21d95f1319f72a75a209ff5f4125a8547b001afeb16a6f20c73bf7e2d",
+        "source_hashes": {
+          ".claude-plugin/plugin.json": "87f663bcc4735caa68d77bebfb93c97026c88986b591c09c81f161f0550b0a29",
+          ".claude/settings.json": "93aa65d89a953416e7a968aa94b510215bf0e789e8b7d5aa81b921031ef62e8d",
+          ".codex/hooks.json": "1b9e09691cf03c9bd30a25cef0b6958a6fa5c771f87bee52d48ae9fc307d6681",
+          ".github/copilot-instructions.md": "927d5196c0f62dcc75f5be16b39dee257d174bb154f27e4eedd294c2b8d29fb3",
+          ".github/workflows/release-checks.yml": "f2e169b43de369dd8e7ae8108dff6392ef8a16b171683d8cf723e437643c7ca7",
+          ".gitignore": "bcdf88d41ff19b7301c92f9f1d260e000d1532a4d8140342ef621b4c5d4678cc",
+          ".python-version": "49a506dd32096b010d75205acf3430c9ae6c40351888129499e5a5e487126c93",
+          "AGENTS.md": "de695f1b668107a22416f91e9a56159de88aa3c6f30bc7289de754d5b7946de3",
+          "CLAUDE.md": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+          "README.md": "5fa45f65a3d1328074cb8c396dea724bd12eca56e1455e2b7d797097e3de95ce",
+          "agents/decision-gatekeeper.md": "dd183c473dd784f3f4bf1b171100737ae4a055474972234e6bd26d580619bbae",
+          "agents/plugin-release-executor.md": "b052317ad50fe3c804542cc4fd21513d25e2883f966c356602c6572c98754491",
+          "config/development.json": "47b514f028e5fe3a0003ceddfceb38e2f83a2c1d81bae2f62e80206a2721758d",
+          "config/package-files.json": "15223ebe03e9a1b7f2086990a95fc45f7ab1609f1760335fa967d1ee85c2ad9e",
+          "config/release.json": "d5add0d75be3980ea9a453a92b5d53d6b25b91efa6ca86dd005714037e4f6c35",
+          "config/specifications.json": "26b8eea8fed56c81476e82f7daf4b3dd7460f741a29f2cde07c798617f887d8a",
+          "config/toolchain.json": "c5856b31e103cb97cb21c6ea2e0ebbe0899735ccfd64f633927acbb5eaf3731b",
+          "docs/agent-test-plan.md": "75b0b946eabe901951cfd9d61f92d70a81862b4d60e975f0d0846359ecd92311",
+          "docs/development-architecture.md": "56f7429759e83d493e8120b2cea5a124775568e220f05c072c896ea3b5af9dc9",
+          "docs/development.md": "bab14ac3576b56d2c32297cb4a20532a5f6809cf08d871fb15badb9752c375e6",
+          "docs/hook-scope.md": "246fa8a1e50b5c035dfe0074c2131f04f4ab9a7b5d454df2291696d19610cfac",
+          "docs/shared-devtools.md": "ed41a1f97f86622a48c06f4f1f3897839e3e53798dc0bf3686dd6aef6d0b0084",
+          "docs/supported-agents.md": "3407f10ab2f3327ca2c46e831639df88e5b38072be46b72637576d4e8489ded9",
+          "docs/verification/acceptance-cli-2026-11-12.json": "8d14926ed5ee7282eecb76fb59e876f60185840061b5416e6c63e56e92a0c061",
+          "docs/verification/acceptance-cli-2026-11-12.md": "fcaf3a907192a0409d2d2184ae61502e6c2bf085d6021b405276619c4c6541ff",
+          "docs/verification/acceptance-surfaces-2026-11-12.md": "c3d7b72d7a174b9f6dda4479a777e268284b6bd8cccf40aad52b242db65809c4",
+          "docs/verification/acceptance-surfaces-native-2026-11-12.json": "63903ac6e60aba04fd841d01cfeaad135ab0635a9facde9f7654ffb07ac9dca5",
+          "docs/verification/agent-events.json": "1c04255e6cee701a61ef3cb346b21ad4e49ef473dc76391994bc50a3a2ace758",
+          "docs/verification/client-hooks.json": "02c3260c30983f39eb4897bf718fa3e3f9250c12ed472a5031b3ddfd2ade41ea",
+          "docs/verification/shared-ai-setup.md": "fcc0d3f8636d280956efd0731f33f26e2868061e4299243ab3acb29997b8dd4b",
+          "docs/verification/shared-devtools.md": "a18f142cc7a0f86d404d3dfe0ab6c17741d99dc39211eb103a1b6df6b40fd7da",
+          "docs/verification/supported-agents.md": "c7a7c44cdd730fd190285302b557eff0a3b7bccd4bbe90b1f2f63af1f2de9b93",
+          "pyproject.toml": "cef863980fe5913241e773557ccf40db307c2f3c28e2f7c1eb40dbe80e7fffca",
+          "scripts/dev": "0183d20f1eeec9e5f79d8b86866cf160db6a1b766ffa2953c4ab2ae2f7688a5e",
+          "scripts/dev.py": "5feef10db811c7c4bc79fa25fd20a8b39e6355464bb9077524c53a7245c38443",
+          "scripts/verify-agent-concurrency.py": "df9b1bb7c6635cec8d386ea2b24cc682f97f984369be4fc6de9cf13708325aa9",
+          "scripts/verify-agent.py": "b2bc279ed60d8e93995f473b84e3f38ce32daad7ddb773afea253aa7f0577ca6",
+          "skills/fin-pocketsmith-categorize-amazon/SKILL.md": "a426a9775c7e3335fef48d7f2e4a9ffae61a5595e61006bb4ae5dbd9e5c03dc0",
+          "skills/fin-pocketsmith-categorize-apple/SKILL.md": "9f672ba2d497c65a854310fb5c2f451a0a056bbb34fb28fe2fd47f1838ac5732",
+          "skills/fin-pocketsmith-categorize-netflix/SKILL.md": "5343f8eb024db7648dc22d6ca21772c3c7e2e5d434c82f2433cef14d3c7736c4",
+          "skills/fin-pocketsmith-categorize-rogers/SKILL.md": "5ca0829c0e1efc124a14f9b126cb98dcc67d8b5da92021d77892338b0cb462a2",
+          "skills/fin-pocketsmith-manage-vacation/SKILL.md": "967b461eb36fda75bfb46f37f1444eb64e91ac8028621af32aa336e5c7cc20dc",
+          "skills/fin-rogers-download-invoice/SKILL.md": "ca5db21cd55f94a80c26bc8c4efb646e87d4e18901d7cbc55fca9aa620822373",
+          "skills/plugin-release/SKILL.md": "899a4c0fdc9f72c7c5a0a7a8170cd6d861def98a017e9f444961a4123d3d33e9",
+          "skills/plugin-release/references/development.md": "50b8d9c25750dd34ec643e4a032c94ca0d80759edef90b6c6a77d207c56cf3e6",
+          "skills/plugin-release/references/release-notes-template.md": "df9e85a9cda719542f4d9fd2e85bd293bb06cda04a031ec4fda28e20cf0ed554",
+          "skills/plugin-release/references/runbook.md": "6b4abe8785b015af8135541eb81601b9e0c49f679d2eea81c1bdbe768460f7df",
+          "skills/plugin-release/scripts/branch-guard.py": "d9b2fa368e86af3b2fa6700d101c72fa1635aee8a3278a780352ba074e02d5b3",
+          "skills/plugin-release/scripts/package.sh": "bda1afdf69d087a6b69df26e6db78ae2fbb1cffbf2bc7180cf18e40359946da9",
+          "skills/plugin-release/scripts/release.py": "337af9ea2d9d5bd8befdd65789b178aec8e67404c65003ba04592e0aa350496d",
+          "tests/test_agent_concurrency.py": "a457155282f16b541621bf3dc0a7e1f411a8e6210833cfc7ae0ee3f57ec07074",
+          "tests/test_agent_probe.py": "cb405172fdfeaeed7a20f0577710cd8d68dd0d18a2390786a28c339ca876a625",
+          "tests/test_branch_guard.py": "aed3d85409f32a62081d029cef1dd9ba149669d56161e60dd95d3820970ac7ca",
+          "tests/test_development.py": "49290ade8ff13a89ce8e4fefafb3294dad321dfef27991e678c77400a9c644e9",
+          "tests/test_live_specs.py": "4ec979a5032af464e7f50baf974cf725bc689c52675c535a89309638b87ff451",
+          "tests/test_release.py": "c4b2eb85535d5f2d48c43ce1f7b9a932b1e8d17657755dec0a547afa9fbf3593",
+          "tests/test_shared_development.py": "f8543f30017fa5998fec1f31b3e07f7f0fcb3e4b5a1da64be914ffec50a755ac",
+          "tools/pa-devtools/pyproject.toml": "2bfdafc25cf851c1f21f045ba017f353266bdbdd8f0b22f289ca109dbbc9df0a",
+          "tools/pa-devtools/src/pa_devtools/__init__.py": "942202cf33ad8538b6bc82abf0a48e3d56674abab5e9e534f684b9be0c63343a",
+          "tools/pa-devtools/src/pa_devtools/hooks.py": "6b48db19e6369f4709e5c96c9aeeaed934f64e0c81f3f3f95b1f092b98e8bb71",
+          "tools/pa-devtools/src/pa_devtools/live_specs.py": "844d1c40bc1f2e291c36d5e50050bee109a8c58cf28144d5fd4fd9b945eaac1a",
+          "tools/pa-devtools/src/pa_devtools/planning.py": "ad27a45305ce64483e0f8aba26e76423a9761656cfd7996d5684b604f2df3897",
+          "tools/pa-devtools/src/pa_devtools/snapshots.py": "cb5c89c72b7486327a369b78ae43415f37b2a9fbc6baf21f56808b0a0933f89e",
+          "tools/pa-devtools/src/pa_devtools/source.py": "cc19390043b3419e95a0b3d59e10086fecfd130b528c2da5548cab51c51e32f9",
+          "tools/pa-devtools/src/pa_devtools/specifications.py": "57bcc6cb1be8846066ac385a6a77d82ba95ae1e974f4b3ab36aacc2f388e3d39",
+          "tools/pa-devtools/src/pa_devtools/vendor/Apache-2.0.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+          "tools/pa-devtools/src/pa_devtools/vendor/NOTICE.md": "556658e19a2a3d0ce7fa044f6f22061fefb4e5060993b75bbf352b7aed99067d",
+          "tools/pa-devtools/src/pa_devtools/vendor/plugin.schema.json": "0a4aad95ce337878ad38802ebf0daa3fde76abe3f65400c86bcbb1ec0b3ab883",
+          "tools/pa-devtools/src/pa_devtools/vendor/specifications.json": "d1c6cf1d0030daf14653e8dceea81ed4da8357b9bbd66941ec234b1f2805c097",
+          "uv.lock": "dc3659e373b4a1037d68bd7353099e7ae3deb9388aeaf6696ba15e0f337b8dbb"
+        },
+        "root_discovery_valid_edit": "PASS",
+        "root_events": [
+          {
+            "event": "start",
+            "tool": null,
+            "exit": 0,
+            "paths": [],
+            "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch chore/acceptance-claude. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+            "stderr": ""
+          },
+          {
+            "event": "edit",
+            "tool": "Edit",
+            "exit": 0,
+            "paths": [
+              "ordinary.txt"
+            ],
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "event": "feedback",
+            "tool": "Edit",
+            "exit": 0,
+            "paths": [
+              "ordinary.txt"
+            ],
+            "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"PostToolUse\", \"additionalContext\": \"pa-toolkit edit feedback (advisory; files unchanged; run scripts/dev format explicitly): structural edit accepted; run scripts/dev check for the full gate\"}}\n",
+            "stderr": ""
+          },
+          {
+            "event": "stop",
+            "tool": null,
+            "exit": 0,
+            "paths": [],
+            "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+            "stderr": ""
+          }
+        ],
+        "client": "claude",
+        "version": "2.1.322 (Claude Code)",
+        "status": "PASS",
+        "fixture_mode": "independent-removed",
+        "user_configuration": "ignored",
+        "startup_signals": [],
+        "fixture_observer": true,
+        "launcher_from_subdirectory": true,
+        "exit": 0,
+        "discovery": "PASS",
+        "native_edit_bytes": "PASS",
+        "native_delivery": "PASS",
+        "diagnostics": "PASS",
+        "feedback_non_mutating": "PASS",
+        "source_commit_unchanged": true,
+        "events": [
+          {
+            "event": "start",
+            "tool": null,
+            "exit": 0,
+            "paths": [],
+            "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch chore/acceptance-claude. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+            "stderr": ""
+          },
+          {
+            "event": "edit",
+            "tool": "Edit",
+            "exit": 0,
+            "paths": [
+              "smoke.sh"
+            ],
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "event": "feedback",
+            "tool": "Edit",
+            "exit": 0,
+            "paths": [
+              "smoke.sh"
+            ],
+            "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"PostToolUse\", \"additionalContext\": \"pa-toolkit edit feedback (advisory; files unchanged; run scripts/dev format explicitly): shfmt: diff <fixture>/smoke.sh.orig <fixture>/smoke.sh\\n--- <fixture>/smoke.sh.orig\\n+++ <fixture>/smoke.sh\\n@@ -1,2 +1,2 @@\\n #!/usr/bin/env bash\\n-if true;then echo after;fi\\n+if true; then echo after; fi\\n\\nShellCheck: passed\"}}\n",
+            "stderr": ""
+          },
+          {
+            "event": "edit",
+            "tool": "Edit",
+            "exit": 0,
+            "paths": [
+              "smoke.json"
+            ],
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "event": "feedback",
+            "tool": "Edit",
+            "exit": 0,
+            "paths": [
+              "smoke.json"
+            ],
+            "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"PostToolUse\", \"additionalContext\": \"pa-toolkit edit feedback (advisory; files unchanged; run scripts/dev format explicitly): Expecting value: line 1 column 12 (char 11)\"}}\n",
+            "stderr": ""
+          },
+          {
+            "event": "stop",
+            "tool": null,
+            "exit": 0,
+            "paths": [],
+            "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+            "stderr": ""
+          },
+          {
+            "event": "start",
+            "tool": null,
+            "exit": 0,
+            "paths": [],
+            "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch DETACHED. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+            "stderr": ""
+          },
+          {
+            "event": "edit",
+            "tool": "Edit",
+            "exit": 2,
+            "paths": [
+              "smoke.sh"
+            ],
+            "stdout": "",
+            "stderr": "Use a named feature worktree to edit; main/detached HEAD is blocked."
+          },
+          {
+            "event": "stop",
+            "tool": null,
+            "exit": 0,
+            "paths": [],
+            "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+            "stderr": ""
+          },
+          {
+            "event": "start",
+            "tool": null,
+            "exit": 0,
+            "paths": [],
+            "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch main. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+            "stderr": ""
+          },
+          {
+            "event": "edit",
+            "tool": "Edit",
+            "exit": 2,
+            "paths": [
+              "smoke.sh"
+            ],
+            "stdout": "",
+            "stderr": "Use a named feature worktree to edit; main/detached HEAD is blocked."
+          },
+          {
+            "event": "stop",
+            "tool": null,
+            "exit": 0,
+            "paths": [],
+            "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+            "stderr": ""
+          }
+        ],
+        "detached_denial": "PASS",
+        "main_denial": "PASS"
+      }
+    ],
+    "client_process_intervals": [
+      {
+        "thread": "ThreadPoolExecutor-0_1",
+        "cwd": "/var/folders/vy/51ghy4cd4yd9185d031glzr00000gn/T/pa-agent-acceptance-4_b7vsfi",
+        "start_monotonic": 0.704428625,
+        "end_monotonic": 8.936910125
+      },
+      {
+        "thread": "ThreadPoolExecutor-0_0",
+        "cwd": "/var/folders/vy/51ghy4cd4yd9185d031glzr00000gn/T/pa-agent-acceptance-0ow9x3gq",
+        "start_monotonic": 0.704353416,
+        "end_monotonic": 8.988510333
+      },
+      {
+        "thread": "ThreadPoolExecutor-0_1",
+        "cwd": "/var/folders/vy/51ghy4cd4yd9185d031glzr00000gn/T/pa-agent-acceptance-4_b7vsfi/scripts",
+        "start_monotonic": 8.937913333,
+        "end_monotonic": 20.363277375
+      },
+      {
+        "thread": "ThreadPoolExecutor-0_0",
+        "cwd": "/var/folders/vy/51ghy4cd4yd9185d031glzr00000gn/T/pa-agent-acceptance-0ow9x3gq/scripts",
+        "start_monotonic": 8.988815291,
+        "end_monotonic": 20.450223083
+      },
+      {
+        "thread": "ThreadPoolExecutor-0_1",
+        "cwd": "/var/folders/vy/51ghy4cd4yd9185d031glzr00000gn/T/pa-agent-acceptance-4_b7vsfi/scripts",
+        "start_monotonic": 20.392710958,
+        "end_monotonic": 27.776460833
+      },
+      {
+        "thread": "ThreadPoolExecutor-0_0",
+        "cwd": "/var/folders/vy/51ghy4cd4yd9185d031glzr00000gn/T/pa-agent-acceptance-0ow9x3gq/scripts",
+        "start_monotonic": 20.470878791,
+        "end_monotonic": 28.352461625
+      },
+      {
+        "thread": "ThreadPoolExecutor-0_1",
+        "cwd": "/var/folders/vy/51ghy4cd4yd9185d031glzr00000gn/T/pa-agent-acceptance-4_b7vsfi/scripts",
+        "start_monotonic": 27.798344083,
+        "end_monotonic": 35.384405166
+      },
+      {
+        "thread": "ThreadPoolExecutor-0_0",
+        "cwd": "/var/folders/vy/51ghy4cd4yd9185d031glzr00000gn/T/pa-agent-acceptance-0ow9x3gq/scripts",
+        "start_monotonic": 28.373954625,
+        "end_monotonic": 35.88331425
+      }
+    ],
+    "maximum_individual_process_overlap_seconds": 11.374462084,
+    "limitation": "Independent repositories, not linked worktrees; process windows include tool execution and do not measure inference scheduling"
   }
 }

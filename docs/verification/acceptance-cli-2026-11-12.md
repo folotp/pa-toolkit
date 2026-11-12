@@ -40,7 +40,7 @@ fixture-only; raw model transcripts, credentials and full user configuration are
 | Antigravity deliberate multi-file defects (A03/A04) | Prior CLI smoke remains passing evidence; not repeated solely for a new session |
 | Antigravity native hook scenarios | NOT APPLICABLE to the configured toolkit integration: no adapter is configured; Git/index/CI remains required |
 | Copilot cloud agent | BLOCKED: explicit hosted task creation against `main` returned `403 Forbidden`; no task created; cause not established |
-| Copilot PR review | Pending the continuation PR's actual request/result; see issue #23 and the PR for current status |
+| Copilot PR review | BLOCKED on PR #30: review API returns 422 `ACTOR_INELIGIBLE`; legacy reviewer request returns success but no requested reviewer/submitted review was observed |
 | Reduced docs/version PR CI (C02) | NOT RUN on a genuine hosted docs/version PR; conservative full behavior and full main/release validation retained |
 
 ## Why the previous Codex blocker was ambiguous
@@ -106,6 +106,14 @@ unavailable in this session. Neither failure proves that PA lacks a subscription
 that the repository disabled Copilot. An authorized hosted surface/access remedy is
 needed; paid-service activation and broader permissions were not attempted.
 
+The dedicated review request on [PR #30](https://github.com/folotp/pa-toolkit/pull/30)
+returned HTTP 422 `ACTOR_INELIGIBLE`, identifying either a license without code review
+or an organization Copilot policy. Those alternatives were not distinguished. A legacy
+reviewer request through the connector returned success; a subsequent REST read showed
+no requested reviewer and no submitted review. A successful request is not a model
+review. The receipt retains the request head and observation time. No service, billing
+or permission setting was changed. Check the PR for any later actual review.
+
 ## Current official sources and remaining boundaries
 
 The receipts contain retrieval timestamps, URLs and SHA-256 digests for current
@@ -120,8 +128,8 @@ adapter is not a claim that Antigravity lacks hooks. Native adapter implementati
 outside this configured Git/index/CI integration and must not copy Claude bindings.
 
 The required current-official-spec gate, conservative PR selection and full
-main/release validation are preserved. Full source/index gates and current-head CI
-belong to the continuation PR. No merge, release/tag, marketplace action, trust change,
+main/release validation are preserved. Full source/index gates and installed pre-commit/pre-push passed with 80 tests;
+[current-head CI belongs to PR #30](https://github.com/folotp/pa-toolkit/pull/30). No merge, release/tag, marketplace action, trust change,
 vault write, CodeQL implementation, other-repository rollout or deployment occurred.
 Issue #23 stays open for the outstanding applicable requirements, including hosted
 Copilot access/review, main native proof and any separately requested instruction-mirror

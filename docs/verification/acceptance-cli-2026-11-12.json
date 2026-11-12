@@ -1403,7 +1403,15 @@
     "cause": "Not established; no entitlement, billing or permission change attempted"
   },
   "copilot_review": {
-    "status": "NOT_RUN",
-    "reason": "Continuation PR not yet opened at receipt creation; consult issue/PR for later evidence"
+    "status": "BLOCKED",
+    "pull_request": "https://github.com/folotp/pa-toolkit/pull/30",
+    "head_sha": "3583807f226e0b59c401274369cc2cd5145592f0",
+    "observed_at_utc": "2026-11-12T19:24:53.744177+00:00",
+    "endpoint": "POST /repos/folotp/pa-toolkit/pulls/30/copilot-code-review",
+    "http_status": 422,
+    "failure_reason": "ACTOR_INELIGIBLE",
+    "diagnostic": "The actor does not have a Copilot license that includes code review, or code review is disabled by their organization's Copilot policy.",
+    "legacy_reviewer_request": "Connector returned success; subsequent REST query had no requested reviewer and no submitted review",
+    "actual_review_observed": false
   }
 }

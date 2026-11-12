@@ -20,6 +20,25 @@ repositories, marketplace pins and live systems remain unchanged. No hooks, sand
 branch protection or permissions are bypassed. Do not run a live bumper, merge,
 release, deploy or access a personal vault to prove developer tooling works.
 
+## Selected products and surface coverage
+
+PA clarified on 2026-11-12 that **CLI only applies to Antigravity alone**.
+Codex and Claude Code remain in scope for thorough acceptance. A successful CLI
+runner certifies only its recorded scenarios, source bytes and product version.
+It cannot close interactive, desktop, IDE or hosted coverage by implication.
+GitHub Copilot means GitHub-hosted cloud agent and PR review, never a local Mac model.
+PA subsequently selected Codex desktop and Claude Code cloud via desktop or web
+beyond the existing CLI suites. Keep local/hosted execution receipts separate.
+
+Maintain the [surface matrix](verification/acceptance-surfaces-2026-11-12.md) alongside
+this catalogue. Discover installed/available entry points and establish PA's intended
+usage before deciding material product ambiguities. Unobserved applicable scenarios
+stay NOT RUN or BLOCKED; do not mark them N/A merely because a CLI suite passed.
+For each selected surface, apply A01–A04 and E01–E02; apply A05 where a native
+adapter exists. Record shell/MCP connector boundaries independently, using only
+non-personal fixtures. G01–G03, S01–S03 and P01 retain deterministic evidence and
+C01–C03 retain hosted CI evidence, separately from native model recordings.
+
 ## Scenario catalogue
 
 | ID | Setup and operation | Expected evidence and failure behavior |

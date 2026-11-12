@@ -18,7 +18,12 @@ is needed. Client configuration is development-only and excluded from runtime.
 | Claude Code local | `CLAUDE.md` imports `AGENTS.md`; `scripts/dev session claude` | `.claude/settings.json`; native Read/Edit feedback and branch guards. Shell/MCP writes rely on Git/CI | 2.1.322: strengthened CLI suite passes root/subdirectory discovery, valid/defect edits, successful events, both diagnostics, main and detached denial; interactive/Desktop not certified |
 | GitHub Copilot on GitHub.com | Cloud agent and PR code review use `AGENTS.md` plus `.github/copilot-instructions.md` | GitHub-hosted checkout/review and required CI; no local Mac client, session launcher or local hook parity required | Hosted task creation returns 403; PR #30 review API returns 422 ACTOR_INELIGIBLE with no actual review observed; Mac CLI is NOT APPLICABLE |
 | Google Antigravity | Current rules documentation loads `AGENTS.md`; `scripts/dev session antigravity` invokes `agy` | PA selected CLI only (2026-11-12); installed 1.5.7; no native hook adapter is configured | CLI smoke plus root/subdirectory concurrent linked edits pass with actual read_file/edit_file events; App/IDE outside selected scope |
-| GitHub Actions | Workflow invokes `scripts/dev ci`; complete history and trusted baseline proof | Stable required Linux/macOS contexts; full main/schedule/release and conservative PR reduction. No LLM client/auth needed | Merged #29 exact-main run 43279394305 passes both OSes; continuation PR supplies current-head results |
+| GitHub Actions | Workflow invokes `scripts/dev ci`; complete history and trusted baseline proof | Stable required Linux/macOS contexts; full main/schedule/release and conservative PR reduction. No LLM client/auth needed | Merged #30 exact-main run 43298112159 at 5b5fe08 passes both OSes with 86 tests, live specifications and actual archive; subsequent PRs require their own current-head results |
+
+Antigravity's selected CLI-only scope does not restrict Codex or Claude Code. Their
+app/IDE/interactive/hosted scenarios require explicit surface selection and actual
+evidence; implemented CLI suites are partial acceptance. See the
+[surface matrix](verification/acceptance-surfaces-2026-11-12.md).
 
 Run `scripts/dev doctor` and the full/index commands regardless of the editing
 client. The launcher normalizes only its child cwd and forwards arguments; it does

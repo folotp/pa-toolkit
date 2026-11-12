@@ -14,11 +14,11 @@ is needed. Client configuration is development-only and excluded from runtime.
 
 | Surface | Discovery and launch | Native integration and limits | Current evidence |
 | --- | --- | --- | --- |
-| Codex CLI/local | `AGENTS.md`; `scripts/dev session codex` | `.codex/hooks.json` requires trusted project/definitions and enabled hooks. No trust or sandbox bypass in test runner | 0.167.2: fresh instruction discovery and native edit bytes pass; no native hook witnesses in isolated probe, hook delivery blocked |
+| Codex CLI/local | `AGENTS.md`; `scripts/dev session codex` | `.codex/hooks.json` requires trusted project/definitions and enabled hooks. No trust or sandbox bypass in test runner | 0.167.2: ordinary trusted linked-root/subdirectory native delivery, diagnostics, detached denial and concurrency pass; independent ignored-config and main-native proof remain blocked |
 | Claude Code local | `CLAUDE.md` imports `AGENTS.md`; `scripts/dev session claude` | `.claude/settings.json`; native Read/Edit feedback and branch guards. Shell/MCP writes rely on Git/CI | 2.1.322: strengthened CLI suite passes root/subdirectory discovery, valid/defect edits, successful events, both diagnostics, main and detached denial; interactive/Desktop not certified |
-| GitHub Copilot on GitHub.com | Cloud agent and PR code review use `AGENTS.md` plus `.github/copilot-instructions.md` | GitHub-hosted checkout/review and required CI; no local Mac client, session launcher or local hook parity required | Hosted agent/review acceptance not run; missing Mac CLI is NOT APPLICABLE |
-| Google Antigravity | Current rules documentation loads `AGENTS.md`; `scripts/dev session antigravity` invokes `agy` | Installed CLI 1.5.7; no native hook adapter is claimed. App/IDE testing is separate from CLI | CLI 1.5.7 smoke passes discovery, valid/multi-file edits and actual read_file/edit_file events; App/IDE and native-hook delivery not certified |
-| GitHub Actions | Workflow invokes `scripts/dev ci`; complete history and trusted baseline proof | Stable required Linux/macOS contexts; full main/schedule/release and conservative PR reduction. No LLM client/auth needed | Merged #24 main run passes both OSes; follow-up PR must supply current-head results |
+| GitHub Copilot on GitHub.com | Cloud agent and PR code review use `AGENTS.md` plus `.github/copilot-instructions.md` | GitHub-hosted checkout/review and required CI; no local Mac client, session launcher or local hook parity required | Hosted task creation returns 403; PR #30 review API returns 422 ACTOR_INELIGIBLE with no actual review observed; Mac CLI is NOT APPLICABLE |
+| Google Antigravity | Current rules documentation loads `AGENTS.md`; `scripts/dev session antigravity` invokes `agy` | PA selected CLI only (2026-11-12); installed 1.5.7; no native hook adapter is configured | CLI smoke plus root/subdirectory concurrent linked edits pass with actual read_file/edit_file events; App/IDE outside selected scope |
+| GitHub Actions | Workflow invokes `scripts/dev ci`; complete history and trusted baseline proof | Stable required Linux/macOS contexts; full main/schedule/release and conservative PR reduction. No LLM client/auth needed | Merged #29 exact-main run 43279394305 passes both OSes; continuation PR supplies current-head results |
 
 Run `scripts/dev doctor` and the full/index commands regardless of the editing
 client. The launcher normalizes only its child cwd and forwards arguments; it does
@@ -59,3 +59,5 @@ and `source_tree_sha256`/per-file hashes identify the bytes tested. A base SHA a
 must never be represented as proof of the tested PR head or an installed release.
 The disposable observer is explicitly labelled and production discovery/configuration
 must still be tested separately on the intended real surface.
+
+Current continuation: [2026-11-12 CLI acceptance](verification/acceptance-cli-2026-11-12.md), including actual native events, source hashes and exact access blockers.

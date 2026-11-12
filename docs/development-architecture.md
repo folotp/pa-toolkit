@@ -39,8 +39,9 @@ verification, Markdown links, README inventory, package-contract/link closure an
 all infrastructure tests. Required failures stop execution. Format is an explicit
 write operation. Lightweight client feedback checks syntax/shell style; it does not
 replace the complete gate. The Git index and CI independently cover shell/MCP/hosted
-writes outside native edit matchers. Current Codex code-mode native apply_patch
-delivery was tested separately from arbitrary nested orchestration.
+writes outside native edit matchers. Current Codex native apply_patch delivery and diagnostics have
+[no-bypass linked-worktree evidence](verification/acceptance-cli-2026-11-12.md);
+independent ignored-config fixtures and main native denial remain blocked.
 
 ## Reuse and intentional differences from Organon
 

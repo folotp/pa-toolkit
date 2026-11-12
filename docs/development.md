@@ -96,7 +96,7 @@ claimed. See the [authoritative-spec contract](shared-devtools.md#live-authorita
 ./scripts/dev worktree feat/example /explicit/disposable/path
 cd /explicit/disposable/path/scripts
 ./dev session claude
-# Or ./dev session codex|copilot|antigravity [client arguments]
+# Or ./dev session codex|antigravity [client arguments]
 ```
 
 Worktree creation starts a new named branch from local main; fetch/verify main before
@@ -223,3 +223,12 @@ hosted baseline proof selects full validation.
 Supported agent targets, capabilities and blockers are in [supported agents](supported-agents.md).
 The [reusable test plan](agent-test-plan.md) and stdlib `scripts/verify-agent.py`
 provide repeatable live acceptance; native-client evidence is separate from CI.
+
+
+For Codex ordinary existing-trust acceptance, use a new clean explicitly disposable
+linked checkout with `verify-agent.py --codex-fixture`; the full command and preserved
+fixture contract are in the [acceptance plan](agent-test-plan.md). This never grants
+trust and still reports the untested main-native guard as BLOCKED. Antigravity's selected
+target is CLI only; `python3 scripts/verify-agent-concurrency.py --output /outside/source/antigravity.json`
+tests overlapping root/subdirectory native edits with the sandbox enabled. These are
+optional model-backed probes, separate from the deterministic development gate.

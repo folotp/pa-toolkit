@@ -1,0 +1,38 @@
+{
+  "git": {
+    "minimum": "2.31.0",
+    "flag": "--version"
+  },
+  "uv": {
+    "minimum": "0.13.7",
+    "flag": "--version"
+  },
+  "bash": {
+    "minimum": "3.2.0",
+    "flag": "--version"
+  },
+  "jq": {
+    "minimum": "1.6.0",
+    "flag": "--version"
+  },
+  "zip": {
+    "minimum": "3.0.0",
+    "flag": "-v"
+  },
+  "unzip": {
+    "minimum": "6.0.0",
+    "flag": "-v"
+  },
+  "shfmt": {
+    "minimum": "3.6.0",
+    "flag": "--version"
+  },
+  "shellcheck": {
+    "minimum": "0.9.0",
+    "flag": "--version"
+  },
+  "actionlint": {
+    "minimum": "1.7.12",
+    "flag": "-version"
+  }
+}

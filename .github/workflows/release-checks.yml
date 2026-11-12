@@ -1,29 +1,69 @@
 name: Release infrastructure
 on:
   pull_request:
+  schedule:
+    - cron: '23 11 * * 1'
+  workflow_dispatch:
   push:
     branches: [main]
 permissions:
   contents: read
+  actions: read
 jobs:
-  # Required protection contexts are Release checks (<matrix.os>); preserve names.
+  # These exact names are live required protection contexts. Coordinate any rename.
   checks:
     name: Release checks (${{ matrix.os }})
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+        include:
+          - os: ubuntu-latest
+            runner: ubuntu-latest
+          # Keep the protected context stable; explicitly select Apple Silicon.
+          # Capacity failures must stay visible, without an implicit Intel fallback.
+          - os: macos-latest
+            runner: macos-15
+    runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v6
         with:
-          python-version: '3.11'
-      - name: Install tools (Linux)
-        if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y jq zip
-      - name: Install tools (macOS)
+          fetch-depth: 0
+      - name: Verify macOS Apple Silicon runner
         if: runner.os == 'macOS'
-        run: brew install jq
-      # Portable fixtures exercise both extension/fallback and dry-run/build.
-      # A repository-specific integration dry-run belongs to the consumer CI.
-      - run: python3 -m unittest discover -s tests -v
+        run: |
+          toolkit_machine_arch="$(uname -m)"
+          printf 'Runner OS=%s architecture=%s machine=%s\n' "$RUNNER_OS" "$RUNNER_ARCH" "$toolkit_machine_arch"
+          test "$RUNNER_ARCH" = ARM64
+          test "$toolkit_machine_arch" = arm64
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: '0.13.7'
+          python-version: '3.11'
+      - name: Install shell tools (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y jq zip unzip shfmt shellcheck
+      - name: Install shell tools (macOS)
+        if: runner.os == 'macOS'
+        run: brew install jq shfmt shellcheck actionlint
+      # Pin the Go-built CI linter; Go is only a bootstrap tool, not a toolkit gate.
+      - uses: actions/setup-go@v6
+        if: runner.os == 'Linux'
+        with:
+          go-version: '1.25.x'
+          cache: false
+      - name: Install actionlint (Linux)
+        if: runner.os == 'Linux'
+        run: go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.12
+      # No path filter: required contexts always report. Missing history/API/policy
+      # compatibility falls back to the same full generic release dry-run.
+      - name: Select conservative PR gates or full validation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TOOLKIT_EVENT: ${{ github.event_name }}
+          TOOLKIT_BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if [ "$TOOLKIT_EVENT" = pull_request ]; then
+            ./scripts/dev ci --base "$TOOLKIT_BASE"
+          else
+            ./scripts/dev ci --full
+          fi

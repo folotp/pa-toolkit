@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Resolve this checkout before dispatch, even when launched from a subdirectory.
+# Launcher Python 3.9+ runs diagnostics/index export; locked project Python runs gates.
+set -euo pipefail
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$root"
+if [[ "${1:-}" == session ]]; then
+    shift
+    client="${1:-}"
+    case "$client" in
+        claude | codex) shift ;;
+        *)
+            echo 'Usage: scripts/dev session claude|codex [client arguments]' >&2
+            exit 2
+            ;;
+    esac
+    exec "$client" "$@"
+fi
+case "${1:-help}" in
+    doctor | worktree | hook | install-hooks | check-staged | pre-push)
+        exec python3 "$root/scripts/dev.py" "$@"
+        ;;
+    check)
+        if [[ "${2:-}" == --staged ]]; then
+            exec python3 "$root/scripts/dev.py" check-staged
+        fi
+        ;;
+esac
+exec uv run --locked --project "$root" python "$root/scripts/dev.py" "$@"

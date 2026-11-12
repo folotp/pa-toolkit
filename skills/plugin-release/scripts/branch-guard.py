@@ -1,17 +1,40 @@
 #!/usr/bin/env python3
 """Install agent-independent main guards without replacing unmanaged hooks."""
+
 import argparse
 from pathlib import Path
 import shlex
 import subprocess
 import sys
 
-MARKER = '# managed-by: pa-toolkit branch-guard'
+MARKER = "# managed-by: pa-toolkit branch-guard"
 
 
 def git(*args):
     """Read Git metadata in the invoking repository, not the driver’s own checkout."""
-    return subprocess.check_output(['git', *args], text=True).strip()
+    return subprocess.check_output(["git", *args], text=True).strip()
+
+
+def check_branch(branch, action="commit"):
+    """One named-feature policy shared by generic Git and toolkit lifecycle guards."""
+    if branch in ("", "main"):
+        raise ValueError(
+            f"Use a named feature worktree to {action}; main/detached HEAD is blocked."
+        )
+
+
+def check_push(stream):
+    """Reject a main destination in Git's four-field pre-push input.
+
+    Shared by this generic guard and the toolkit development adapter. Malformed
+    records fail closed instead of accidentally permitting an uninspected update.
+    """
+    for line in stream:
+        fields = line.split()
+        if len(fields) != 4:
+            raise ValueError("Malformed pre-push update; expected four Git fields")
+        if fields[2] == "refs/heads/main":
+            raise ValueError("Direct main push blocked; merge a pull request.")
 
 
 def main():
@@ -24,30 +47,39 @@ def main():
     Launchers retain this script’s absolute path: reinstall before removing or moving
     the source checkout. Server-side branch protection is the independent merge gate."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('event', choices=['install', 'pre-commit', 'pre-push'])
+    parser.add_argument("event", choices=["install", "pre-commit", "pre-push"])
     args = parser.parse_args()
-    if args.event == 'pre-commit':
-        if git('branch', '--show-current') in ('', 'main'):
-            parser.exit(1, 'Commit on a named feature branch, never main/detached HEAD.\n')
-    elif args.event == 'pre-push':
-        for line in sys.stdin:
-            # Git sends: local_ref local_sha remote_ref remote_sha, one per update.
-            fields = line.split()
-            if len(fields) == 4 and fields[2] == 'refs/heads/main':
-                parser.exit(1, 'Direct main push blocked; merge a pull request.\n')
+    if args.event == "pre-commit":
+        try:
+            check_branch(git("branch", "--show-current"))
+        except ValueError as error:
+            parser.exit(1, str(error) + "\n")
+    elif args.event == "pre-push":
+        try:
+            check_push(sys.stdin)
+        except ValueError as error:
+            parser.exit(1, str(error) + "\n")
     else:
         # Preflight every destination before mutating the shared hooks directory.
-        for event in ('pre-commit', 'pre-push'):
-            path = Path(git('rev-parse', '--path-format=absolute', '--git-path', 'hooks/' + event))
+        for event in ("pre-commit", "pre-push"):
+            path = Path(git("rev-parse", "--path-format=absolute", "--git-path", "hooks/" + event))
             if path.exists() and MARKER not in path.read_text():
-                parser.exit(1, 'Preserving unmanaged hook; integrate manually: ' + str(path) + '\n')
-        for event in ('pre-commit', 'pre-push'):
-            path = Path(git('rev-parse', '--path-format=absolute', '--git-path', 'hooks/' + event))
+                parser.exit(1, "Preserving unmanaged hook; integrate manually: " + str(path) + "\n")
+        for event in ("pre-commit", "pre-push"):
+            path = Path(git("rev-parse", "--path-format=absolute", "--git-path", "hooks/" + event))
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text('#!/bin/sh\n' + MARKER + '\nexec python3 ' + shlex.quote(str(Path(__file__).resolve())) + ' ' + event + '\n')
+            path.write_text(
+                "#!/bin/sh\n"
+                + MARKER
+                + "\nexec python3 "
+                + shlex.quote(str(Path(__file__).resolve()))
+                + " "
+                + event
+                + "\n"
+            )
             path.chmod(0o755)
-            print('Installed ' + str(path))
+            print("Installed " + str(path))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

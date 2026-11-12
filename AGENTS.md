@@ -26,3 +26,37 @@ Code must explain its own intent through precise names, coherent functions and e
 ## Shared release infrastructure
 
 Read `skills/plugin-release/references/development.md` for architecture, extension/receipt contracts, tests and CI. The canonical general release procedure is `skills/plugin-release/references/runbook.md`; the Claude executor is an adapter. Run `python3 -m unittest discover -s tests -v` before committing release infrastructure changes. Use one named branch/worktree per editing agent and merge through a PR. Do not publish, tag or change marketplace pins without an authorized release request.
+
+## Shared development interface
+
+Use `./scripts/dev doctor`, `./scripts/dev check` and `./scripts/dev check --staged`.
+Run the full gate before committing; Git validates the actual index separately.
+`./scripts/dev format` is an explicit source write. Lifecycle feedback never formats.
+Create worktrees with `./scripts/dev worktree feat/example /explicit/path`; start
+Claude/Codex with `./scripts/dev session claude|codex` from that checkout, including
+when invoking the launcher from a subdirectory. Preserve other sessions' checkouts.
+
+Development uses locked Python dependencies (`uv sync --locked`), Bash 3.2-compatible
+shell code and the supported tools in `config/toolchain.json`. Launcher Python 3.9+
+and managed project Python 3.11-3.15 are distinct. No development gate needs a vault,
+finance service, installed AI client or installed Git hook. Missing required tools,
+blocked caches/network and unavailable checks fail with a setup remedy.
+
+Architecture, setup, CI ownership, client limits and recovery are maintained in the
+[development architecture](https://github.com/folotp/pa-toolkit/blob/main/docs/development-architecture.md),
+[development runbook](https://github.com/folotp/pa-toolkit/blob/main/docs/development.md)
+and [hook scope](https://github.com/folotp/pa-toolkit/blob/main/docs/hook-scope.md).
+Maintain source contracts, tests and these documents in the same PR.
+
+`./scripts/dev install-hooks` preflights pre-commit/pre-push, honors `core.hooksPath`
+and upgrades only exact recognized toolkit launchers. Shared hook installation
+also affects linked worktrees: older branches without the shared launcher fail
+closed. Preserve unmanaged hooks and compose manually using the development runbook.
+Do not install from a transient checkout without understanding that shared scope.
+
+Runtime files are explicitly selected by `config/package-files.json`. Update this
+inventory with runtime additions and verify a real archive through the generic
+release driver from a clean worktree. This repository's `config/release.json` selects
+its shared full gate and runtime package command. The general runbook/driver remains
+the only release implementation; require exact merged remote-main identity again
+before an authorized tag. Development adapters/configuration/environments never ship.

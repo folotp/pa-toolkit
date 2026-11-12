@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "gates": {
+    "doctor": {
+      "argv": [
+        "./scripts/dev",
+        "_gate",
+        "doctor"
+      ],
+      "always": true
+    },
+    "specs": {
+      "argv": [
+        "./scripts/dev",
+        "_gate",
+        "specs"
+      ],
+      "always": true
+    },
+    "spec-freshness": {
+      "argv": [
+        "./scripts/dev",
+        "_gate",
+        "spec-freshness"
+      ],
+      "always": true
+    },
+    "code": {
+      "argv": [
+        "./scripts/dev",
+        "_gate",
+        "code"
+      ],
+      "always": false
+    },
+    "links": {
+      "argv": [
+        "./scripts/dev",
+        "_gate",
+        "links"
+      ],
+      "always": true
+    },
+    "inventory": {
+      "argv": [
+        "./scripts/dev",
+        "_gate",
+        "inventory"
+      ],
+      "always": true
+    },
+    "package-contract": {
+      "argv": [
+        "./scripts/dev",
+        "_gate",
+        "package-contract"
+      ],
+      "always": true
+    },
+    "tests": {
+      "argv": [
+        "./scripts/dev",
+        "_gate",
+        "tests"
+      ],
+      "always": false
+    }
+  },
+  "changes": [
+    {
+      "name": "development-policy",
+      "patterns": [
+        "config/**",
+        "tools/**",
+        "scripts/**",
+        "tests/**",
+        ".github/**",
+        "pyproject.toml",
+        "uv.lock",
+        ".python-version",
+        ".gitignore"
+      ],
+      "gates": [],
+      "full": true
+    },
+    {
+      "name": "code",
+      "patterns": [
+        "*.py",
+        "*.sh",
+        "**/*.py",
+        "**/*.sh"
+      ],
+      "gates": [
+        "code",
+        "tests"
+      ],
+      "full": false
+    },
+    {
+      "name": "development-docs",
+      "patterns": [
+        "docs/**",
+        "CLAUDE.md"
+      ],
+      "gates": [],
+      "full": false
+    },
+    {
+      "name": "runtime-docs",
+      "patterns": [
+        "README.md",
+        "AGENTS.md"
+      ],
+      "gates": [],
+      "full": false
+    },
+    {
+      "name": "runtime-metadata",
+      "patterns": [
+        ".claude-plugin/plugin.json",
+        "skills/*/SKILL.md",
+        "skills/*/references/**",
+        "agents/*.md"
+      ],
+      "gates": [],
+      "full": false
+    }
+  ],
+  "baseline": {
+    "repository": "folotp/pa-toolkit",
+    "workflow": ".github/workflows/release-checks.yml",
+    "branch": "main",
+    "policy_paths": [
+      "config",
+      ".github/workflows/release-checks.yml",
+      "scripts",
+      "tools/pa-devtools",
+      "tests",
+      "pyproject.toml",
+      "uv.lock",
+      ".python-version"
+    ]
+  }
+}

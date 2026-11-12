@@ -210,3 +210,18 @@ class LinkedFixtureTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Changed hook definitions"):
             with probe.fixture(self.linked, "codex", self.source):
                 self.fail("old primary bindings would be certified")
+
+    def test_staged_source_removal_refused_without_leaving_a_stale_file(self):
+        probe.git(self.source, "rm", "tracked.txt")
+        with self.assertRaisesRegex(ValueError, "source deletions"):
+            with probe.fixture(self.source, "codex", self.linked):
+                self.fail("staged removal would leave a stale linked file")
+        self.assertEqual((self.linked / "tracked.txt").read_text(), "original\n")
+
+    def test_staged_source_rename_refused_without_leaving_the_old_path(self):
+        probe.git(self.source, "mv", "tracked.txt", "renamed.txt")
+        with self.assertRaisesRegex(ValueError, "source deletions"):
+            with probe.fixture(self.source, "codex", self.linked):
+                self.fail("staged rename would leave the old linked path")
+        self.assertEqual((self.linked / "tracked.txt").read_text(), "original\n")
+        self.assertFalse((self.linked / "renamed.txt").exists())

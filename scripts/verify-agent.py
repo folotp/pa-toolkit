@@ -131,7 +131,9 @@ def fixture(source, client, linked=None):
         raise ValueError("Linked fixture must belong to the selected source repository")
     if git(linked, "rev-parse", "HEAD") != git(source, "rev-parse", "HEAD"):
         raise ValueError("Linked fixture must start at the selected source HEAD")
-    if git(source, "ls-files", "--deleted"):
+    # Compare HEAD to the whole source state: ls-files --deleted misses index removals,
+    # and rename detection would hide the old path that the overlay leaves behind.
+    if git(source, "diff", "--no-renames", "--diff-filter=D", "--name-only", "HEAD", "--"):
         raise ValueError(
             "Use an independent fixture for source deletions; linked export overlays HEAD"
         )

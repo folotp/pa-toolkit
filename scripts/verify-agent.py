@@ -433,7 +433,8 @@ def probe(source, client, timeout, linked=None):
                         "BLOCKED: main belongs to the preserved primary checkout; "
                         "independent fixture requires user project/hook review"
                     )
-                    evidence["status"] = "BLOCKED"
+                    if evidence["status"] == "PASS":
+                        evidence["status"] = "BLOCKED"
                     continue
                 git(root, *switch)
                 offset = len(witness.read_text().splitlines())

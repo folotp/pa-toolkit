@@ -1,7 +1,9 @@
 """Probe acceptance must prove diagnostics, not only event-name coverage."""
 
 import copy
+from contextlib import nullcontext
 import importlib.util
+import json
 import os
 from pathlib import Path
 import subprocess
@@ -16,6 +18,57 @@ SPEC.loader.exec_module(probe)
 
 
 class PositiveAcceptanceTests(unittest.TestCase):
+    def test_linked_main_blocker_preserves_an_observed_detached_guard_failure(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "AGENTS.md").write_text("Fixture instructions\n")
+            (root / "scripts").mkdir()
+            (root / "scripts/dev.py").write_text('if __name__ == "__main__":\n    pass\n')
+            calls = []
+
+            def client(argv, cwd, env, timeout):
+                calls.append(argv)
+                witness = Path(env["PA_TOOLKIT_TEST_EVENTS"])
+                marker = probe.re.search(
+                    r"AGENT-ACCEPTANCE-[a-f0-9]+", (root / "AGENTS.md").read_text()
+                )[0]
+                if len(calls) == 1:
+                    (root / "ordinary.txt").write_text("after\n")
+                    events = [
+                        {"event": event, "exit": 0, "paths": ["ordinary.txt"]}
+                        for event in ("start", "edit", "feedback", "stop")
+                    ]
+                    witness.write_text("".join(json.dumps(e) + "\n" for e in events))
+                elif len(calls) == 2:
+                    (root / "smoke.sh").write_text(
+                        "#!/usr/bin/env bash\nif true;then echo after;fi\n"
+                    )
+                    (root / "smoke.json").write_text('{"invalid":}\n')
+                    witness.write_text("".join(json.dumps(e) + "\n" for e in self.events()))
+                else:
+                    # Simulate an actual guard regression: native edit succeeds on detached HEAD.
+                    (root / "smoke.sh").write_text("#!/usr/bin/env bash\necho denied\n")
+                    with witness.open("a") as stream:
+                        stream.write(
+                            json.dumps({"event": "edit", "exit": 0, "paths": ["smoke.sh"]}) + "\n"
+                        )
+                return subprocess.CompletedProcess(argv, 0, marker, "")
+
+            with (
+                patch.object(probe, "fixture", return_value=nullcontext((root, {}))),
+                patch.object(probe, "git", return_value="fixture-head"),
+                patch.object(probe, "prerequisites", return_value=[]),
+                patch.object(probe.shutil, "which", return_value="codex"),
+                patch.object(probe.subprocess, "check_output", return_value="codex fixture"),
+                patch.object(probe, "run_client", side_effect=client),
+            ):
+                result = probe.probe(root, "codex", 1, linked=root / "selected-fixture")
+            self.assertEqual(result["root_discovery_valid_edit"], "PASS")
+            self.assertEqual(result["diagnostics"], "PASS")
+            self.assertEqual(result["detached_denial"], "FAIL")
+            self.assertTrue(result["main_denial"].startswith("BLOCKED"))
+            self.assertEqual(result["status"], "FAIL")
+
     def events(self):
         return [
             {"event": "start", "exit": 0},

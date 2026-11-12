@@ -132,9 +132,12 @@ removals/renames. The guard now compares HEAD against the complete source state 
 rename detection disabled, rejecting old paths that a linked overlay would retain.
 Two dedicated regressions preserve fixture bytes for staged removal and staged rename.
 This review is Codex evidence, not the outstanding Copilot acceptance requirement.
+The next review also found that a later blocked main scenario overwrote an observed
+detached guard failure. The aggregate now preserves FAIL; a probe-level regression
+simulates changed forbidden bytes after passing positive scenarios and asserts FAIL.
 
 The required current-official-spec gate, conservative PR selection and full
-main/release validation are preserved. Full source/index gates and installed pre-commit/pre-push passed with 80 tests;
+main/release validation are preserved. Full source/index gates and installed pre-commit/pre-push passed with 83 tests;
 [current-head CI belongs to PR #30](https://github.com/folotp/pa-toolkit/pull/30). No merge, release/tag, marketplace action, trust change,
 vault write, CodeQL implementation, other-repository rollout or deployment occurred.
 Issue #23 stays open for the outstanding applicable requirements, including hosted

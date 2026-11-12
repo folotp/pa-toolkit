@@ -1,6 +1,9 @@
 # Supported-agent verification — 2026-11-12
 
-Scope: **unmerged PR #29**, tested by exporting its feature-worktree bytes into
+Latest continuation: [CLI acceptance and blockers](acceptance-cli-2026-11-12.md).
+The sections below preserve the historical pre-merge evidence; PR #29 is now merged.
+
+Historical scope: **then-unmerged PR #29**, tested by exporting its feature-worktree bytes into
 independent disposable repositories. The refreshed Claude probe uses base `28014f6`
 plus the review-correction WIP. `source_base_commit` is the checkout base, not a claim
 that main or that exact clean commit was tested; tree/per-file hashes identify bytes.

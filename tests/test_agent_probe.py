@@ -2,7 +2,10 @@
 
 import copy
 import importlib.util
+import os
 from pathlib import Path
+import subprocess
+import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -74,6 +77,15 @@ class PositiveAcceptanceTests(unittest.TestCase):
 
 
 class AntigravityAcceptanceTests(unittest.TestCase):
+    def test_only_structured_tool_names_are_retained(self):
+        events = [
+            {"content": [{"type": "tool_use", "name": "edit_file"}]},
+            {"toolName": "read_file"},
+            {"type": "message", "text": "I used edit_file"},
+            {"type": "tool_call", "name": None},
+        ]
+        self.assertEqual(probe.native_tools(events), ["edit_file", "read_file"])
+
     def test_native_edit_proof_is_required_independently_of_bytes(self):
         self.assertEqual(
             probe.antigravity_result(0, True, True, ["read_file", "edit_file"], []), "PASS"
@@ -82,3 +94,119 @@ class AntigravityAcceptanceTests(unittest.TestCase):
         self.assertEqual(
             probe.antigravity_result(1, False, False, [], ["Authentication required"]), "BLOCKED"
         )
+
+
+class LinkedFixtureTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.env = patch.dict(
+            os.environ,
+            {k: v for k, v in os.environ.items() if not k.startswith("GIT_")},
+            clear=True,
+        )
+        self.env.start()
+        self.addCleanup(self.env.stop)
+        self.source = Path(self.temp.name) / "source"
+        self.source.mkdir()
+        probe.git(self.source, "init", "-q", "-b", "feat/source")
+        (self.source / "tracked.txt").write_text("original\n")
+        (self.source / ".codex").mkdir()
+        (self.source / ".codex/hooks.json").write_text('{"hooks": {}}\n')
+        probe.git(self.source, "add", ".")
+        probe.git(
+            self.source,
+            "-c",
+            "user.name=Fixture",
+            "-c",
+            "user.email=fixture@example.invalid",
+            "commit",
+            "-qm",
+            "fixture",
+        )
+        self.linked = Path(self.temp.name) / "linked"
+        probe.git(
+            self.source,
+            "worktree",
+            "add",
+            "-q",
+            "-b",
+            "chore/acceptance-codex-test",
+            str(self.linked),
+        )
+
+    def test_wip_export_and_branch_restore_preserve_fixture_and_index(self):
+        before = probe.git(self.linked, "write-tree")
+        (self.source / "tracked.txt").write_text("selected WIP\n")
+        with self.assertRaises(subprocess.TimeoutExpired):
+            with probe.fixture(self.source, "codex", self.linked) as (root, hashes):
+                self.assertEqual(root, self.linked.resolve())
+                self.assertEqual((root / "tracked.txt").read_text(), "selected WIP\n")
+                self.assertTrue(probe.provenance(self.source, hashes)["source_dirty"])
+                probe.git(root, "switch", "--detach")
+                raise subprocess.TimeoutExpired("client", 1)
+        self.assertTrue(self.linked.exists())
+        self.assertEqual(
+            probe.git(self.linked, "branch", "--show-current"), "chore/acceptance-codex-test"
+        )
+        self.assertEqual(probe.git(self.linked, "write-tree"), before)
+        self.assertEqual((self.source / "tracked.txt").read_text(), "selected WIP\n")
+
+    def test_source_wrong_client_or_ordinary_branch_refused_before_export(self):
+        for client, target in (("codex", self.source), ("claude", self.linked)):
+            with self.assertRaises(ValueError):
+                with probe.fixture(self.source, client, target):
+                    self.fail("unsafe fixture accepted")
+        probe.git(self.linked, "switch", "-c", "feat/preserved")
+        with self.assertRaisesRegex(ValueError, "branch must start"):
+            with probe.fixture(self.source, "codex", self.linked):
+                self.fail("ordinary checkout accepted")
+
+    def test_untracked_or_staged_work_refused_and_preserved(self):
+        (self.linked / "user.txt").write_text("preserve\n")
+        for stage in (False, True):
+            if stage:
+                probe.git(self.linked, "add", "user.txt")
+            with self.assertRaisesRegex(ValueError, "must be clean"):
+                with probe.fixture(self.source, "codex", self.linked):
+                    self.fail("dirty fixture accepted")
+            self.assertEqual((self.linked / "user.txt").read_text(), "preserve\n")
+
+    def test_different_source_head_refused_before_export(self):
+        probe.git(
+            self.source,
+            "-c",
+            "user.name=Fixture",
+            "-c",
+            "user.email=fixture@example.invalid",
+            "commit",
+            "--allow-empty",
+            "-qm",
+            "new source",
+        )
+        with self.assertRaisesRegex(ValueError, "source HEAD"):
+            with probe.fixture(self.source, "codex", self.linked):
+                self.fail("different fixture HEAD accepted")
+
+    def test_startup_categories_retain_no_arbitrary_stderr(self):
+        self.assertEqual(
+            probe.startup_signals(
+                "Project config.toml files are disabled. Open /hooks for review. token=secret"
+            ),
+            ["project_layer_disabled", "hook_review_required"],
+        )
+        self.assertEqual(probe.startup_signals("unrelated private output"), [])
+
+    def test_source_deletion_or_changed_linked_bindings_refused_before_export(self):
+        (self.source / "tracked.txt").unlink()
+        with self.assertRaisesRegex(ValueError, "source deletions"):
+            with probe.fixture(self.source, "codex", self.linked):
+                self.fail("stale linked HEAD file would remain")
+        self.assertEqual((self.linked / "tracked.txt").read_text(), "original\n")
+        (self.source / "tracked.txt").write_text("original\n")
+        (self.linked / ".codex/hooks.json").write_text('{"hooks": {"Stop": []}}\n')
+        probe.git(self.source, "branch", "-m", "chore/acceptance-codex-primary")
+        # Source can itself be a linked feature checkout, with different primary bindings.
+        with self.assertRaisesRegex(ValueError, "Changed hook definitions"):
+            with probe.fixture(self.linked, "codex", self.source):
+                self.fail("old primary bindings would be certified")

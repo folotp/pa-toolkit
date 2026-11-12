@@ -61,7 +61,8 @@ The stdlib runner exports tracked/nonignored current source into an independent
 repository, adds random instruction marker and text/shell/JSON fixtures, then starts the
 real client through `scripts/dev session` from a subdirectory. It wraps `hook()`
 only inside the disposable fixture to retain bounded actual event output. It never
-adds invocation-local trust overrides. The evidence distinguishes the observer from
+adds invocation-local trust overrides. The default Codex independent fixture ignores
+user configuration; a disabled project layer is BLOCKED, not a delivery failure diagnosis. The evidence distinguishes the observer from
 unchanged production source and records source base/WIP state, a source-tree digest and per-file hashes. Raw streams remain in memory;
 only sanitized selected evidence is saved. Temporary repositories are removed.
 
@@ -98,3 +99,39 @@ selected gates and download `official-specifications-*` artifacts for resolved
 sources/results. Repeat only for changed source or a failed/unresolved check.
 Use a genuine subsequent docs/version PR to observe reduction once its base has
 successful compatible main-push CI; never merge or manufacture a release to test it.
+
+
+## Selected CLI continuation and ordinary Codex configuration
+
+PA selected Antigravity CLI only on 2026-11-12; App/IDE/remote product modes are outside
+this acceptance target. Existing CLI defect smoke remains evidence with its recorded
+source/version; new root/subdirectory concurrency is reproducible with:
+
+```sh
+python3 scripts/verify-agent-concurrency.py --output /outside/source/antigravity-concurrent.json
+```
+
+The runner requires actual native edit events, exact bytes, distinct unchanged branches,
+overlapping execution windows and no extra modified paths. Timeouts are BLOCKED. It
+uses the existing shared probe helpers; no native Antigravity hook coverage is inferred.
+
+For Codex, inspect actual `hooks/list` project sources and `config/read` layer state.
+The installed 0.167.2 selected already trusted primary definitions for linked worktrees;
+a fresh independent project had a disabled project layer. To test ordinary existing
+configuration without changing trust:
+
+```sh
+./scripts/dev worktree chore/acceptance-codex-example /outside/source/codex-fixture
+python3 scripts/verify-agent.py --client codex --codex-fixture /outside/source/codex-fixture --output /outside/source/codex.json
+```
+
+The opt-in linked fixture must be clean, share the source repository and starting HEAD,
+and use the specified disposable branch prefix. Source/primary hook bindings must be
+identical; source deletions need an independent fixture. Exported WIP hashes are retained.
+The runner preserves the fixture/index and restores its original branch even on timeout.
+It retains ordinary user configuration and existing trust, so the selected prompt still
+prohibits MCP/network/vault access. It never writes trust or uses a bypass. Native main
+denial remains BLOCKED; never force-checkout preserved primary main to finish the test.
+For E01, start two linked invocations concurrently with distinct fixtures/output paths;
+retain both receipts and execution-window overlap, and inspect each native outcome.
+See the [continuation report](verification/acceptance-cli-2026-11-12.md) for observed results.

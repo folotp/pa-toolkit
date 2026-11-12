@@ -9,6 +9,8 @@ an agent says. Missing clients/authentication or untrusted hooks are explicit bl
 """
 
 import argparse
+from contextlib import contextmanager
+from datetime import datetime, timezone
 import hashlib
 import json
 import os
@@ -103,6 +105,71 @@ def run_client(argv, cwd, env, timeout):
     return subprocess.CompletedProcess(argv, process.returncode, out, err)
 
 
+@contextmanager
+def fixture(source, client, linked=None):
+    """Export into a temp repo or an explicitly selected clean disposable worktree.
+
+    Linked Codex mode uses ordinary existing configuration and never grants trust.
+    Preserve that fixture, its index and original branch. Only runner-owned temporary
+    repositories are automatically removed. Exported WIP is identified by hashes.
+    """
+    if linked is None:
+        with tempfile.TemporaryDirectory(prefix="pa-agent-acceptance-") as directory:
+            root = Path(directory)
+            yield root, export(source, root)
+        return
+    linked = linked.resolve()
+    if client != "codex" or linked == source.resolve():
+        raise ValueError("Linked fixture requires Codex and a separate disposable checkout")
+    branch = git(linked, "branch", "--show-current")
+    if not branch.startswith("chore/acceptance-codex-"):
+        raise ValueError("Fixture branch must start with chore/acceptance-codex-")
+    if git(linked, "status", "--porcelain", "--untracked-files=all"):
+        raise ValueError("Linked fixture must be clean, including untracked files")
+    common = ("rev-parse", "--path-format=absolute", "--git-common-dir")
+    if git(linked, *common) != git(source, *common):
+        raise ValueError("Linked fixture must belong to the selected source repository")
+    if git(linked, "rev-parse", "HEAD") != git(source, "rev-parse", "HEAD"):
+        raise ValueError("Linked fixture must start at the selected source HEAD")
+    if git(source, "ls-files", "--deleted"):
+        raise ValueError(
+            "Use an independent fixture for source deletions; linked export overlays HEAD"
+        )
+    # This installed Codex can select primary-checkout definitions for a linked cwd.
+    # Never certify changed bindings by accidentally running an older trusted copy.
+    primary = Path(git(source, "worktree", "list", "--porcelain").splitlines()[0][9:])
+    bindings = Path(".codex/hooks.json")
+    if (source / bindings).read_bytes() != (primary / bindings).read_bytes():
+        raise ValueError("Changed hook definitions require isolated project/hook review")
+    try:
+        yield linked, export(source, linked)
+    finally:
+        if git(linked, "branch", "--show-current") != branch:
+            git(linked, "switch", branch)
+
+
+def provenance(source, hashes):
+    """Identify exported bytes, including dirty source, independently of model results."""
+    return {
+        "observed_at_utc": datetime.now(timezone.utc).isoformat(),
+        "source_base_commit": git(source, "rev-parse", "HEAD"),
+        "source_dirty": bool(git(source, "status", "--porcelain")),
+        "source_tree_sha256": hashlib.sha256(
+            json.dumps(hashes, sort_keys=True).encode()
+        ).hexdigest(),
+        "source_hashes": hashes,
+    }
+
+
+def startup_signals(stderr):
+    """Retain recognized startup categories even on exit zero, never raw user config."""
+    patterns = {
+        "project_layer_disabled": r"[Pp]roject config.toml files are disabled|To load project-local config",
+        "hook_review_required": r"[Hh]ooks?.{0,80}(?:review|untrusted)|/hooks",
+    }
+    return [name for name, pattern in patterns.items() if re.search(pattern, stderr)]
+
+
 def prerequisites():
     """Return setup blockers before spending a model call on unavailable diagnostics."""
     failures = []
@@ -181,7 +248,7 @@ def positive_result(events, edits, discovery, client_exit, blockers=()):
     return "PASS", delivery, "PASS"
 
 
-def probe(source, client, timeout):
+def probe(source, client, timeout, linked=None):
     blockers = prerequisites()
     if blockers:
         return {"client": client, "status": "BLOCKED", "reason": "; ".join(blockers)}
@@ -189,9 +256,8 @@ def probe(source, client, timeout):
     if not executable:
         return {"client": client, "status": "BLOCKED", "reason": "Client executable not installed"}
     version = subprocess.check_output([executable, "--version"], text=True).strip()
-    with tempfile.TemporaryDirectory(prefix="pa-agent-acceptance-") as directory:
-        root = Path(directory)
-        hashes = export(source, root)
+    with fixture(source, client, linked) as (root, hashes):
+        identity = provenance(source, hashes)
         marker = "AGENT-ACCEPTANCE-" + uuid.uuid4().hex
         with (root / "AGENTS.md").open("a") as stream:
             stream.write(
@@ -208,18 +274,19 @@ def probe(source, client, timeout):
         (root / "ordinary.txt").write_text("before\n")
         (root / "smoke.sh").write_text("#!/usr/bin/env bash\necho before\n")
         (root / "smoke.json").write_text('{"before":true}\n')
-        git(root, "init", "-q", "-b", "chore/acceptance-" + client)
-        git(root, "add", ".")
-        git(
-            root,
-            "-c",
-            "user.name=Fixture",
-            "-c",
-            "user.email=fixture@example.invalid",
-            "commit",
-            "-qm",
-            "Disposable acceptance fixture",
-        )
+        if linked is None:
+            git(root, "init", "-q", "-b", "chore/acceptance-" + client)
+            git(root, "add", ".")
+            git(
+                root,
+                "-c",
+                "user.name=Fixture",
+                "-c",
+                "user.email=fixture@example.invalid",
+                "commit",
+                "-qm",
+                "Disposable acceptance fixture",
+            )
         before = git(root, "rev-parse", "HEAD")
         witness = root / "native-events.jsonl"
         env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
@@ -241,6 +308,8 @@ def probe(source, client, timeout):
                 "--json",
                 prompt,
             ]
+            if linked is not None:
+                args.remove("--ignore-user-config")
         else:
             args = [
                 "-p",
@@ -275,6 +344,7 @@ def probe(source, client, timeout):
                 "version": version,
                 "status": "BLOCKED",
                 "reason": "Root valid-edit timeout",
+                **identity,
             }
         root_events = (
             [json.loads(line) for line in witness.read_text().splitlines()]
@@ -305,6 +375,7 @@ def probe(source, client, timeout):
                 "version": version,
                 "status": "BLOCKED",
                 "reason": "Client exceeded bounded timeout",
+                **identity,
             }
         events = (
             [json.loads(line) for line in witness.read_text().splitlines()]
@@ -323,17 +394,15 @@ def probe(source, client, timeout):
         if status == "PASS" and not root_ok:
             status = "FAIL" if root_delivery else "BLOCKED"
         evidence = {
+            **identity,
             "root_discovery_valid_edit": "PASS" if root_ok else "NOT_PROVEN",
             "root_events": root_events,
             "client": client,
             "version": version,
             "status": status,
-            "source_base_commit": git(source, "rev-parse", "HEAD"),
-            "source_dirty": bool(git(source, "status", "--porcelain")),
-            "source_tree_sha256": hashlib.sha256(
-                json.dumps(hashes, sort_keys=True).encode()
-            ).hexdigest(),
-            "source_hashes": hashes,
+            "fixture_mode": "linked-preserved" if linked is not None else "independent-removed",
+            "user_configuration": "ordinary-existing" if linked is not None else "ignored",
+            "startup_signals": startup_signals(root_run.stderr + "\n" + result.stderr),
             "fixture_observer": True,
             "launcher_from_subdirectory": True,
             "exit": result.returncode,
@@ -357,6 +426,13 @@ def probe(source, client, timeout):
                 ("detached", ["switch", "--detach"]),
                 ("main", ["switch", "-c", "main"]),
             ):
+                if linked is not None and branch == "main":
+                    evidence["main_denial"] = (
+                        "BLOCKED: main belongs to the preserved primary checkout; "
+                        "independent fixture requires user project/hook review"
+                    )
+                    evidence["status"] = "BLOCKED"
+                    continue
                 git(root, *switch)
                 offset = len(witness.read_text().splitlines())
                 argv[-1] = (
@@ -391,6 +467,26 @@ def probe(source, client, timeout):
                     evidence["status"] = "BLOCKED"
 
         return evidence
+
+
+def native_tools(value):
+    """Extract observed tool names from structured client events, never narrative text."""
+    found = []
+    if isinstance(value, list):
+        for child in value:
+            found.extend(native_tools(child))
+    elif isinstance(value, dict):
+        if value.get("type") in ("tool_use", "tool_call", "tool_call_start"):
+            name = value.get("name", value.get("tool_name", ""))
+            if isinstance(name, str) and name:
+                found.append(name)
+        for key in ("tool_name", "toolName"):
+            if isinstance(value.get(key), str) and value[key]:
+                found.append(value[key])
+        for child in value.values():
+            if isinstance(child, (dict, list)):
+                found.extend(native_tools(child))
+    return found
 
 
 def antigravity_result(client_exit, discovery, edits, tools, errors):
@@ -483,23 +579,6 @@ def probe_antigravity(source, timeout):
         tools = []
         event_shapes = []
 
-        def inspect(value):
-            if isinstance(value, list):
-                for item in value:
-                    inspect(item)
-            elif isinstance(value, dict):
-                kind = str(value.get("type", ""))
-                if kind in ("tool_use", "tool_call", "tool_call_start"):
-                    name = value.get("name", value.get("tool_name", ""))
-                    if isinstance(name, str) and name:
-                        tools.append(name)
-                for key in ("tool_name", "toolName"):
-                    if isinstance(value.get(key), str):
-                        tools.append(value[key])
-                for child in value.values():
-                    if isinstance(child, (dict, list)):
-                        inspect(child)
-
         for line in result.stdout.splitlines():
             try:
                 event = json.loads(line)
@@ -515,7 +594,7 @@ def probe_antigravity(source, timeout):
                 errors.append(
                     str(event.get("error", event.get("message", event.get("status"))))[:800]
                 )
-            inspect(event)
+            tools.extend(native_tools(event))
         return {
             "client": "antigravity",
             "version": version,
@@ -546,14 +625,23 @@ def main():
     parser.add_argument("--source", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--timeout", type=int, default=180)
+    parser.add_argument(
+        "--codex-fixture",
+        type=Path,
+        help="Explicit clean chore/acceptance-codex-* linked checkout; preserved after mutation",
+    )
     args = parser.parse_args()
     source = args.source.resolve()
     if args.output.resolve().is_relative_to(source):
         parser.error("Evidence output must be outside source")
+    if args.codex_fixture and args.client != "codex":
+        parser.error("--codex-fixture applies only to Codex")
+    if args.codex_fixture and args.output.resolve().is_relative_to(args.codex_fixture.resolve()):
+        parser.error("Evidence output must be outside the linked fixture")
     result = (
         probe_antigravity(source, args.timeout)
         if args.client == "antigravity"
-        else probe(source, args.client, args.timeout)
+        else probe(source, args.client, args.timeout, args.codex_fixture)
     )
     args.output.write_text(json.dumps(result, indent=2) + "\n")
     print(

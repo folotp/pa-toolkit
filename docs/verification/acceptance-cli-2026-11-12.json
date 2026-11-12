@@ -1,0 +1,1409 @@
+{
+  "observed_date": "2026-11-12",
+  "source_note": "Each run identifies its own clean-main or dirty feature snapshot. Later source is not certified by a base SHA alone.",
+  "official_sources": [
+    {
+      "url": "https://learn.chatgpt.com/docs/hooks.md",
+      "resolved_url": "https://learn.chatgpt.com/docs/hooks.md",
+      "sha256": "a50c60b697d8df62e2f907adbb18b2f5a1a25cd3360e7b843cde25f18ab6d782",
+      "retrieved_at_utc": "2026-11-12T19:20:16.225410+00:00",
+      "status": 200,
+      "conformance": "MANUAL_REVIEW: prose guidance, not executable certification"
+    },
+    {
+      "url": "https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-from-cli",
+      "resolved_url": "https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-from-cli",
+      "sha256": "5c4521d5d77d754b877b3bb62238f2149b14fa8427486f5ec4f9d81639c7aecd",
+      "retrieved_at_utc": "2026-11-12T19:20:16.357977+00:00",
+      "status": 200,
+      "conformance": "MANUAL_REVIEW: prose guidance, not executable certification"
+    },
+    {
+      "url": "https://docs.github.com/en/rest/pulls/copilot-code-review",
+      "resolved_url": "https://docs.github.com/en/rest/pulls/copilot-code-review",
+      "sha256": "b41c887f4f7fe16405a2afd2658b9f59f78854f89879e705cc16780a565009d0",
+      "retrieved_at_utc": "2026-11-12T19:20:16.472248+00:00",
+      "status": 200,
+      "conformance": "MANUAL_REVIEW: prose guidance, not executable certification"
+    },
+    {
+      "url": "https://antigravity.google/docs/cli/best-practices/",
+      "resolved_url": "https://antigravity.google/docs/cli/best-practices/",
+      "sha256": "9a18d1806619a838d395c5be064dd8f0245f4cdb846ac18fc7b2674de477f527",
+      "retrieved_at_utc": "2026-11-12T19:20:16.701301+00:00",
+      "status": 200,
+      "conformance": "MANUAL_REVIEW: prose guidance, not executable certification"
+    },
+    {
+      "url": "https://antigravity.google/docs/hooks/",
+      "resolved_url": "https://antigravity.google/docs/hooks/",
+      "sha256": "25f0a75a35022934cf237e912654b04c96898b86723e737765289fba22cb3962",
+      "retrieved_at_utc": "2026-11-12T19:20:16.871250+00:00",
+      "status": 200,
+      "conformance": "MANUAL_REVIEW: prose guidance, not executable certification"
+    }
+  ],
+  "runs": {
+    "codex-linked": {
+      "client": "codex",
+      "version": "codex-cli 0.167.2",
+      "source_base_commit": "31952d09694d14c4ddd0a1284e5d627f966d3b5c",
+      "source_dirty": false,
+      "source_tree_sha256": "84410d2f5e69e06276589b9d7e2c4da9e366f6b4ddcbb2db49e5fe048824bb7a",
+      "source_hashes": {
+        ".claude-plugin/plugin.json": "87f663bcc4735caa68d77bebfb93c97026c88986b591c09c81f161f0550b0a29",
+        ".claude/settings.json": "93aa65d89a953416e7a968aa94b510215bf0e789e8b7d5aa81b921031ef62e8d",
+        ".codex/hooks.json": "1b9e09691cf03c9bd30a25cef0b6958a6fa5c771f87bee52d48ae9fc307d6681",
+        ".github/copilot-instructions.md": "927d5196c0f62dcc75f5be16b39dee257d174bb154f27e4eedd294c2b8d29fb3",
+        ".github/workflows/release-checks.yml": "f2e169b43de369dd8e7ae8108dff6392ef8a16b171683d8cf723e437643c7ca7",
+        ".gitignore": "bcdf88d41ff19b7301c92f9f1d260e000d1532a4d8140342ef621b4c5d4678cc",
+        ".python-version": "49a506dd32096b010d75205acf3430c9ae6c40351888129499e5a5e487126c93",
+        "AGENTS.md": "de695f1b668107a22416f91e9a56159de88aa3c6f30bc7289de754d5b7946de3",
+        "CLAUDE.md": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+        "README.md": "5fa45f65a3d1328074cb8c396dea724bd12eca56e1455e2b7d797097e3de95ce",
+        "agents/decision-gatekeeper.md": "dd183c473dd784f3f4bf1b171100737ae4a055474972234e6bd26d580619bbae",
+        "agents/plugin-release-executor.md": "b052317ad50fe3c804542cc4fd21513d25e2883f966c356602c6572c98754491",
+        "config/development.json": "47b514f028e5fe3a0003ceddfceb38e2f83a2c1d81bae2f62e80206a2721758d",
+        "config/package-files.json": "15223ebe03e9a1b7f2086990a95fc45f7ab1609f1760335fa967d1ee85c2ad9e",
+        "config/release.json": "d5add0d75be3980ea9a453a92b5d53d6b25b91efa6ca86dd005714037e4f6c35",
+        "config/specifications.json": "26b8eea8fed56c81476e82f7daf4b3dd7460f741a29f2cde07c798617f887d8a",
+        "config/toolchain.json": "c5856b31e103cb97cb21c6ea2e0ebbe0899735ccfd64f633927acbb5eaf3731b",
+        "docs/agent-test-plan.md": "fa526d0652bf40239a65047decf72bce7214cb16d0652b2ee581901e11f6aec0",
+        "docs/development-architecture.md": "c843a322df2ed0ee47a5a75273c5e9801ac12c1f320a27a7a473993c512aefa4",
+        "docs/development.md": "4a890ffe45c16666bfc7b15775a33afb866e2c23c3a88051ccf37eb404f91f67",
+        "docs/hook-scope.md": "ed8d7db39021e8c5a615ab2455334becec8eb5f4564f1164f16212340e79313e",
+        "docs/shared-devtools.md": "ed41a1f97f86622a48c06f4f1f3897839e3e53798dc0bf3686dd6aef6d0b0084",
+        "docs/supported-agents.md": "445da000107ef748f692e628c3ccb19baf4212f74f0472a9fec62704a4b874bd",
+        "docs/verification/agent-events.json": "1c04255e6cee701a61ef3cb346b21ad4e49ef473dc76391994bc50a3a2ace758",
+        "docs/verification/client-hooks.json": "02c3260c30983f39eb4897bf718fa3e3f9250c12ed472a5031b3ddfd2ade41ea",
+        "docs/verification/shared-ai-setup.md": "fcc0d3f8636d280956efd0731f33f26e2868061e4299243ab3acb29997b8dd4b",
+        "docs/verification/shared-devtools.md": "a18f142cc7a0f86d404d3dfe0ab6c17741d99dc39211eb103a1b6df6b40fd7da",
+        "docs/verification/supported-agents.md": "bb80d0fc87508b0e54f506bd51f36d2450438810729e8485d57317165ddb366d",
+        "pyproject.toml": "cef863980fe5913241e773557ccf40db307c2f3c28e2f7c1eb40dbe80e7fffca",
+        "scripts/dev": "0183d20f1eeec9e5f79d8b86866cf160db6a1b766ffa2953c4ab2ae2f7688a5e",
+        "scripts/dev.py": "5feef10db811c7c4bc79fa25fd20a8b39e6355464bb9077524c53a7245c38443",
+        "scripts/verify-agent.py": "650d5c782298c5e220a7b71c99c7d5d2292826b305d9cf074cc6606ad6162f8c",
+        "skills/fin-pocketsmith-categorize-amazon/SKILL.md": "a426a9775c7e3335fef48d7f2e4a9ffae61a5595e61006bb4ae5dbd9e5c03dc0",
+        "skills/fin-pocketsmith-categorize-apple/SKILL.md": "9f672ba2d497c65a854310fb5c2f451a0a056bbb34fb28fe2fd47f1838ac5732",
+        "skills/fin-pocketsmith-categorize-netflix/SKILL.md": "5343f8eb024db7648dc22d6ca21772c3c7e2e5d434c82f2433cef14d3c7736c4",
+        "skills/fin-pocketsmith-categorize-rogers/SKILL.md": "5ca0829c0e1efc124a14f9b126cb98dcc67d8b5da92021d77892338b0cb462a2",
+        "skills/fin-pocketsmith-manage-vacation/SKILL.md": "967b461eb36fda75bfb46f37f1444eb64e91ac8028621af32aa336e5c7cc20dc",
+        "skills/fin-rogers-download-invoice/SKILL.md": "ca5db21cd55f94a80c26bc8c4efb646e87d4e18901d7cbc55fca9aa620822373",
+        "skills/plugin-release/SKILL.md": "899a4c0fdc9f72c7c5a0a7a8170cd6d861def98a017e9f444961a4123d3d33e9",
+        "skills/plugin-release/references/development.md": "50b8d9c25750dd34ec643e4a032c94ca0d80759edef90b6c6a77d207c56cf3e6",
+        "skills/plugin-release/references/release-notes-template.md": "df9e85a9cda719542f4d9fd2e85bd293bb06cda04a031ec4fda28e20cf0ed554",
+        "skills/plugin-release/references/runbook.md": "6b4abe8785b015af8135541eb81601b9e0c49f679d2eea81c1bdbe768460f7df",
+        "skills/plugin-release/scripts/branch-guard.py": "d9b2fa368e86af3b2fa6700d101c72fa1635aee8a3278a780352ba074e02d5b3",
+        "skills/plugin-release/scripts/package.sh": "bda1afdf69d087a6b69df26e6db78ae2fbb1cffbf2bc7180cf18e40359946da9",
+        "skills/plugin-release/scripts/release.py": "337af9ea2d9d5bd8befdd65789b178aec8e67404c65003ba04592e0aa350496d",
+        "tests/test_agent_probe.py": "261342d2fd83545f12585e15cbe0f0d103a507c0f4d9d25084a9f80ce30c752c",
+        "tests/test_branch_guard.py": "aed3d85409f32a62081d029cef1dd9ba149669d56161e60dd95d3820970ac7ca",
+        "tests/test_development.py": "49290ade8ff13a89ce8e4fefafb3294dad321dfef27991e678c77400a9c644e9",
+        "tests/test_live_specs.py": "4ec979a5032af464e7f50baf974cf725bc689c52675c535a89309638b87ff451",
+        "tests/test_release.py": "c4b2eb85535d5f2d48c43ce1f7b9a932b1e8d17657755dec0a547afa9fbf3593",
+        "tests/test_shared_development.py": "f8543f30017fa5998fec1f31b3e07f7f0fcb3e4b5a1da64be914ffec50a755ac",
+        "tools/pa-devtools/pyproject.toml": "2bfdafc25cf851c1f21f045ba017f353266bdbdd8f0b22f289ca109dbbc9df0a",
+        "tools/pa-devtools/src/pa_devtools/__init__.py": "942202cf33ad8538b6bc82abf0a48e3d56674abab5e9e534f684b9be0c63343a",
+        "tools/pa-devtools/src/pa_devtools/hooks.py": "6b48db19e6369f4709e5c96c9aeeaed934f64e0c81f3f3f95b1f092b98e8bb71",
+        "tools/pa-devtools/src/pa_devtools/live_specs.py": "844d1c40bc1f2e291c36d5e50050bee109a8c58cf28144d5fd4fd9b945eaac1a",
+        "tools/pa-devtools/src/pa_devtools/planning.py": "ad27a45305ce64483e0f8aba26e76423a9761656cfd7996d5684b604f2df3897",
+        "tools/pa-devtools/src/pa_devtools/snapshots.py": "cb5c89c72b7486327a369b78ae43415f37b2a9fbc6baf21f56808b0a0933f89e",
+        "tools/pa-devtools/src/pa_devtools/source.py": "cc19390043b3419e95a0b3d59e10086fecfd130b528c2da5548cab51c51e32f9",
+        "tools/pa-devtools/src/pa_devtools/specifications.py": "57bcc6cb1be8846066ac385a6a77d82ba95ae1e974f4b3ab36aacc2f388e3d39",
+        "tools/pa-devtools/src/pa_devtools/vendor/Apache-2.0.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "tools/pa-devtools/src/pa_devtools/vendor/NOTICE.md": "556658e19a2a3d0ce7fa044f6f22061fefb4e5060993b75bbf352b7aed99067d",
+        "tools/pa-devtools/src/pa_devtools/vendor/plugin.schema.json": "0a4aad95ce337878ad38802ebf0daa3fde76abe3f65400c86bcbb1ec0b3ab883",
+        "tools/pa-devtools/src/pa_devtools/vendor/specifications.json": "d1c6cf1d0030daf14653e8dceea81ed4da8357b9bbd66941ec234b1f2805c097",
+        "uv.lock": "dc3659e373b4a1037d68bd7353099e7ae3deb9388aeaf6696ba15e0f337b8dbb"
+      },
+      "fixture_observer": true,
+      "configuration": "ordinary existing user configuration, hooks enabled, workspace-write; no trust writes or bypass",
+      "fixture_mode": "preserved linked worktree",
+      "status": "BLOCKED",
+      "main_denial": "BLOCKED: primary main preserved; no main checkout edit attempted",
+      "root": {
+        "exit": 0,
+        "discovery": true,
+        "events": [
+          {
+            "event": "start",
+            "tool": null,
+            "exit": 0,
+            "paths": [],
+            "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch chore/acceptance-codex-native-20261112. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+            "stderr": ""
+          },
+          {
+            "event": "edit",
+            "tool": "apply_patch",
+            "exit": 0,
+            "paths": [
+              "ordinary.txt"
+            ],
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "event": "feedback",
+            "tool": "apply_patch",
+            "exit": 0,
+            "paths": [
+              "ordinary.txt"
+            ],
+            "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"PostToolUse\", \"additionalContext\": \"pa-toolkit edit feedback (advisory; files unchanged; run scripts/dev format explicitly): structural edit accepted; run scripts/dev check for the full gate\"}}\n",
+            "stderr": ""
+          },
+          {
+            "event": "stop",
+            "tool": null,
+            "exit": 0,
+            "paths": [],
+            "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+            "stderr": ""
+          }
+        ],
+        "stderr": "Reading additional input from stdin...\n"
+      },
+      "defects": {
+        "exit": 0,
+        "discovery": true,
+        "events": [
+          {
+            "event": "start",
+            "tool": null,
+            "exit": 0,
+            "paths": [],
+            "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch chore/acceptance-codex-native-20261112. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+            "stderr": ""
+          },
+          {
+            "event": "edit",
+            "tool": "apply_patch",
+            "exit": 0,
+            "paths": [
+              "smoke.sh",
+              "smoke.json"
+            ],
+            "stdout": "",
+            "stderr": ""
+          },
+          {
+            "event": "feedback",
+            "tool": "apply_patch",
+            "exit": 0,
+            "paths": [
+              "smoke.sh",
+              "smoke.json"
+            ],
+            "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"PostToolUse\", \"additionalContext\": \"pa-toolkit edit feedback (advisory; files unchanged; run scripts/dev format explicitly): shfmt: diff <fixture>/smoke.sh.orig <fixture>/smoke.sh\\n--- <fixture>/smoke.sh.orig\\n+++ <fixture>/smoke.sh\\n@@ -1,2 +1,2 @@\\n #!/usr/bin/env bash\\n-if true;then echo after;fi\\n+if true; then echo after; fi\\n\\nShellCheck: passed\\nExpecting value: line 1 column 12 (char 11)\"}}\n",
+            "stderr": ""
+          },
+          {
+            "event": "stop",
+            "tool": null,
+            "exit": 0,
+            "paths": [],
+            "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+            "stderr": ""
+          }
+        ],
+        "stderr": "Reading additional input from stdin...\n"
+      },
+      "root_bytes": true,
+      "defect_bytes": true,
+      "positive_result": [
+        "PASS",
+        true,
+        "PASS"
+      ],
+      "detached": {
+        "exit": 0,
+        "events": [
+          {
+            "event": "start",
+            "tool": null,
+            "exit": 0,
+            "paths": [],
+            "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch DETACHED. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+            "stderr": ""
+          },
+          {
+            "event": "edit",
+            "tool": "apply_patch",
+            "exit": 2,
+            "paths": [
+              "smoke.sh"
+            ],
+            "stdout": "",
+            "stderr": "Use a named feature worktree to edit; main/detached HEAD is blocked."
+          },
+          {
+            "event": "stop",
+            "tool": null,
+            "exit": 0,
+            "paths": [],
+            "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+            "stderr": ""
+          }
+        ],
+        "bytes_unchanged": true,
+        "status": "PASS"
+      }
+    },
+    "codex-runner": {
+      "observed_at_utc": "2026-11-12T19:16:10.421255+00:00",
+      "source_base_commit": "31952d09694d14c4ddd0a1284e5d627f966d3b5c",
+      "source_dirty": true,
+      "source_tree_sha256": "8880430b4313082a6b72abf1b271f846f86787718a5f0acd80dd0323fc30603a",
+      "source_hashes": {
+        ".claude-plugin/plugin.json": "87f663bcc4735caa68d77bebfb93c97026c88986b591c09c81f161f0550b0a29",
+        ".claude/settings.json": "93aa65d89a953416e7a968aa94b510215bf0e789e8b7d5aa81b921031ef62e8d",
+        ".codex/hooks.json": "1b9e09691cf03c9bd30a25cef0b6958a6fa5c771f87bee52d48ae9fc307d6681",
+        ".github/copilot-instructions.md": "927d5196c0f62dcc75f5be16b39dee257d174bb154f27e4eedd294c2b8d29fb3",
+        ".github/workflows/release-checks.yml": "f2e169b43de369dd8e7ae8108dff6392ef8a16b171683d8cf723e437643c7ca7",
+        ".gitignore": "bcdf88d41ff19b7301c92f9f1d260e000d1532a4d8140342ef621b4c5d4678cc",
+        ".python-version": "49a506dd32096b010d75205acf3430c9ae6c40351888129499e5a5e487126c93",
+        "AGENTS.md": "de695f1b668107a22416f91e9a56159de88aa3c6f30bc7289de754d5b7946de3",
+        "CLAUDE.md": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+        "README.md": "5fa45f65a3d1328074cb8c396dea724bd12eca56e1455e2b7d797097e3de95ce",
+        "agents/decision-gatekeeper.md": "dd183c473dd784f3f4bf1b171100737ae4a055474972234e6bd26d580619bbae",
+        "agents/plugin-release-executor.md": "b052317ad50fe3c804542cc4fd21513d25e2883f966c356602c6572c98754491",
+        "config/development.json": "47b514f028e5fe3a0003ceddfceb38e2f83a2c1d81bae2f62e80206a2721758d",
+        "config/package-files.json": "15223ebe03e9a1b7f2086990a95fc45f7ab1609f1760335fa967d1ee85c2ad9e",
+        "config/release.json": "d5add0d75be3980ea9a453a92b5d53d6b25b91efa6ca86dd005714037e4f6c35",
+        "config/specifications.json": "26b8eea8fed56c81476e82f7daf4b3dd7460f741a29f2cde07c798617f887d8a",
+        "config/toolchain.json": "c5856b31e103cb97cb21c6ea2e0ebbe0899735ccfd64f633927acbb5eaf3731b",
+        "docs/agent-test-plan.md": "fa526d0652bf40239a65047decf72bce7214cb16d0652b2ee581901e11f6aec0",
+        "docs/development-architecture.md": "c843a322df2ed0ee47a5a75273c5e9801ac12c1f320a27a7a473993c512aefa4",
+        "docs/development.md": "4a890ffe45c16666bfc7b15775a33afb866e2c23c3a88051ccf37eb404f91f67",
+        "docs/hook-scope.md": "ed8d7db39021e8c5a615ab2455334becec8eb5f4564f1164f16212340e79313e",
+        "docs/shared-devtools.md": "ed41a1f97f86622a48c06f4f1f3897839e3e53798dc0bf3686dd6aef6d0b0084",
+        "docs/supported-agents.md": "445da000107ef748f692e628c3ccb19baf4212f74f0472a9fec62704a4b874bd",
+        "docs/verification/agent-events.json": "1c04255e6cee701a61ef3cb346b21ad4e49ef473dc76391994bc50a3a2ace758",
+        "docs/verification/client-hooks.json": "02c3260c30983f39eb4897bf718fa3e3f9250c12ed472a5031b3ddfd2ade41ea",
+        "docs/verification/shared-ai-setup.md": "fcc0d3f8636d280956efd0731f33f26e2868061e4299243ab3acb29997b8dd4b",
+        "docs/verification/shared-devtools.md": "a18f142cc7a0f86d404d3dfe0ab6c17741d99dc39211eb103a1b6df6b40fd7da",
+        "docs/verification/supported-agents.md": "bb80d0fc87508b0e54f506bd51f36d2450438810729e8485d57317165ddb366d",
+        "pyproject.toml": "cef863980fe5913241e773557ccf40db307c2f3c28e2f7c1eb40dbe80e7fffca",
+        "scripts/dev": "0183d20f1eeec9e5f79d8b86866cf160db6a1b766ffa2953c4ab2ae2f7688a5e",
+        "scripts/dev.py": "5feef10db811c7c4bc79fa25fd20a8b39e6355464bb9077524c53a7245c38443",
+        "scripts/verify-agent.py": "c9ea36a42f85199486b3d5f5c5471243f2260bc36bbfb828480422f31e4f1881",
+        "skills/fin-pocketsmith-categorize-amazon/SKILL.md": "a426a9775c7e3335fef48d7f2e4a9ffae61a5595e61006bb4ae5dbd9e5c03dc0",
+        "skills/fin-pocketsmith-categorize-apple/SKILL.md": "9f672ba2d497c65a854310fb5c2f451a0a056bbb34fb28fe2fd47f1838ac5732",
+        "skills/fin-pocketsmith-categorize-netflix/SKILL.md": "5343f8eb024db7648dc22d6ca21772c3c7e2e5d434c82f2433cef14d3c7736c4",
+        "skills/fin-pocketsmith-categorize-rogers/SKILL.md": "5ca0829c0e1efc124a14f9b126cb98dcc67d8b5da92021d77892338b0cb462a2",
+        "skills/fin-pocketsmith-manage-vacation/SKILL.md": "967b461eb36fda75bfb46f37f1444eb64e91ac8028621af32aa336e5c7cc20dc",
+        "skills/fin-rogers-download-invoice/SKILL.md": "ca5db21cd55f94a80c26bc8c4efb646e87d4e18901d7cbc55fca9aa620822373",
+        "skills/plugin-release/SKILL.md": "899a4c0fdc9f72c7c5a0a7a8170cd6d861def98a017e9f444961a4123d3d33e9",
+        "skills/plugin-release/references/development.md": "50b8d9c25750dd34ec643e4a032c94ca0d80759edef90b6c6a77d207c56cf3e6",
+        "skills/plugin-release/references/release-notes-template.md": "df9e85a9cda719542f4d9fd2e85bd293bb06cda04a031ec4fda28e20cf0ed554",
+        "skills/plugin-release/references/runbook.md": "6b4abe8785b015af8135541eb81601b9e0c49f679d2eea81c1bdbe768460f7df",
+        "skills/plugin-release/scripts/branch-guard.py": "d9b2fa368e86af3b2fa6700d101c72fa1635aee8a3278a780352ba074e02d5b3",
+        "skills/plugin-release/scripts/package.sh": "bda1afdf69d087a6b69df26e6db78ae2fbb1cffbf2bc7180cf18e40359946da9",
+        "skills/plugin-release/scripts/release.py": "337af9ea2d9d5bd8befdd65789b178aec8e67404c65003ba04592e0aa350496d",
+        "tests/test_agent_probe.py": "af5efb1e7ab8d80e6d019f965c35e42a8b9bbf47cd7edad49ae39a0ee5298aba",
+        "tests/test_branch_guard.py": "aed3d85409f32a62081d029cef1dd9ba149669d56161e60dd95d3820970ac7ca",
+        "tests/test_development.py": "49290ade8ff13a89ce8e4fefafb3294dad321dfef27991e678c77400a9c644e9",
+        "tests/test_live_specs.py": "4ec979a5032af464e7f50baf974cf725bc689c52675c535a89309638b87ff451",
+        "tests/test_release.py": "c4b2eb85535d5f2d48c43ce1f7b9a932b1e8d17657755dec0a547afa9fbf3593",
+        "tests/test_shared_development.py": "f8543f30017fa5998fec1f31b3e07f7f0fcb3e4b5a1da64be914ffec50a755ac",
+        "tools/pa-devtools/pyproject.toml": "2bfdafc25cf851c1f21f045ba017f353266bdbdd8f0b22f289ca109dbbc9df0a",
+        "tools/pa-devtools/src/pa_devtools/__init__.py": "942202cf33ad8538b6bc82abf0a48e3d56674abab5e9e534f684b9be0c63343a",
+        "tools/pa-devtools/src/pa_devtools/hooks.py": "6b48db19e6369f4709e5c96c9aeeaed934f64e0c81f3f3f95b1f092b98e8bb71",
+        "tools/pa-devtools/src/pa_devtools/live_specs.py": "844d1c40bc1f2e291c36d5e50050bee109a8c58cf28144d5fd4fd9b945eaac1a",
+        "tools/pa-devtools/src/pa_devtools/planning.py": "ad27a45305ce64483e0f8aba26e76423a9761656cfd7996d5684b604f2df3897",
+        "tools/pa-devtools/src/pa_devtools/snapshots.py": "cb5c89c72b7486327a369b78ae43415f37b2a9fbc6baf21f56808b0a0933f89e",
+        "tools/pa-devtools/src/pa_devtools/source.py": "cc19390043b3419e95a0b3d59e10086fecfd130b528c2da5548cab51c51e32f9",
+        "tools/pa-devtools/src/pa_devtools/specifications.py": "57bcc6cb1be8846066ac385a6a77d82ba95ae1e974f4b3ab36aacc2f388e3d39",
+        "tools/pa-devtools/src/pa_devtools/vendor/Apache-2.0.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "tools/pa-devtools/src/pa_devtools/vendor/NOTICE.md": "556658e19a2a3d0ce7fa044f6f22061fefb4e5060993b75bbf352b7aed99067d",
+        "tools/pa-devtools/src/pa_devtools/vendor/plugin.schema.json": "0a4aad95ce337878ad38802ebf0daa3fde76abe3f65400c86bcbb1ec0b3ab883",
+        "tools/pa-devtools/src/pa_devtools/vendor/specifications.json": "d1c6cf1d0030daf14653e8dceea81ed4da8357b9bbd66941ec234b1f2805c097",
+        "uv.lock": "dc3659e373b4a1037d68bd7353099e7ae3deb9388aeaf6696ba15e0f337b8dbb"
+      },
+      "root_discovery_valid_edit": "PASS",
+      "root_events": [
+        {
+          "event": "start",
+          "tool": null,
+          "exit": 0,
+          "paths": [],
+          "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch chore/acceptance-codex-runner-20261112. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+          "stderr": ""
+        },
+        {
+          "event": "edit",
+          "tool": "apply_patch",
+          "exit": 0,
+          "paths": [
+            "ordinary.txt"
+          ],
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "event": "feedback",
+          "tool": "apply_patch",
+          "exit": 0,
+          "paths": [
+            "ordinary.txt"
+          ],
+          "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"PostToolUse\", \"additionalContext\": \"pa-toolkit edit feedback (advisory; files unchanged; run scripts/dev format explicitly): structural edit accepted; run scripts/dev check for the full gate\"}}\n",
+          "stderr": ""
+        },
+        {
+          "event": "stop",
+          "tool": null,
+          "exit": 0,
+          "paths": [],
+          "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+          "stderr": ""
+        }
+      ],
+      "client": "codex",
+      "version": "codex-cli 0.167.2",
+      "status": "BLOCKED",
+      "fixture_mode": "linked-preserved",
+      "user_configuration": "ordinary-existing",
+      "startup_signals": [],
+      "fixture_observer": true,
+      "launcher_from_subdirectory": true,
+      "exit": 0,
+      "discovery": "PASS",
+      "native_edit_bytes": "PASS",
+      "native_delivery": "PASS",
+      "diagnostics": "PASS",
+      "feedback_non_mutating": "PASS",
+      "source_commit_unchanged": true,
+      "events": [
+        {
+          "event": "start",
+          "tool": null,
+          "exit": 0,
+          "paths": [],
+          "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch chore/acceptance-codex-runner-20261112. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+          "stderr": ""
+        },
+        {
+          "event": "edit",
+          "tool": "apply_patch",
+          "exit": 0,
+          "paths": [
+            "smoke.sh",
+            "smoke.json"
+          ],
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "event": "feedback",
+          "tool": "apply_patch",
+          "exit": 0,
+          "paths": [
+            "smoke.sh",
+            "smoke.json"
+          ],
+          "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"PostToolUse\", \"additionalContext\": \"pa-toolkit edit feedback (advisory; files unchanged; run scripts/dev format explicitly): shfmt: diff <fixture>/smoke.sh.orig <fixture>/smoke.sh\\n--- <fixture>/smoke.sh.orig\\n+++ <fixture>/smoke.sh\\n@@ -1,2 +1,2 @@\\n #!/usr/bin/env bash\\n-if true;then echo after;fi\\n+if true; then echo after; fi\\n\\nShellCheck: passed\\nExpecting value: line 1 column 12 (char 11)\"}}\n",
+          "stderr": ""
+        },
+        {
+          "event": "stop",
+          "tool": null,
+          "exit": 0,
+          "paths": [],
+          "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+          "stderr": ""
+        },
+        {
+          "event": "start",
+          "tool": null,
+          "exit": 0,
+          "paths": [],
+          "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch DETACHED. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+          "stderr": ""
+        },
+        {
+          "event": "edit",
+          "tool": "apply_patch",
+          "exit": 2,
+          "paths": [
+            "smoke.sh"
+          ],
+          "stdout": "",
+          "stderr": "Use a named feature worktree to edit; main/detached HEAD is blocked."
+        },
+        {
+          "event": "stop",
+          "tool": null,
+          "exit": 0,
+          "paths": [],
+          "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+          "stderr": ""
+        }
+      ],
+      "detached_denial": "PASS",
+      "main_denial": "BLOCKED: main belongs to the preserved primary checkout; independent fixture requires user project/hook review"
+    },
+    "codex-concurrent-a": {
+      "observed_at_utc": "2026-11-12T19:18:52.322379+00:00",
+      "source_base_commit": "31952d09694d14c4ddd0a1284e5d627f966d3b5c",
+      "source_dirty": true,
+      "source_tree_sha256": "29ce0c2694316e9fed4dc53114a0d533cf8b5c130a94c1ba12b5051358939c7e",
+      "source_hashes": {
+        "scripts/verify-agent-concurrency.py": "ac6fa30827d0e3cad4810c0dfba7d54790e4a7633072c9e8d716b4b6195c4122",
+        ".claude-plugin/plugin.json": "87f663bcc4735caa68d77bebfb93c97026c88986b591c09c81f161f0550b0a29",
+        ".claude/settings.json": "93aa65d89a953416e7a968aa94b510215bf0e789e8b7d5aa81b921031ef62e8d",
+        ".codex/hooks.json": "1b9e09691cf03c9bd30a25cef0b6958a6fa5c771f87bee52d48ae9fc307d6681",
+        ".github/copilot-instructions.md": "927d5196c0f62dcc75f5be16b39dee257d174bb154f27e4eedd294c2b8d29fb3",
+        ".github/workflows/release-checks.yml": "f2e169b43de369dd8e7ae8108dff6392ef8a16b171683d8cf723e437643c7ca7",
+        ".gitignore": "bcdf88d41ff19b7301c92f9f1d260e000d1532a4d8140342ef621b4c5d4678cc",
+        ".python-version": "49a506dd32096b010d75205acf3430c9ae6c40351888129499e5a5e487126c93",
+        "AGENTS.md": "de695f1b668107a22416f91e9a56159de88aa3c6f30bc7289de754d5b7946de3",
+        "CLAUDE.md": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+        "README.md": "5fa45f65a3d1328074cb8c396dea724bd12eca56e1455e2b7d797097e3de95ce",
+        "agents/decision-gatekeeper.md": "dd183c473dd784f3f4bf1b171100737ae4a055474972234e6bd26d580619bbae",
+        "agents/plugin-release-executor.md": "b052317ad50fe3c804542cc4fd21513d25e2883f966c356602c6572c98754491",
+        "config/development.json": "47b514f028e5fe3a0003ceddfceb38e2f83a2c1d81bae2f62e80206a2721758d",
+        "config/package-files.json": "15223ebe03e9a1b7f2086990a95fc45f7ab1609f1760335fa967d1ee85c2ad9e",
+        "config/release.json": "d5add0d75be3980ea9a453a92b5d53d6b25b91efa6ca86dd005714037e4f6c35",
+        "config/specifications.json": "26b8eea8fed56c81476e82f7daf4b3dd7460f741a29f2cde07c798617f887d8a",
+        "config/toolchain.json": "c5856b31e103cb97cb21c6ea2e0ebbe0899735ccfd64f633927acbb5eaf3731b",
+        "docs/agent-test-plan.md": "fa526d0652bf40239a65047decf72bce7214cb16d0652b2ee581901e11f6aec0",
+        "docs/development-architecture.md": "c843a322df2ed0ee47a5a75273c5e9801ac12c1f320a27a7a473993c512aefa4",
+        "docs/development.md": "4a890ffe45c16666bfc7b15775a33afb866e2c23c3a88051ccf37eb404f91f67",
+        "docs/hook-scope.md": "ed8d7db39021e8c5a615ab2455334becec8eb5f4564f1164f16212340e79313e",
+        "docs/shared-devtools.md": "ed41a1f97f86622a48c06f4f1f3897839e3e53798dc0bf3686dd6aef6d0b0084",
+        "docs/supported-agents.md": "445da000107ef748f692e628c3ccb19baf4212f74f0472a9fec62704a4b874bd",
+        "docs/verification/agent-events.json": "1c04255e6cee701a61ef3cb346b21ad4e49ef473dc76391994bc50a3a2ace758",
+        "docs/verification/client-hooks.json": "02c3260c30983f39eb4897bf718fa3e3f9250c12ed472a5031b3ddfd2ade41ea",
+        "docs/verification/shared-ai-setup.md": "fcc0d3f8636d280956efd0731f33f26e2868061e4299243ab3acb29997b8dd4b",
+        "docs/verification/shared-devtools.md": "a18f142cc7a0f86d404d3dfe0ab6c17741d99dc39211eb103a1b6df6b40fd7da",
+        "docs/verification/supported-agents.md": "bb80d0fc87508b0e54f506bd51f36d2450438810729e8485d57317165ddb366d",
+        "pyproject.toml": "cef863980fe5913241e773557ccf40db307c2f3c28e2f7c1eb40dbe80e7fffca",
+        "scripts/dev": "0183d20f1eeec9e5f79d8b86866cf160db6a1b766ffa2953c4ab2ae2f7688a5e",
+        "scripts/dev.py": "5feef10db811c7c4bc79fa25fd20a8b39e6355464bb9077524c53a7245c38443",
+        "scripts/verify-agent.py": "662d3d1bbdf1b9d9b59bd7a4b8cff326e48ae6583a9d89222bf7003f1f880182",
+        "skills/fin-pocketsmith-categorize-amazon/SKILL.md": "a426a9775c7e3335fef48d7f2e4a9ffae61a5595e61006bb4ae5dbd9e5c03dc0",
+        "skills/fin-pocketsmith-categorize-apple/SKILL.md": "9f672ba2d497c65a854310fb5c2f451a0a056bbb34fb28fe2fd47f1838ac5732",
+        "skills/fin-pocketsmith-categorize-netflix/SKILL.md": "5343f8eb024db7648dc22d6ca21772c3c7e2e5d434c82f2433cef14d3c7736c4",
+        "skills/fin-pocketsmith-categorize-rogers/SKILL.md": "5ca0829c0e1efc124a14f9b126cb98dcc67d8b5da92021d77892338b0cb462a2",
+        "skills/fin-pocketsmith-manage-vacation/SKILL.md": "967b461eb36fda75bfb46f37f1444eb64e91ac8028621af32aa336e5c7cc20dc",
+        "skills/fin-rogers-download-invoice/SKILL.md": "ca5db21cd55f94a80c26bc8c4efb646e87d4e18901d7cbc55fca9aa620822373",
+        "skills/plugin-release/SKILL.md": "899a4c0fdc9f72c7c5a0a7a8170cd6d861def98a017e9f444961a4123d3d33e9",
+        "skills/plugin-release/references/development.md": "50b8d9c25750dd34ec643e4a032c94ca0d80759edef90b6c6a77d207c56cf3e6",
+        "skills/plugin-release/references/release-notes-template.md": "df9e85a9cda719542f4d9fd2e85bd293bb06cda04a031ec4fda28e20cf0ed554",
+        "skills/plugin-release/references/runbook.md": "6b4abe8785b015af8135541eb81601b9e0c49f679d2eea81c1bdbe768460f7df",
+        "skills/plugin-release/scripts/branch-guard.py": "d9b2fa368e86af3b2fa6700d101c72fa1635aee8a3278a780352ba074e02d5b3",
+        "skills/plugin-release/scripts/package.sh": "bda1afdf69d087a6b69df26e6db78ae2fbb1cffbf2bc7180cf18e40359946da9",
+        "skills/plugin-release/scripts/release.py": "337af9ea2d9d5bd8befdd65789b178aec8e67404c65003ba04592e0aa350496d",
+        "tests/test_agent_probe.py": "90d92aac5b36ffc618fc0b6d0a858d7bb505a33166a8488481bf77bc070e06b6",
+        "tests/test_branch_guard.py": "aed3d85409f32a62081d029cef1dd9ba149669d56161e60dd95d3820970ac7ca",
+        "tests/test_development.py": "49290ade8ff13a89ce8e4fefafb3294dad321dfef27991e678c77400a9c644e9",
+        "tests/test_live_specs.py": "4ec979a5032af464e7f50baf974cf725bc689c52675c535a89309638b87ff451",
+        "tests/test_release.py": "c4b2eb85535d5f2d48c43ce1f7b9a932b1e8d17657755dec0a547afa9fbf3593",
+        "tests/test_shared_development.py": "f8543f30017fa5998fec1f31b3e07f7f0fcb3e4b5a1da64be914ffec50a755ac",
+        "tools/pa-devtools/pyproject.toml": "2bfdafc25cf851c1f21f045ba017f353266bdbdd8f0b22f289ca109dbbc9df0a",
+        "tools/pa-devtools/src/pa_devtools/__init__.py": "942202cf33ad8538b6bc82abf0a48e3d56674abab5e9e534f684b9be0c63343a",
+        "tools/pa-devtools/src/pa_devtools/hooks.py": "6b48db19e6369f4709e5c96c9aeeaed934f64e0c81f3f3f95b1f092b98e8bb71",
+        "tools/pa-devtools/src/pa_devtools/live_specs.py": "844d1c40bc1f2e291c36d5e50050bee109a8c58cf28144d5fd4fd9b945eaac1a",
+        "tools/pa-devtools/src/pa_devtools/planning.py": "ad27a45305ce64483e0f8aba26e76423a9761656cfd7996d5684b604f2df3897",
+        "tools/pa-devtools/src/pa_devtools/snapshots.py": "cb5c89c72b7486327a369b78ae43415f37b2a9fbc6baf21f56808b0a0933f89e",
+        "tools/pa-devtools/src/pa_devtools/source.py": "cc19390043b3419e95a0b3d59e10086fecfd130b528c2da5548cab51c51e32f9",
+        "tools/pa-devtools/src/pa_devtools/specifications.py": "57bcc6cb1be8846066ac385a6a77d82ba95ae1e974f4b3ab36aacc2f388e3d39",
+        "tools/pa-devtools/src/pa_devtools/vendor/Apache-2.0.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "tools/pa-devtools/src/pa_devtools/vendor/NOTICE.md": "556658e19a2a3d0ce7fa044f6f22061fefb4e5060993b75bbf352b7aed99067d",
+        "tools/pa-devtools/src/pa_devtools/vendor/plugin.schema.json": "0a4aad95ce337878ad38802ebf0daa3fde76abe3f65400c86bcbb1ec0b3ab883",
+        "tools/pa-devtools/src/pa_devtools/vendor/specifications.json": "d1c6cf1d0030daf14653e8dceea81ed4da8357b9bbd66941ec234b1f2805c097",
+        "uv.lock": "dc3659e373b4a1037d68bd7353099e7ae3deb9388aeaf6696ba15e0f337b8dbb"
+      },
+      "root_discovery_valid_edit": "PASS",
+      "root_events": [
+        {
+          "event": "start",
+          "tool": null,
+          "exit": 0,
+          "paths": [],
+          "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch chore/acceptance-codex-concurrent-a. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+          "stderr": ""
+        },
+        {
+          "event": "edit",
+          "tool": "apply_patch",
+          "exit": 0,
+          "paths": [
+            "ordinary.txt"
+          ],
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "event": "feedback",
+          "tool": "apply_patch",
+          "exit": 0,
+          "paths": [
+            "ordinary.txt"
+          ],
+          "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"PostToolUse\", \"additionalContext\": \"pa-toolkit edit feedback (advisory; files unchanged; run scripts/dev format explicitly): structural edit accepted; run scripts/dev check for the full gate\"}}\n",
+          "stderr": ""
+        },
+        {
+          "event": "stop",
+          "tool": null,
+          "exit": 0,
+          "paths": [],
+          "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+          "stderr": ""
+        }
+      ],
+      "client": "codex",
+      "version": "codex-cli 0.167.2",
+      "status": "BLOCKED",
+      "fixture_mode": "linked-preserved",
+      "user_configuration": "ordinary-existing",
+      "startup_signals": [],
+      "fixture_observer": true,
+      "launcher_from_subdirectory": true,
+      "exit": 0,
+      "discovery": "PASS",
+      "native_edit_bytes": "PASS",
+      "native_delivery": "PASS",
+      "diagnostics": "PASS",
+      "feedback_non_mutating": "PASS",
+      "source_commit_unchanged": true,
+      "events": [
+        {
+          "event": "start",
+          "tool": null,
+          "exit": 0,
+          "paths": [],
+          "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch chore/acceptance-codex-concurrent-a. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+          "stderr": ""
+        },
+        {
+          "event": "edit",
+          "tool": "apply_patch",
+          "exit": 0,
+          "paths": [
+            "smoke.sh",
+            "smoke.json"
+          ],
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "event": "feedback",
+          "tool": "apply_patch",
+          "exit": 0,
+          "paths": [
+            "smoke.sh",
+            "smoke.json"
+          ],
+          "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"PostToolUse\", \"additionalContext\": \"pa-toolkit edit feedback (advisory; files unchanged; run scripts/dev format explicitly): shfmt: diff <fixture>/smoke.sh.orig <fixture>/smoke.sh\\n--- <fixture>/smoke.sh.orig\\n+++ <fixture>/smoke.sh\\n@@ -1,2 +1,2 @@\\n #!/usr/bin/env bash\\n-if true;then echo after;fi\\n+if true; then echo after; fi\\n\\nShellCheck: passed\\nExpecting value: line 1 column 12 (char 11)\"}}\n",
+          "stderr": ""
+        },
+        {
+          "event": "stop",
+          "tool": null,
+          "exit": 0,
+          "paths": [],
+          "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+          "stderr": ""
+        },
+        {
+          "event": "start",
+          "tool": null,
+          "exit": 0,
+          "paths": [],
+          "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch DETACHED. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+          "stderr": ""
+        },
+        {
+          "event": "edit",
+          "tool": "apply_patch",
+          "exit": 2,
+          "paths": [
+            "smoke.sh"
+          ],
+          "stdout": "",
+          "stderr": "Use a named feature worktree to edit; main/detached HEAD is blocked."
+        },
+        {
+          "event": "stop",
+          "tool": null,
+          "exit": 0,
+          "paths": [],
+          "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+          "stderr": ""
+        }
+      ],
+      "detached_denial": "PASS",
+      "main_denial": "BLOCKED: main belongs to the preserved primary checkout; independent fixture requires user project/hook review",
+      "start_monotonic": 0.022117333,
+      "end_monotonic": 53.060828166
+    },
+    "codex-concurrent-b": {
+      "observed_at_utc": "2026-11-12T19:18:52.322524+00:00",
+      "source_base_commit": "31952d09694d14c4ddd0a1284e5d627f966d3b5c",
+      "source_dirty": true,
+      "source_tree_sha256": "29ce0c2694316e9fed4dc53114a0d533cf8b5c130a94c1ba12b5051358939c7e",
+      "source_hashes": {
+        "scripts/verify-agent-concurrency.py": "ac6fa30827d0e3cad4810c0dfba7d54790e4a7633072c9e8d716b4b6195c4122",
+        ".claude-plugin/plugin.json": "87f663bcc4735caa68d77bebfb93c97026c88986b591c09c81f161f0550b0a29",
+        ".claude/settings.json": "93aa65d89a953416e7a968aa94b510215bf0e789e8b7d5aa81b921031ef62e8d",
+        ".codex/hooks.json": "1b9e09691cf03c9bd30a25cef0b6958a6fa5c771f87bee52d48ae9fc307d6681",
+        ".github/copilot-instructions.md": "927d5196c0f62dcc75f5be16b39dee257d174bb154f27e4eedd294c2b8d29fb3",
+        ".github/workflows/release-checks.yml": "f2e169b43de369dd8e7ae8108dff6392ef8a16b171683d8cf723e437643c7ca7",
+        ".gitignore": "bcdf88d41ff19b7301c92f9f1d260e000d1532a4d8140342ef621b4c5d4678cc",
+        ".python-version": "49a506dd32096b010d75205acf3430c9ae6c40351888129499e5a5e487126c93",
+        "AGENTS.md": "de695f1b668107a22416f91e9a56159de88aa3c6f30bc7289de754d5b7946de3",
+        "CLAUDE.md": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+        "README.md": "5fa45f65a3d1328074cb8c396dea724bd12eca56e1455e2b7d797097e3de95ce",
+        "agents/decision-gatekeeper.md": "dd183c473dd784f3f4bf1b171100737ae4a055474972234e6bd26d580619bbae",
+        "agents/plugin-release-executor.md": "b052317ad50fe3c804542cc4fd21513d25e2883f966c356602c6572c98754491",
+        "config/development.json": "47b514f028e5fe3a0003ceddfceb38e2f83a2c1d81bae2f62e80206a2721758d",
+        "config/package-files.json": "15223ebe03e9a1b7f2086990a95fc45f7ab1609f1760335fa967d1ee85c2ad9e",
+        "config/release.json": "d5add0d75be3980ea9a453a92b5d53d6b25b91efa6ca86dd005714037e4f6c35",
+        "config/specifications.json": "26b8eea8fed56c81476e82f7daf4b3dd7460f741a29f2cde07c798617f887d8a",
+        "config/toolchain.json": "c5856b31e103cb97cb21c6ea2e0ebbe0899735ccfd64f633927acbb5eaf3731b",
+        "docs/agent-test-plan.md": "fa526d0652bf40239a65047decf72bce7214cb16d0652b2ee581901e11f6aec0",
+        "docs/development-architecture.md": "c843a322df2ed0ee47a5a75273c5e9801ac12c1f320a27a7a473993c512aefa4",
+        "docs/development.md": "4a890ffe45c16666bfc7b15775a33afb866e2c23c3a88051ccf37eb404f91f67",
+        "docs/hook-scope.md": "ed8d7db39021e8c5a615ab2455334becec8eb5f4564f1164f16212340e79313e",
+        "docs/shared-devtools.md": "ed41a1f97f86622a48c06f4f1f3897839e3e53798dc0bf3686dd6aef6d0b0084",
+        "docs/supported-agents.md": "445da000107ef748f692e628c3ccb19baf4212f74f0472a9fec62704a4b874bd",
+        "docs/verification/agent-events.json": "1c04255e6cee701a61ef3cb346b21ad4e49ef473dc76391994bc50a3a2ace758",
+        "docs/verification/client-hooks.json": "02c3260c30983f39eb4897bf718fa3e3f9250c12ed472a5031b3ddfd2ade41ea",
+        "docs/verification/shared-ai-setup.md": "fcc0d3f8636d280956efd0731f33f26e2868061e4299243ab3acb29997b8dd4b",
+        "docs/verification/shared-devtools.md": "a18f142cc7a0f86d404d3dfe0ab6c17741d99dc39211eb103a1b6df6b40fd7da",
+        "docs/verification/supported-agents.md": "bb80d0fc87508b0e54f506bd51f36d2450438810729e8485d57317165ddb366d",
+        "pyproject.toml": "cef863980fe5913241e773557ccf40db307c2f3c28e2f7c1eb40dbe80e7fffca",
+        "scripts/dev": "0183d20f1eeec9e5f79d8b86866cf160db6a1b766ffa2953c4ab2ae2f7688a5e",
+        "scripts/dev.py": "5feef10db811c7c4bc79fa25fd20a8b39e6355464bb9077524c53a7245c38443",
+        "scripts/verify-agent.py": "662d3d1bbdf1b9d9b59bd7a4b8cff326e48ae6583a9d89222bf7003f1f880182",
+        "skills/fin-pocketsmith-categorize-amazon/SKILL.md": "a426a9775c7e3335fef48d7f2e4a9ffae61a5595e61006bb4ae5dbd9e5c03dc0",
+        "skills/fin-pocketsmith-categorize-apple/SKILL.md": "9f672ba2d497c65a854310fb5c2f451a0a056bbb34fb28fe2fd47f1838ac5732",
+        "skills/fin-pocketsmith-categorize-netflix/SKILL.md": "5343f8eb024db7648dc22d6ca21772c3c7e2e5d434c82f2433cef14d3c7736c4",
+        "skills/fin-pocketsmith-categorize-rogers/SKILL.md": "5ca0829c0e1efc124a14f9b126cb98dcc67d8b5da92021d77892338b0cb462a2",
+        "skills/fin-pocketsmith-manage-vacation/SKILL.md": "967b461eb36fda75bfb46f37f1444eb64e91ac8028621af32aa336e5c7cc20dc",
+        "skills/fin-rogers-download-invoice/SKILL.md": "ca5db21cd55f94a80c26bc8c4efb646e87d4e18901d7cbc55fca9aa620822373",
+        "skills/plugin-release/SKILL.md": "899a4c0fdc9f72c7c5a0a7a8170cd6d861def98a017e9f444961a4123d3d33e9",
+        "skills/plugin-release/references/development.md": "50b8d9c25750dd34ec643e4a032c94ca0d80759edef90b6c6a77d207c56cf3e6",
+        "skills/plugin-release/references/release-notes-template.md": "df9e85a9cda719542f4d9fd2e85bd293bb06cda04a031ec4fda28e20cf0ed554",
+        "skills/plugin-release/references/runbook.md": "6b4abe8785b015af8135541eb81601b9e0c49f679d2eea81c1bdbe768460f7df",
+        "skills/plugin-release/scripts/branch-guard.py": "d9b2fa368e86af3b2fa6700d101c72fa1635aee8a3278a780352ba074e02d5b3",
+        "skills/plugin-release/scripts/package.sh": "bda1afdf69d087a6b69df26e6db78ae2fbb1cffbf2bc7180cf18e40359946da9",
+        "skills/plugin-release/scripts/release.py": "337af9ea2d9d5bd8befdd65789b178aec8e67404c65003ba04592e0aa350496d",
+        "tests/test_agent_probe.py": "90d92aac5b36ffc618fc0b6d0a858d7bb505a33166a8488481bf77bc070e06b6",
+        "tests/test_branch_guard.py": "aed3d85409f32a62081d029cef1dd9ba149669d56161e60dd95d3820970ac7ca",
+        "tests/test_development.py": "49290ade8ff13a89ce8e4fefafb3294dad321dfef27991e678c77400a9c644e9",
+        "tests/test_live_specs.py": "4ec979a5032af464e7f50baf974cf725bc689c52675c535a89309638b87ff451",
+        "tests/test_release.py": "c4b2eb85535d5f2d48c43ce1f7b9a932b1e8d17657755dec0a547afa9fbf3593",
+        "tests/test_shared_development.py": "f8543f30017fa5998fec1f31b3e07f7f0fcb3e4b5a1da64be914ffec50a755ac",
+        "tools/pa-devtools/pyproject.toml": "2bfdafc25cf851c1f21f045ba017f353266bdbdd8f0b22f289ca109dbbc9df0a",
+        "tools/pa-devtools/src/pa_devtools/__init__.py": "942202cf33ad8538b6bc82abf0a48e3d56674abab5e9e534f684b9be0c63343a",
+        "tools/pa-devtools/src/pa_devtools/hooks.py": "6b48db19e6369f4709e5c96c9aeeaed934f64e0c81f3f3f95b1f092b98e8bb71",
+        "tools/pa-devtools/src/pa_devtools/live_specs.py": "844d1c40bc1f2e291c36d5e50050bee109a8c58cf28144d5fd4fd9b945eaac1a",
+        "tools/pa-devtools/src/pa_devtools/planning.py": "ad27a45305ce64483e0f8aba26e76423a9761656cfd7996d5684b604f2df3897",
+        "tools/pa-devtools/src/pa_devtools/snapshots.py": "cb5c89c72b7486327a369b78ae43415f37b2a9fbc6baf21f56808b0a0933f89e",
+        "tools/pa-devtools/src/pa_devtools/source.py": "cc19390043b3419e95a0b3d59e10086fecfd130b528c2da5548cab51c51e32f9",
+        "tools/pa-devtools/src/pa_devtools/specifications.py": "57bcc6cb1be8846066ac385a6a77d82ba95ae1e974f4b3ab36aacc2f388e3d39",
+        "tools/pa-devtools/src/pa_devtools/vendor/Apache-2.0.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "tools/pa-devtools/src/pa_devtools/vendor/NOTICE.md": "556658e19a2a3d0ce7fa044f6f22061fefb4e5060993b75bbf352b7aed99067d",
+        "tools/pa-devtools/src/pa_devtools/vendor/plugin.schema.json": "0a4aad95ce337878ad38802ebf0daa3fde76abe3f65400c86bcbb1ec0b3ab883",
+        "tools/pa-devtools/src/pa_devtools/vendor/specifications.json": "d1c6cf1d0030daf14653e8dceea81ed4da8357b9bbd66941ec234b1f2805c097",
+        "uv.lock": "dc3659e373b4a1037d68bd7353099e7ae3deb9388aeaf6696ba15e0f337b8dbb"
+      },
+      "root_discovery_valid_edit": "PASS",
+      "root_events": [
+        {
+          "event": "start",
+          "tool": null,
+          "exit": 0,
+          "paths": [],
+          "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch chore/acceptance-codex-concurrent-b. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+          "stderr": ""
+        },
+        {
+          "event": "edit",
+          "tool": "apply_patch",
+          "exit": 0,
+          "paths": [
+            "ordinary.txt"
+          ],
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "event": "feedback",
+          "tool": "apply_patch",
+          "exit": 0,
+          "paths": [
+            "ordinary.txt"
+          ],
+          "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"PostToolUse\", \"additionalContext\": \"pa-toolkit edit feedback (advisory; files unchanged; run scripts/dev format explicitly): structural edit accepted; run scripts/dev check for the full gate\"}}\n",
+          "stderr": ""
+        },
+        {
+          "event": "stop",
+          "tool": null,
+          "exit": 0,
+          "paths": [],
+          "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+          "stderr": ""
+        }
+      ],
+      "client": "codex",
+      "version": "codex-cli 0.167.2",
+      "status": "BLOCKED",
+      "fixture_mode": "linked-preserved",
+      "user_configuration": "ordinary-existing",
+      "startup_signals": [],
+      "fixture_observer": true,
+      "launcher_from_subdirectory": true,
+      "exit": 0,
+      "discovery": "PASS",
+      "native_edit_bytes": "PASS",
+      "native_delivery": "PASS",
+      "diagnostics": "PASS",
+      "feedback_non_mutating": "PASS",
+      "source_commit_unchanged": true,
+      "events": [
+        {
+          "event": "start",
+          "tool": null,
+          "exit": 0,
+          "paths": [],
+          "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch chore/acceptance-codex-concurrent-b. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+          "stderr": ""
+        },
+        {
+          "event": "edit",
+          "tool": "apply_patch",
+          "exit": 0,
+          "paths": [
+            "smoke.sh",
+            "smoke.json"
+          ],
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "event": "feedback",
+          "tool": "apply_patch",
+          "exit": 0,
+          "paths": [
+            "smoke.sh",
+            "smoke.json"
+          ],
+          "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"PostToolUse\", \"additionalContext\": \"pa-toolkit edit feedback (advisory; files unchanged; run scripts/dev format explicitly): shfmt: diff <fixture>/smoke.sh.orig <fixture>/smoke.sh\\n--- <fixture>/smoke.sh.orig\\n+++ <fixture>/smoke.sh\\n@@ -1,2 +1,2 @@\\n #!/usr/bin/env bash\\n-if true;then echo after;fi\\n+if true; then echo after; fi\\n\\nShellCheck: passed\\nExpecting value: line 1 column 12 (char 11)\"}}\n",
+          "stderr": ""
+        },
+        {
+          "event": "stop",
+          "tool": null,
+          "exit": 0,
+          "paths": [],
+          "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+          "stderr": ""
+        },
+        {
+          "event": "start",
+          "tool": null,
+          "exit": 0,
+          "paths": [],
+          "stdout": "{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": \"pa-toolkit development: <fixture>; branch DETACHED. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing.\"}}\n",
+          "stderr": ""
+        },
+        {
+          "event": "edit",
+          "tool": "apply_patch",
+          "exit": 2,
+          "paths": [
+            "smoke.sh"
+          ],
+          "stdout": "",
+          "stderr": "Use a named feature worktree to edit; main/detached HEAD is blocked."
+        },
+        {
+          "event": "stop",
+          "tool": null,
+          "exit": 0,
+          "paths": [],
+          "stdout": "{\"systemMessage\": \"pa-toolkit Stop lint (advisory; files unchanged): passed\"}\n",
+          "stderr": ""
+        }
+      ],
+      "detached_denial": "PASS",
+      "main_denial": "BLOCKED: main belongs to the preserved primary checkout; independent fixture requires user project/hook review",
+      "start_monotonic": 0.022193166,
+      "end_monotonic": 54.647525625
+    },
+    "codex-concurrent-summary": {
+      "scenario": "E01",
+      "client": "codex",
+      "overlap_seconds": 53.038635,
+      "status": "PASS",
+      "client_overall_statuses": [
+        "BLOCKED",
+        "BLOCKED"
+      ],
+      "main_denial": "BLOCKED: preserved primary main is outside fixture scope",
+      "source_tree_sha256": [
+        "29ce0c2694316e9fed4dc53114a0d533cf8b5c130a94c1ba12b5051358939c7e",
+        "29ce0c2694316e9fed4dc53114a0d533cf8b5c130a94c1ba12b5051358939c7e"
+      ]
+    },
+    "antigravity-concurrent": {
+      "client": "antigravity",
+      "version": "1.5.7",
+      "surface": "CLI only, selected by PA 2026-11-12",
+      "observed_at_utc": "2026-11-12T19:12:03.128713+00:00",
+      "source_base_commit": "31952d09694d14c4ddd0a1284e5d627f966d3b5c",
+      "source_dirty": false,
+      "native_hooks": "NOT_APPLICABLE: no adapter configured",
+      "app_ide": "NOT_APPLICABLE: outside selected target",
+      "status": "PASS",
+      "source_hashes": {
+        ".claude-plugin/plugin.json": "87f663bcc4735caa68d77bebfb93c97026c88986b591c09c81f161f0550b0a29",
+        ".claude/settings.json": "93aa65d89a953416e7a968aa94b510215bf0e789e8b7d5aa81b921031ef62e8d",
+        ".codex/hooks.json": "1b9e09691cf03c9bd30a25cef0b6958a6fa5c771f87bee52d48ae9fc307d6681",
+        ".github/copilot-instructions.md": "927d5196c0f62dcc75f5be16b39dee257d174bb154f27e4eedd294c2b8d29fb3",
+        ".github/workflows/release-checks.yml": "f2e169b43de369dd8e7ae8108dff6392ef8a16b171683d8cf723e437643c7ca7",
+        ".gitignore": "bcdf88d41ff19b7301c92f9f1d260e000d1532a4d8140342ef621b4c5d4678cc",
+        ".python-version": "49a506dd32096b010d75205acf3430c9ae6c40351888129499e5a5e487126c93",
+        "AGENTS.md": "de695f1b668107a22416f91e9a56159de88aa3c6f30bc7289de754d5b7946de3",
+        "CLAUDE.md": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+        "README.md": "5fa45f65a3d1328074cb8c396dea724bd12eca56e1455e2b7d797097e3de95ce",
+        "agents/decision-gatekeeper.md": "dd183c473dd784f3f4bf1b171100737ae4a055474972234e6bd26d580619bbae",
+        "agents/plugin-release-executor.md": "b052317ad50fe3c804542cc4fd21513d25e2883f966c356602c6572c98754491",
+        "config/development.json": "47b514f028e5fe3a0003ceddfceb38e2f83a2c1d81bae2f62e80206a2721758d",
+        "config/package-files.json": "15223ebe03e9a1b7f2086990a95fc45f7ab1609f1760335fa967d1ee85c2ad9e",
+        "config/release.json": "d5add0d75be3980ea9a453a92b5d53d6b25b91efa6ca86dd005714037e4f6c35",
+        "config/specifications.json": "26b8eea8fed56c81476e82f7daf4b3dd7460f741a29f2cde07c798617f887d8a",
+        "config/toolchain.json": "c5856b31e103cb97cb21c6ea2e0ebbe0899735ccfd64f633927acbb5eaf3731b",
+        "docs/agent-test-plan.md": "fa526d0652bf40239a65047decf72bce7214cb16d0652b2ee581901e11f6aec0",
+        "docs/development-architecture.md": "c843a322df2ed0ee47a5a75273c5e9801ac12c1f320a27a7a473993c512aefa4",
+        "docs/development.md": "4a890ffe45c16666bfc7b15775a33afb866e2c23c3a88051ccf37eb404f91f67",
+        "docs/hook-scope.md": "ed8d7db39021e8c5a615ab2455334becec8eb5f4564f1164f16212340e79313e",
+        "docs/shared-devtools.md": "ed41a1f97f86622a48c06f4f1f3897839e3e53798dc0bf3686dd6aef6d0b0084",
+        "docs/supported-agents.md": "445da000107ef748f692e628c3ccb19baf4212f74f0472a9fec62704a4b874bd",
+        "docs/verification/agent-events.json": "1c04255e6cee701a61ef3cb346b21ad4e49ef473dc76391994bc50a3a2ace758",
+        "docs/verification/client-hooks.json": "02c3260c30983f39eb4897bf718fa3e3f9250c12ed472a5031b3ddfd2ade41ea",
+        "docs/verification/shared-ai-setup.md": "fcc0d3f8636d280956efd0731f33f26e2868061e4299243ab3acb29997b8dd4b",
+        "docs/verification/shared-devtools.md": "a18f142cc7a0f86d404d3dfe0ab6c17741d99dc39211eb103a1b6df6b40fd7da",
+        "docs/verification/supported-agents.md": "bb80d0fc87508b0e54f506bd51f36d2450438810729e8485d57317165ddb366d",
+        "pyproject.toml": "cef863980fe5913241e773557ccf40db307c2f3c28e2f7c1eb40dbe80e7fffca",
+        "scripts/dev": "0183d20f1eeec9e5f79d8b86866cf160db6a1b766ffa2953c4ab2ae2f7688a5e",
+        "scripts/dev.py": "5feef10db811c7c4bc79fa25fd20a8b39e6355464bb9077524c53a7245c38443",
+        "scripts/verify-agent.py": "650d5c782298c5e220a7b71c99c7d5d2292826b305d9cf074cc6606ad6162f8c",
+        "skills/fin-pocketsmith-categorize-amazon/SKILL.md": "a426a9775c7e3335fef48d7f2e4a9ffae61a5595e61006bb4ae5dbd9e5c03dc0",
+        "skills/fin-pocketsmith-categorize-apple/SKILL.md": "9f672ba2d497c65a854310fb5c2f451a0a056bbb34fb28fe2fd47f1838ac5732",
+        "skills/fin-pocketsmith-categorize-netflix/SKILL.md": "5343f8eb024db7648dc22d6ca21772c3c7e2e5d434c82f2433cef14d3c7736c4",
+        "skills/fin-pocketsmith-categorize-rogers/SKILL.md": "5ca0829c0e1efc124a14f9b126cb98dcc67d8b5da92021d77892338b0cb462a2",
+        "skills/fin-pocketsmith-manage-vacation/SKILL.md": "967b461eb36fda75bfb46f37f1444eb64e91ac8028621af32aa336e5c7cc20dc",
+        "skills/fin-rogers-download-invoice/SKILL.md": "ca5db21cd55f94a80c26bc8c4efb646e87d4e18901d7cbc55fca9aa620822373",
+        "skills/plugin-release/SKILL.md": "899a4c0fdc9f72c7c5a0a7a8170cd6d861def98a017e9f444961a4123d3d33e9",
+        "skills/plugin-release/references/development.md": "50b8d9c25750dd34ec643e4a032c94ca0d80759edef90b6c6a77d207c56cf3e6",
+        "skills/plugin-release/references/release-notes-template.md": "df9e85a9cda719542f4d9fd2e85bd293bb06cda04a031ec4fda28e20cf0ed554",
+        "skills/plugin-release/references/runbook.md": "6b4abe8785b015af8135541eb81601b9e0c49f679d2eea81c1bdbe768460f7df",
+        "skills/plugin-release/scripts/branch-guard.py": "d9b2fa368e86af3b2fa6700d101c72fa1635aee8a3278a780352ba074e02d5b3",
+        "skills/plugin-release/scripts/package.sh": "bda1afdf69d087a6b69df26e6db78ae2fbb1cffbf2bc7180cf18e40359946da9",
+        "skills/plugin-release/scripts/release.py": "337af9ea2d9d5bd8befdd65789b178aec8e67404c65003ba04592e0aa350496d",
+        "tests/test_agent_probe.py": "261342d2fd83545f12585e15cbe0f0d103a507c0f4d9d25084a9f80ce30c752c",
+        "tests/test_branch_guard.py": "aed3d85409f32a62081d029cef1dd9ba149669d56161e60dd95d3820970ac7ca",
+        "tests/test_development.py": "49290ade8ff13a89ce8e4fefafb3294dad321dfef27991e678c77400a9c644e9",
+        "tests/test_live_specs.py": "4ec979a5032af464e7f50baf974cf725bc689c52675c535a89309638b87ff451",
+        "tests/test_release.py": "c4b2eb85535d5f2d48c43ce1f7b9a932b1e8d17657755dec0a547afa9fbf3593",
+        "tests/test_shared_development.py": "f8543f30017fa5998fec1f31b3e07f7f0fcb3e4b5a1da64be914ffec50a755ac",
+        "tools/pa-devtools/pyproject.toml": "2bfdafc25cf851c1f21f045ba017f353266bdbdd8f0b22f289ca109dbbc9df0a",
+        "tools/pa-devtools/src/pa_devtools/__init__.py": "942202cf33ad8538b6bc82abf0a48e3d56674abab5e9e534f684b9be0c63343a",
+        "tools/pa-devtools/src/pa_devtools/hooks.py": "6b48db19e6369f4709e5c96c9aeeaed934f64e0c81f3f3f95b1f092b98e8bb71",
+        "tools/pa-devtools/src/pa_devtools/live_specs.py": "844d1c40bc1f2e291c36d5e50050bee109a8c58cf28144d5fd4fd9b945eaac1a",
+        "tools/pa-devtools/src/pa_devtools/planning.py": "ad27a45305ce64483e0f8aba26e76423a9761656cfd7996d5684b604f2df3897",
+        "tools/pa-devtools/src/pa_devtools/snapshots.py": "cb5c89c72b7486327a369b78ae43415f37b2a9fbc6baf21f56808b0a0933f89e",
+        "tools/pa-devtools/src/pa_devtools/source.py": "cc19390043b3419e95a0b3d59e10086fecfd130b528c2da5548cab51c51e32f9",
+        "tools/pa-devtools/src/pa_devtools/specifications.py": "57bcc6cb1be8846066ac385a6a77d82ba95ae1e974f4b3ab36aacc2f388e3d39",
+        "tools/pa-devtools/src/pa_devtools/vendor/Apache-2.0.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "tools/pa-devtools/src/pa_devtools/vendor/NOTICE.md": "556658e19a2a3d0ce7fa044f6f22061fefb4e5060993b75bbf352b7aed99067d",
+        "tools/pa-devtools/src/pa_devtools/vendor/plugin.schema.json": "0a4aad95ce337878ad38802ebf0daa3fde76abe3f65400c86bcbb1ec0b3ab883",
+        "tools/pa-devtools/src/pa_devtools/vendor/specifications.json": "d1c6cf1d0030daf14653e8dceea81ed4da8357b9bbd66941ec234b1f2805c097",
+        "uv.lock": "dc3659e373b4a1037d68bd7353099e7ae3deb9388aeaf6696ba15e0f337b8dbb"
+      },
+      "source_tree_sha256": "84410d2f5e69e06276589b9d7e2c4da9e366f6b4ddcbb2db49e5fe048824bb7a",
+      "sessions": [
+        {
+          "launch": "root",
+          "status": "PASS",
+          "exit": 0,
+          "discovery": true,
+          "exact_bytes": true,
+          "tools": [
+            "edit_file",
+            "read_file"
+          ],
+          "errors": [],
+          "branch": "chore/acceptance-agy-a",
+          "changed_paths": [
+            "AGENTS.md",
+            "ordinary.txt"
+          ],
+          "start_monotonic": 41962.221873125,
+          "end_monotonic": 42017.639003791
+        },
+        {
+          "launch": "subdirectory",
+          "status": "PASS",
+          "exit": 0,
+          "discovery": true,
+          "exact_bytes": true,
+          "tools": [
+            "edit_file",
+            "read_file"
+          ],
+          "errors": [],
+          "branch": "chore/acceptance-agy-b",
+          "changed_paths": [
+            "AGENTS.md",
+            "ordinary.txt"
+          ],
+          "start_monotonic": 41962.222864875,
+          "end_monotonic": 42040.327165916
+        }
+      ],
+      "overlap_seconds": 55.41613891599991,
+      "independent_branches": true,
+      "cleanup": "Runner-owned disposable repository/worktree removed; source and pre-existing worktrees untouched"
+    },
+    "antigravity-runner-concurrent": {
+      "client": "antigravity",
+      "version": "1.5.7",
+      "surface": "CLI only",
+      "observed_at_utc": "2026-11-12T19:18:15.260748+00:00",
+      "source_base_commit": "31952d09694d14c4ddd0a1284e5d627f966d3b5c",
+      "source_dirty": true,
+      "native_hooks": "NOT_APPLICABLE: no adapter configured",
+      "app_ide": "NOT_APPLICABLE: outside selected target",
+      "status": "PASS",
+      "source_hashes": {
+        "scripts/verify-agent-concurrency.py": "ac6fa30827d0e3cad4810c0dfba7d54790e4a7633072c9e8d716b4b6195c4122",
+        ".claude-plugin/plugin.json": "87f663bcc4735caa68d77bebfb93c97026c88986b591c09c81f161f0550b0a29",
+        ".claude/settings.json": "93aa65d89a953416e7a968aa94b510215bf0e789e8b7d5aa81b921031ef62e8d",
+        ".codex/hooks.json": "1b9e09691cf03c9bd30a25cef0b6958a6fa5c771f87bee52d48ae9fc307d6681",
+        ".github/copilot-instructions.md": "927d5196c0f62dcc75f5be16b39dee257d174bb154f27e4eedd294c2b8d29fb3",
+        ".github/workflows/release-checks.yml": "f2e169b43de369dd8e7ae8108dff6392ef8a16b171683d8cf723e437643c7ca7",
+        ".gitignore": "bcdf88d41ff19b7301c92f9f1d260e000d1532a4d8140342ef621b4c5d4678cc",
+        ".python-version": "49a506dd32096b010d75205acf3430c9ae6c40351888129499e5a5e487126c93",
+        "AGENTS.md": "de695f1b668107a22416f91e9a56159de88aa3c6f30bc7289de754d5b7946de3",
+        "CLAUDE.md": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+        "README.md": "5fa45f65a3d1328074cb8c396dea724bd12eca56e1455e2b7d797097e3de95ce",
+        "agents/decision-gatekeeper.md": "dd183c473dd784f3f4bf1b171100737ae4a055474972234e6bd26d580619bbae",
+        "agents/plugin-release-executor.md": "b052317ad50fe3c804542cc4fd21513d25e2883f966c356602c6572c98754491",
+        "config/development.json": "47b514f028e5fe3a0003ceddfceb38e2f83a2c1d81bae2f62e80206a2721758d",
+        "config/package-files.json": "15223ebe03e9a1b7f2086990a95fc45f7ab1609f1760335fa967d1ee85c2ad9e",
+        "config/release.json": "d5add0d75be3980ea9a453a92b5d53d6b25b91efa6ca86dd005714037e4f6c35",
+        "config/specifications.json": "26b8eea8fed56c81476e82f7daf4b3dd7460f741a29f2cde07c798617f887d8a",
+        "config/toolchain.json": "c5856b31e103cb97cb21c6ea2e0ebbe0899735ccfd64f633927acbb5eaf3731b",
+        "docs/agent-test-plan.md": "fa526d0652bf40239a65047decf72bce7214cb16d0652b2ee581901e11f6aec0",
+        "docs/development-architecture.md": "c843a322df2ed0ee47a5a75273c5e9801ac12c1f320a27a7a473993c512aefa4",
+        "docs/development.md": "4a890ffe45c16666bfc7b15775a33afb866e2c23c3a88051ccf37eb404f91f67",
+        "docs/hook-scope.md": "ed8d7db39021e8c5a615ab2455334becec8eb5f4564f1164f16212340e79313e",
+        "docs/shared-devtools.md": "ed41a1f97f86622a48c06f4f1f3897839e3e53798dc0bf3686dd6aef6d0b0084",
+        "docs/supported-agents.md": "445da000107ef748f692e628c3ccb19baf4212f74f0472a9fec62704a4b874bd",
+        "docs/verification/agent-events.json": "1c04255e6cee701a61ef3cb346b21ad4e49ef473dc76391994bc50a3a2ace758",
+        "docs/verification/client-hooks.json": "02c3260c30983f39eb4897bf718fa3e3f9250c12ed472a5031b3ddfd2ade41ea",
+        "docs/verification/shared-ai-setup.md": "fcc0d3f8636d280956efd0731f33f26e2868061e4299243ab3acb29997b8dd4b",
+        "docs/verification/shared-devtools.md": "a18f142cc7a0f86d404d3dfe0ab6c17741d99dc39211eb103a1b6df6b40fd7da",
+        "docs/verification/supported-agents.md": "bb80d0fc87508b0e54f506bd51f36d2450438810729e8485d57317165ddb366d",
+        "pyproject.toml": "cef863980fe5913241e773557ccf40db307c2f3c28e2f7c1eb40dbe80e7fffca",
+        "scripts/dev": "0183d20f1eeec9e5f79d8b86866cf160db6a1b766ffa2953c4ab2ae2f7688a5e",
+        "scripts/dev.py": "5feef10db811c7c4bc79fa25fd20a8b39e6355464bb9077524c53a7245c38443",
+        "scripts/verify-agent.py": "662d3d1bbdf1b9d9b59bd7a4b8cff326e48ae6583a9d89222bf7003f1f880182",
+        "skills/fin-pocketsmith-categorize-amazon/SKILL.md": "a426a9775c7e3335fef48d7f2e4a9ffae61a5595e61006bb4ae5dbd9e5c03dc0",
+        "skills/fin-pocketsmith-categorize-apple/SKILL.md": "9f672ba2d497c65a854310fb5c2f451a0a056bbb34fb28fe2fd47f1838ac5732",
+        "skills/fin-pocketsmith-categorize-netflix/SKILL.md": "5343f8eb024db7648dc22d6ca21772c3c7e2e5d434c82f2433cef14d3c7736c4",
+        "skills/fin-pocketsmith-categorize-rogers/SKILL.md": "5ca0829c0e1efc124a14f9b126cb98dcc67d8b5da92021d77892338b0cb462a2",
+        "skills/fin-pocketsmith-manage-vacation/SKILL.md": "967b461eb36fda75bfb46f37f1444eb64e91ac8028621af32aa336e5c7cc20dc",
+        "skills/fin-rogers-download-invoice/SKILL.md": "ca5db21cd55f94a80c26bc8c4efb646e87d4e18901d7cbc55fca9aa620822373",
+        "skills/plugin-release/SKILL.md": "899a4c0fdc9f72c7c5a0a7a8170cd6d861def98a017e9f444961a4123d3d33e9",
+        "skills/plugin-release/references/development.md": "50b8d9c25750dd34ec643e4a032c94ca0d80759edef90b6c6a77d207c56cf3e6",
+        "skills/plugin-release/references/release-notes-template.md": "df9e85a9cda719542f4d9fd2e85bd293bb06cda04a031ec4fda28e20cf0ed554",
+        "skills/plugin-release/references/runbook.md": "6b4abe8785b015af8135541eb81601b9e0c49f679d2eea81c1bdbe768460f7df",
+        "skills/plugin-release/scripts/branch-guard.py": "d9b2fa368e86af3b2fa6700d101c72fa1635aee8a3278a780352ba074e02d5b3",
+        "skills/plugin-release/scripts/package.sh": "bda1afdf69d087a6b69df26e6db78ae2fbb1cffbf2bc7180cf18e40359946da9",
+        "skills/plugin-release/scripts/release.py": "337af9ea2d9d5bd8befdd65789b178aec8e67404c65003ba04592e0aa350496d",
+        "tests/test_agent_probe.py": "672e64238e4c68e4094ac76e065190bf02dd0e3a505b8ccb360c238fc0628022",
+        "tests/test_branch_guard.py": "aed3d85409f32a62081d029cef1dd9ba149669d56161e60dd95d3820970ac7ca",
+        "tests/test_development.py": "49290ade8ff13a89ce8e4fefafb3294dad321dfef27991e678c77400a9c644e9",
+        "tests/test_live_specs.py": "4ec979a5032af464e7f50baf974cf725bc689c52675c535a89309638b87ff451",
+        "tests/test_release.py": "c4b2eb85535d5f2d48c43ce1f7b9a932b1e8d17657755dec0a547afa9fbf3593",
+        "tests/test_shared_development.py": "f8543f30017fa5998fec1f31b3e07f7f0fcb3e4b5a1da64be914ffec50a755ac",
+        "tools/pa-devtools/pyproject.toml": "2bfdafc25cf851c1f21f045ba017f353266bdbdd8f0b22f289ca109dbbc9df0a",
+        "tools/pa-devtools/src/pa_devtools/__init__.py": "942202cf33ad8538b6bc82abf0a48e3d56674abab5e9e534f684b9be0c63343a",
+        "tools/pa-devtools/src/pa_devtools/hooks.py": "6b48db19e6369f4709e5c96c9aeeaed934f64e0c81f3f3f95b1f092b98e8bb71",
+        "tools/pa-devtools/src/pa_devtools/live_specs.py": "844d1c40bc1f2e291c36d5e50050bee109a8c58cf28144d5fd4fd9b945eaac1a",
+        "tools/pa-devtools/src/pa_devtools/planning.py": "ad27a45305ce64483e0f8aba26e76423a9761656cfd7996d5684b604f2df3897",
+        "tools/pa-devtools/src/pa_devtools/snapshots.py": "cb5c89c72b7486327a369b78ae43415f37b2a9fbc6baf21f56808b0a0933f89e",
+        "tools/pa-devtools/src/pa_devtools/source.py": "cc19390043b3419e95a0b3d59e10086fecfd130b528c2da5548cab51c51e32f9",
+        "tools/pa-devtools/src/pa_devtools/specifications.py": "57bcc6cb1be8846066ac385a6a77d82ba95ae1e974f4b3ab36aacc2f388e3d39",
+        "tools/pa-devtools/src/pa_devtools/vendor/Apache-2.0.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "tools/pa-devtools/src/pa_devtools/vendor/NOTICE.md": "556658e19a2a3d0ce7fa044f6f22061fefb4e5060993b75bbf352b7aed99067d",
+        "tools/pa-devtools/src/pa_devtools/vendor/plugin.schema.json": "0a4aad95ce337878ad38802ebf0daa3fde76abe3f65400c86bcbb1ec0b3ab883",
+        "tools/pa-devtools/src/pa_devtools/vendor/specifications.json": "d1c6cf1d0030daf14653e8dceea81ed4da8357b9bbd66941ec234b1f2805c097",
+        "uv.lock": "dc3659e373b4a1037d68bd7353099e7ae3deb9388aeaf6696ba15e0f337b8dbb"
+      },
+      "source_tree_sha256": "52dfdfba9e8a35623211fff1d90c4f7ce2955400155b7e7a4ce439f22fcaf6ff",
+      "sessions": [
+        {
+          "launch": "root",
+          "status": "PASS",
+          "exit": 0,
+          "discovery": true,
+          "exact_bytes": true,
+          "tools": [
+            "edit_file",
+            "read_file"
+          ],
+          "errors": [],
+          "branch": "chore/acceptance-agy-a",
+          "changed_paths": [
+            "AGENTS.md",
+            "ordinary.txt"
+          ],
+          "start_monotonic": 0.563462166,
+          "end_monotonic": 56.888685
+        },
+        {
+          "launch": "subdirectory",
+          "status": "PASS",
+          "exit": 0,
+          "discovery": true,
+          "exact_bytes": true,
+          "tools": [
+            "edit_file",
+            "read_file"
+          ],
+          "errors": [],
+          "branch": "chore/acceptance-agy-b",
+          "changed_paths": [
+            "AGENTS.md",
+            "ordinary.txt"
+          ],
+          "start_monotonic": 0.563562916,
+          "end_monotonic": 57.737680416
+        }
+      ],
+      "overlap_seconds": 56.325122084,
+      "independent_branches": true,
+      "cleanup": "Runner-owned disposable repository/worktree removed; source and pre-existing worktrees untouched"
+    },
+    "codex-hook-inspection": {
+      "hooks": {
+        "id": 2,
+        "result": {
+          "data": [
+            {
+              "cwd": "<feature>",
+              "hooks": [
+                {
+                  "eventName": "preToolUse",
+                  "source": "project",
+                  "sourcePath": "<primary>/.codex/hooks.json",
+                  "enabled": true,
+                  "trustStatus": "trusted",
+                  "currentHash": "sha256:17f2418ec766134ebb885463bb3552a1911f675add68bc9300c301e398c04305",
+                  "isManaged": false
+                },
+                {
+                  "eventName": "postToolUse",
+                  "source": "project",
+                  "sourcePath": "<primary>/.codex/hooks.json",
+                  "enabled": true,
+                  "trustStatus": "trusted",
+                  "currentHash": "sha256:c1b6d6199d9eda463fd5868727ce238f90596ea330d2befb6854efa5e52bd4dd",
+                  "isManaged": false
+                },
+                {
+                  "eventName": "sessionStart",
+                  "source": "project",
+                  "sourcePath": "<primary>/.codex/hooks.json",
+                  "enabled": true,
+                  "trustStatus": "trusted",
+                  "currentHash": "sha256:aa79e8ce7814816f622c418dbb6b223503191f9662e33e53a63041fe8f802ce4",
+                  "isManaged": false
+                },
+                {
+                  "eventName": "stop",
+                  "source": "project",
+                  "sourcePath": "<primary>/.codex/hooks.json",
+                  "enabled": true,
+                  "trustStatus": "trusted",
+                  "currentHash": "sha256:aca46eb77224ea391ff5701e93f0216611a5fc30f5fa85f30aa6e773a84b9a28",
+                  "isManaged": false
+                }
+              ],
+              "warnings": [],
+              "errors": []
+            },
+            {
+              "cwd": "<feature>/scripts",
+              "hooks": [
+                {
+                  "eventName": "preToolUse",
+                  "source": "project",
+                  "sourcePath": "<primary>/.codex/hooks.json",
+                  "enabled": true,
+                  "trustStatus": "trusted",
+                  "currentHash": "sha256:17f2418ec766134ebb885463bb3552a1911f675add68bc9300c301e398c04305",
+                  "isManaged": false
+                },
+                {
+                  "eventName": "postToolUse",
+                  "source": "project",
+                  "sourcePath": "<primary>/.codex/hooks.json",
+                  "enabled": true,
+                  "trustStatus": "trusted",
+                  "currentHash": "sha256:c1b6d6199d9eda463fd5868727ce238f90596ea330d2befb6854efa5e52bd4dd",
+                  "isManaged": false
+                },
+                {
+                  "eventName": "sessionStart",
+                  "source": "project",
+                  "sourcePath": "<primary>/.codex/hooks.json",
+                  "enabled": true,
+                  "trustStatus": "trusted",
+                  "currentHash": "sha256:aa79e8ce7814816f622c418dbb6b223503191f9662e33e53a63041fe8f802ce4",
+                  "isManaged": false
+                },
+                {
+                  "eventName": "stop",
+                  "source": "project",
+                  "sourcePath": "<primary>/.codex/hooks.json",
+                  "enabled": true,
+                  "trustStatus": "trusted",
+                  "currentHash": "sha256:aca46eb77224ea391ff5701e93f0216611a5fc30f5fa85f30aa6e773a84b9a28",
+                  "isManaged": false
+                }
+              ],
+              "warnings": [],
+              "errors": []
+            },
+            {
+              "cwd": "<primary>",
+              "hooks": [
+                {
+                  "eventName": "preToolUse",
+                  "source": "project",
+                  "sourcePath": "<primary>/.codex/hooks.json",
+                  "enabled": true,
+                  "trustStatus": "trusted",
+                  "currentHash": "sha256:17f2418ec766134ebb885463bb3552a1911f675add68bc9300c301e398c04305",
+                  "isManaged": false
+                },
+                {
+                  "eventName": "postToolUse",
+                  "source": "project",
+                  "sourcePath": "<primary>/.codex/hooks.json",
+                  "enabled": true,
+                  "trustStatus": "trusted",
+                  "currentHash": "sha256:c1b6d6199d9eda463fd5868727ce238f90596ea330d2befb6854efa5e52bd4dd",
+                  "isManaged": false
+                },
+                {
+                  "eventName": "sessionStart",
+                  "source": "project",
+                  "sourcePath": "<primary>/.codex/hooks.json",
+                  "enabled": true,
+                  "trustStatus": "trusted",
+                  "currentHash": "sha256:aa79e8ce7814816f622c418dbb6b223503191f9662e33e53a63041fe8f802ce4",
+                  "isManaged": false
+                },
+                {
+                  "eventName": "stop",
+                  "source": "project",
+                  "sourcePath": "<primary>/.codex/hooks.json",
+                  "enabled": true,
+                  "trustStatus": "trusted",
+                  "currentHash": "sha256:aca46eb77224ea391ff5701e93f0216611a5fc30f5fa85f30aa6e773a84b9a28",
+                  "isManaged": false
+                }
+              ],
+              "warnings": [],
+              "errors": []
+            }
+          ]
+        }
+      },
+      "layers": [
+        {
+          "name": {
+            "type": "sessionFlags"
+          },
+          "disabledReason": null
+        },
+        {
+          "name": {
+            "type": "project",
+            "dotCodexFolder": "<feature>/.codex"
+          },
+          "disabledReason": null
+        },
+        {
+          "name": {
+            "type": "user",
+            "file": "<codex-home>/config.toml",
+            "profile": null
+          },
+          "disabledReason": null
+        },
+        {
+          "name": {
+            "type": "system",
+            "file": "/etc/codex/config.toml"
+          },
+          "disabledReason": null
+        }
+      ]
+    },
+    "codex-independent-discovery": {
+      "hooks": [
+        {
+          "cwd": "<independent-fixture>",
+          "warnings": [],
+          "errors": [],
+          "hooks": []
+        }
+      ],
+      "layers": [
+        {
+          "name": {
+            "type": "sessionFlags"
+          },
+          "disabledReason": null
+        },
+        {
+          "name": {
+            "type": "project",
+            "dotCodexFolder": "<independent-fixture>"
+          },
+          "disabledReason": "To load project-local config, hooks, and exec policies, add <independent-fixture> as a trusted project in <codex-home>/config.toml."
+        },
+        {
+          "name": {
+            "type": "user",
+            "file": "<codex-home>/config.toml",
+            "profile": null
+          },
+          "disabledReason": null
+        },
+        {
+          "name": {
+            "type": "system",
+            "file": "/etc/codex/config.toml"
+          },
+          "disabledReason": null
+        }
+      ]
+    },
+    "codex-independent-main": {
+      "root_discovery_valid_edit": "NOT_PROVEN",
+      "root_events": [],
+      "client": "codex",
+      "version": "codex-cli 0.167.2",
+      "status": "BLOCKED",
+      "source_base_commit": "31952d09694d14c4ddd0a1284e5d627f966d3b5c",
+      "source_dirty": false,
+      "source_tree_sha256": "84410d2f5e69e06276589b9d7e2c4da9e366f6b4ddcbb2db49e5fe048824bb7a",
+      "source_hashes": {
+        ".claude-plugin/plugin.json": "87f663bcc4735caa68d77bebfb93c97026c88986b591c09c81f161f0550b0a29",
+        ".claude/settings.json": "93aa65d89a953416e7a968aa94b510215bf0e789e8b7d5aa81b921031ef62e8d",
+        ".codex/hooks.json": "1b9e09691cf03c9bd30a25cef0b6958a6fa5c771f87bee52d48ae9fc307d6681",
+        ".github/copilot-instructions.md": "927d5196c0f62dcc75f5be16b39dee257d174bb154f27e4eedd294c2b8d29fb3",
+        ".github/workflows/release-checks.yml": "f2e169b43de369dd8e7ae8108dff6392ef8a16b171683d8cf723e437643c7ca7",
+        ".gitignore": "bcdf88d41ff19b7301c92f9f1d260e000d1532a4d8140342ef621b4c5d4678cc",
+        ".python-version": "49a506dd32096b010d75205acf3430c9ae6c40351888129499e5a5e487126c93",
+        "AGENTS.md": "de695f1b668107a22416f91e9a56159de88aa3c6f30bc7289de754d5b7946de3",
+        "CLAUDE.md": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+        "README.md": "5fa45f65a3d1328074cb8c396dea724bd12eca56e1455e2b7d797097e3de95ce",
+        "agents/decision-gatekeeper.md": "dd183c473dd784f3f4bf1b171100737ae4a055474972234e6bd26d580619bbae",
+        "agents/plugin-release-executor.md": "b052317ad50fe3c804542cc4fd21513d25e2883f966c356602c6572c98754491",
+        "config/development.json": "47b514f028e5fe3a0003ceddfceb38e2f83a2c1d81bae2f62e80206a2721758d",
+        "config/package-files.json": "15223ebe03e9a1b7f2086990a95fc45f7ab1609f1760335fa967d1ee85c2ad9e",
+        "config/release.json": "d5add0d75be3980ea9a453a92b5d53d6b25b91efa6ca86dd005714037e4f6c35",
+        "config/specifications.json": "26b8eea8fed56c81476e82f7daf4b3dd7460f741a29f2cde07c798617f887d8a",
+        "config/toolchain.json": "c5856b31e103cb97cb21c6ea2e0ebbe0899735ccfd64f633927acbb5eaf3731b",
+        "docs/agent-test-plan.md": "fa526d0652bf40239a65047decf72bce7214cb16d0652b2ee581901e11f6aec0",
+        "docs/development-architecture.md": "c843a322df2ed0ee47a5a75273c5e9801ac12c1f320a27a7a473993c512aefa4",
+        "docs/development.md": "4a890ffe45c16666bfc7b15775a33afb866e2c23c3a88051ccf37eb404f91f67",
+        "docs/hook-scope.md": "ed8d7db39021e8c5a615ab2455334becec8eb5f4564f1164f16212340e79313e",
+        "docs/shared-devtools.md": "ed41a1f97f86622a48c06f4f1f3897839e3e53798dc0bf3686dd6aef6d0b0084",
+        "docs/supported-agents.md": "445da000107ef748f692e628c3ccb19baf4212f74f0472a9fec62704a4b874bd",
+        "docs/verification/agent-events.json": "1c04255e6cee701a61ef3cb346b21ad4e49ef473dc76391994bc50a3a2ace758",
+        "docs/verification/client-hooks.json": "02c3260c30983f39eb4897bf718fa3e3f9250c12ed472a5031b3ddfd2ade41ea",
+        "docs/verification/shared-ai-setup.md": "fcc0d3f8636d280956efd0731f33f26e2868061e4299243ab3acb29997b8dd4b",
+        "docs/verification/shared-devtools.md": "a18f142cc7a0f86d404d3dfe0ab6c17741d99dc39211eb103a1b6df6b40fd7da",
+        "docs/verification/supported-agents.md": "bb80d0fc87508b0e54f506bd51f36d2450438810729e8485d57317165ddb366d",
+        "pyproject.toml": "cef863980fe5913241e773557ccf40db307c2f3c28e2f7c1eb40dbe80e7fffca",
+        "scripts/dev": "0183d20f1eeec9e5f79d8b86866cf160db6a1b766ffa2953c4ab2ae2f7688a5e",
+        "scripts/dev.py": "5feef10db811c7c4bc79fa25fd20a8b39e6355464bb9077524c53a7245c38443",
+        "scripts/verify-agent.py": "650d5c782298c5e220a7b71c99c7d5d2292826b305d9cf074cc6606ad6162f8c",
+        "skills/fin-pocketsmith-categorize-amazon/SKILL.md": "a426a9775c7e3335fef48d7f2e4a9ffae61a5595e61006bb4ae5dbd9e5c03dc0",
+        "skills/fin-pocketsmith-categorize-apple/SKILL.md": "9f672ba2d497c65a854310fb5c2f451a0a056bbb34fb28fe2fd47f1838ac5732",
+        "skills/fin-pocketsmith-categorize-netflix/SKILL.md": "5343f8eb024db7648dc22d6ca21772c3c7e2e5d434c82f2433cef14d3c7736c4",
+        "skills/fin-pocketsmith-categorize-rogers/SKILL.md": "5ca0829c0e1efc124a14f9b126cb98dcc67d8b5da92021d77892338b0cb462a2",
+        "skills/fin-pocketsmith-manage-vacation/SKILL.md": "967b461eb36fda75bfb46f37f1444eb64e91ac8028621af32aa336e5c7cc20dc",
+        "skills/fin-rogers-download-invoice/SKILL.md": "ca5db21cd55f94a80c26bc8c4efb646e87d4e18901d7cbc55fca9aa620822373",
+        "skills/plugin-release/SKILL.md": "899a4c0fdc9f72c7c5a0a7a8170cd6d861def98a017e9f444961a4123d3d33e9",
+        "skills/plugin-release/references/development.md": "50b8d9c25750dd34ec643e4a032c94ca0d80759edef90b6c6a77d207c56cf3e6",
+        "skills/plugin-release/references/release-notes-template.md": "df9e85a9cda719542f4d9fd2e85bd293bb06cda04a031ec4fda28e20cf0ed554",
+        "skills/plugin-release/references/runbook.md": "6b4abe8785b015af8135541eb81601b9e0c49f679d2eea81c1bdbe768460f7df",
+        "skills/plugin-release/scripts/branch-guard.py": "d9b2fa368e86af3b2fa6700d101c72fa1635aee8a3278a780352ba074e02d5b3",
+        "skills/plugin-release/scripts/package.sh": "bda1afdf69d087a6b69df26e6db78ae2fbb1cffbf2bc7180cf18e40359946da9",
+        "skills/plugin-release/scripts/release.py": "337af9ea2d9d5bd8befdd65789b178aec8e67404c65003ba04592e0aa350496d",
+        "tests/test_agent_probe.py": "261342d2fd83545f12585e15cbe0f0d103a507c0f4d9d25084a9f80ce30c752c",
+        "tests/test_branch_guard.py": "aed3d85409f32a62081d029cef1dd9ba149669d56161e60dd95d3820970ac7ca",
+        "tests/test_development.py": "49290ade8ff13a89ce8e4fefafb3294dad321dfef27991e678c77400a9c644e9",
+        "tests/test_live_specs.py": "4ec979a5032af464e7f50baf974cf725bc689c52675c535a89309638b87ff451",
+        "tests/test_release.py": "c4b2eb85535d5f2d48c43ce1f7b9a932b1e8d17657755dec0a547afa9fbf3593",
+        "tests/test_shared_development.py": "f8543f30017fa5998fec1f31b3e07f7f0fcb3e4b5a1da64be914ffec50a755ac",
+        "tools/pa-devtools/pyproject.toml": "2bfdafc25cf851c1f21f045ba017f353266bdbdd8f0b22f289ca109dbbc9df0a",
+        "tools/pa-devtools/src/pa_devtools/__init__.py": "942202cf33ad8538b6bc82abf0a48e3d56674abab5e9e534f684b9be0c63343a",
+        "tools/pa-devtools/src/pa_devtools/hooks.py": "6b48db19e6369f4709e5c96c9aeeaed934f64e0c81f3f3f95b1f092b98e8bb71",
+        "tools/pa-devtools/src/pa_devtools/live_specs.py": "844d1c40bc1f2e291c36d5e50050bee109a8c58cf28144d5fd4fd9b945eaac1a",
+        "tools/pa-devtools/src/pa_devtools/planning.py": "ad27a45305ce64483e0f8aba26e76423a9761656cfd7996d5684b604f2df3897",
+        "tools/pa-devtools/src/pa_devtools/snapshots.py": "cb5c89c72b7486327a369b78ae43415f37b2a9fbc6baf21f56808b0a0933f89e",
+        "tools/pa-devtools/src/pa_devtools/source.py": "cc19390043b3419e95a0b3d59e10086fecfd130b528c2da5548cab51c51e32f9",
+        "tools/pa-devtools/src/pa_devtools/specifications.py": "57bcc6cb1be8846066ac385a6a77d82ba95ae1e974f4b3ab36aacc2f388e3d39",
+        "tools/pa-devtools/src/pa_devtools/vendor/Apache-2.0.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "tools/pa-devtools/src/pa_devtools/vendor/NOTICE.md": "556658e19a2a3d0ce7fa044f6f22061fefb4e5060993b75bbf352b7aed99067d",
+        "tools/pa-devtools/src/pa_devtools/vendor/plugin.schema.json": "0a4aad95ce337878ad38802ebf0daa3fde76abe3f65400c86bcbb1ec0b3ab883",
+        "tools/pa-devtools/src/pa_devtools/vendor/specifications.json": "d1c6cf1d0030daf14653e8dceea81ed4da8357b9bbd66941ec234b1f2805c097",
+        "uv.lock": "dc3659e373b4a1037d68bd7353099e7ae3deb9388aeaf6696ba15e0f337b8dbb"
+      },
+      "fixture_observer": true,
+      "launcher_from_subdirectory": true,
+      "exit": 0,
+      "discovery": "PASS",
+      "native_edit_bytes": "PASS",
+      "native_delivery": "BLOCKED: missing native event witnesses; inspect client hook trust/discovery",
+      "diagnostics": "NOT_PROVEN: native delivery incomplete",
+      "feedback_non_mutating": "NOT_PROVEN",
+      "source_commit_unchanged": true,
+      "events": [],
+      "detached_denial": "NOT_RUN",
+      "main_denial": "NOT_RUN"
+    }
+  },
+  "copilot_cloud": {
+    "status": "BLOCKED",
+    "command": "gh agent-task create --repo folotp/pa-toolkit --base main --from-file <external-prompt>",
+    "prompt_sha256": "a29fd1cd65a7240cceb111386cb0ffe724e3a3de0db6b1b4b36b2f277e506507",
+    "exit": 1,
+    "diagnostic": "failed to create job: 403 Forbidden: Forbidden",
+    "task_created": false,
+    "cause": "Not established; no entitlement, billing or permission change attempted"
+  },
+  "copilot_review": {
+    "status": "NOT_RUN",
+    "reason": "Continuation PR not yet opened at receipt creation; consult issue/PR for later evidence"
+  }
+}

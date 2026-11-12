@@ -48,14 +48,21 @@ Use mandatory Git index checking and required Linux/macOS CI for every committed
 No claim of hook coverage follows from configuration parsing, user trust or a model's
 statement that advice changed the file: inspect actual event delivery and file bytes.
 
-Codex CLI 0.167.0 previously selected hook definitions from the primary checkout when
-started in a linked worktree. Inspect `/hooks` and review/trust exact definitions.
-Do not change global trust/project settings to test new definitions. The current acceptance runner never bypasses hook trust or changes global/project
-trust settings. Missing native event delivery is BLOCKED and retains the actual
-Git/index/CI fallback. Earlier 2026-11-10 invocation-local trust-bypass recordings
-are historical and do not certify this no-bypass acceptance route. After merge,
-update primary main so ordinary discovery sees the tracked adapters. See the
-[reusable plan](agent-test-plan.md) and [current report](verification/supported-agents.md).
+Codex CLI 0.167.2 was rechecked on 2026-11-12: read-only `hooks/list` selects
+primary-checkout definitions for linked root/subdirectory launches. Existing trusted
+definitions delivered actual native start/edit/feedback/stop events, both path-specific
+diagnostics and detached denial in the selected disposable worktrees. The independent
+ignored-user-config fixture has a disabled project layer and no project hooks; that
+route remains BLOCKED. No trust or sandbox bypass was used. Main native denial remains
+BLOCKED because primary main is preserved. See the [current evidence](verification/acceptance-cli-2026-11-12.md).
+
+Use `--codex-fixture` only with a newly created, clean, explicitly disposable linked
+`chore/acceptance-codex-*` checkout. The runner retains normal existing configuration,
+never grants trust, refuses changed source/primary hook bindings and preserves the
+fixture and original branch. Review changed definitions in the client when needed;
+do not manufacture a pass by copying trust or changing global project settings.
+Earlier 2026-11-10 bypass-assisted recordings remain historical. Shell/MCP paths and
+other surfaces retain Git/index/CI enforcement; no native claim follows from those gates.
 
 
 ## Official contracts

@@ -17,11 +17,11 @@
       ],
       "always": true
     },
-    "spec-freshness": {
+    "spec-live": {
       "argv": [
         "./scripts/dev",
         "_gate",
-        "spec-freshness"
+        "spec-live"
       ],
       "always": true
     },

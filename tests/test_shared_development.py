@@ -81,7 +81,11 @@ class CIIntegrationTests(unittest.TestCase):
         import yaml
 
         workflow = yaml.safe_load((ROOT / ".github/workflows/release-checks.yml").read_text())
-        step = workflow["jobs"]["checks"]["steps"][-1]
+        step = next(
+            step
+            for step in workflow["jobs"]["checks"]["steps"]
+            if step.get("name") == "Select conservative PR gates or full validation"
+        )
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             (root / "scripts").mkdir()
@@ -107,7 +111,7 @@ class PlanningTests(unittest.TestCase):
         self.assertFalse(plan["full"])
         self.assertEqual(set(plan["skip"]), {"code", "tests"})
         self.assertTrue(
-            {"doctor", "specs", "spec-freshness", "links", "inventory", "package-contract"}
+            {"doctor", "specs", "spec-live", "links", "inventory", "package-contract"}
             <= set(plan["run"])
         )
 

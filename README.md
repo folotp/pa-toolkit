@@ -110,3 +110,8 @@ docs/                          architecture, setup, client limits and evidence (
 ```
 
 Tracked in Organon as SD-BL-0066.
+
+Supported development agents are Codex, Claude Code, GitHub Copilot and Google
+Antigravity, with GitHub Actions CI for deterministic checks. See the
+[support matrix](https://github.com/folotp/pa-toolkit/blob/main/docs/supported-agents.md)
+and [reusable acceptance scenarios](https://github.com/folotp/pa-toolkit/blob/main/docs/agent-test-plan.md).

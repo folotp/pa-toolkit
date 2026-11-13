@@ -39,12 +39,21 @@ class ReceiptTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "private regular"):
                 append_receipt(root, str(log), {})
 
+    def test_symlink_loop_resolution_is_an_unavailable_receipt(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "source"
+            root.mkdir()
+            loop = Path(directory) / "loop"
+            loop.symlink_to(loop.name)
+            with self.assertRaisesRegex(ValueError, "cannot be resolved"):
+                append_receipt(root, str(loop), {})
+
     def test_fifo_and_missing_file_do_not_block_or_create(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory) / "source"
             root.mkdir()
             path = Path(directory) / "events"
-            with self.assertRaises(OSError):
+            with self.assertRaises((ValueError, OSError)):
                 append_receipt(root, str(path), {})
             self.assertFalse(path.exists())
             os.mkfifo(path, 0o600)

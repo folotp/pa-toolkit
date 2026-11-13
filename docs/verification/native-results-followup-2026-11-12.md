@@ -111,11 +111,11 @@ needed to claim this bounded continuation complete.
 ## Follow-up validation
 
 Locked sync and doctor pass in the new feat/native-acceptance-followup worktree.
-The full shared gate passes 95 deterministic tests, current official specification
+The full shared gate passes 97 deterministic tests, current official specification
 resolution/validation, source checks, links, inventory and runtime package contract.
 The new tests cover receipt concurrency and unsafe destinations, real CLI advisory/
 rejection exit receipts (including malformed tool names), unchanged native-guard
-semantics, installer directory/permission remedies, Claude matcher agreement and
+semantics (including symlink-loop receipt failures), installer directory/permission remedies, Claude matcher agreement and
 cloud-branch staged/push behavior. No dependency was added. The permission error is
 injected, so root cannot accidentally defeat a mode-bit assertion.
 

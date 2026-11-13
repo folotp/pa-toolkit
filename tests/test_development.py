@@ -377,6 +377,30 @@ class RepositoryTests(unittest.TestCase):
             if event == "feedback":
                 self.assertIn("advisory unavailable", json.loads(result.stdout)["systemMessage"])
 
+    def test_symlink_loop_receipt_preserves_real_cli_exit_and_output(self):
+        loop = Path(self.temp.name) / "loop"
+        loop.symlink_to(loop.name)
+        env = dict(os.environ, PA_TOOLKIT_HOOK_TRACE=str(loop))
+        payload = json.dumps(
+            {"tool_name": "Edit", "tool_input": {"file_path": str(self.root / "ordinary.py")}}
+        )
+        for event, code in (("edit", 2), ("feedback", 0)):
+            result = subprocess.run(
+                [sys.executable, str(SOURCE / "scripts/dev.py"), "hook", event],
+                input=payload,
+                text=True,
+                capture_output=True,
+                env=env,
+            )
+            self.assertEqual(result.returncode, code, result.stderr)
+            self.assertIn("Hook receipt unavailable", result.stderr)
+            self.assertNotIn("Traceback", result.stderr)
+            if event == "edit":
+                self.assertIn("outside repository", result.stderr)
+            else:
+                self.assertIn("advisory unavailable", json.loads(result.stdout)["systemMessage"])
+        self.assertTrue(loop.is_symlink())
+
     def test_trace_failures_do_not_change_allow_or_deny(self):
         for trace in (
             "relative.jsonl",

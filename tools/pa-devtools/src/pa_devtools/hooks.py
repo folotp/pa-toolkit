@@ -104,7 +104,14 @@ def append_receipt(root, destination, record):
     """
     path = Path(destination)
     require(path.is_absolute(), "Receipt path must be absolute")
-    require(not path.resolve().is_relative_to(root.resolve()), "Receipt must stay outside source")
+    try:
+        resolved = path.resolve(strict=True)
+    except (OSError, RuntimeError) as error:
+        # Python 3.9-3.12 use RuntimeError for a symlink loop; newer launchers
+        # use OSError. Strict resolution also refuses unresolved loops on every
+        # supported version. Observation must not replace the hook outcome.
+        raise ValueError("Receipt path cannot be resolved") from error
+    require(not resolved.is_relative_to(root.resolve()), "Receipt must stay outside source")
     descriptor = os.open(path, os.O_WRONLY | os.O_APPEND | os.O_NOFOLLOW | os.O_NONBLOCK)
     try:
         info = os.fstat(descriptor)

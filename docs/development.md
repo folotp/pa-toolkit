@@ -90,6 +90,49 @@ and identified as requiring semantic review; no fictional schema certification i
 claimed. See the [authoritative-spec contract](shared-devtools.md#live-authoritative-specifications).
 #14's broader semantic skill audit remains separate.
 
+## Claude Code cloud setup
+
+A new cloud clone does not inherit another clone's Git hooks. The recorded cloud
+run initially lacked actionlint; a task-local v1.7.12 install fixed that container
+only. PA reported updating the environment definition separately; this repository
+has not verified persistence in a fresh environment. Configure the environment's
+setup with the Linux prerequisites above, pinned actionlint v1.7.12 (for example
+the Go install command), its binary directory on PATH, and `uv sync --locked`.
+Do not silently upgrade clients or weaken checks to complete setup.
+
+Before installing Git hooks, inspect `git rev-parse --git-common-dir`,
+`git config --show-origin --get core.hooksPath` (exit 1 means unset), and
+`git rev-parse --git-path hooks/pre-commit` / `hooks/pre-push`. Confirm the destinations
+belong to this task clone, preserve unmanaged hooks, then run:
+
+```sh
+./scripts/dev install-hooks
+./scripts/dev doctor
+./scripts/dev check
+```
+
+Put the reviewed installation step in the environment's supported setup script if
+hooks should be present in each ephemeral clone. This document does not modify a
+hosted environment or install shared hooks automatically. The installer prints both
+resolved destinations before mutation and honors external `core.hooksPath`; review
+that shared scope. Missing directories are created. Invalid directory destinations
+fail preflight. I/O failures name the destination and recovery remedy; a later
+write failure can leave earlier writes installed, so inspect both before retrying.
+
+Cloud harnesses may assign `claude/<name>` branches. The commit/edit guard rejects
+only main/detached HEAD; the push guard rejects a main destination regardless of
+source branch. Regression tests cover a harness branch's actual staged check and
+feature/main destinations. The worktree-creation helper still requires the normal
+feat/fix/chore/perf/docs prefixes for branches it creates. Preserve the platform's
+task branch and keep each session in its own checkout.
+
+Cloud acceptance is development tooling only; finance/gatekeeper skills needing
+personal connectors are outside these fixtures. The report observed an ephemeral
+Linux container running as root and outbound HTTPS through a proxy. It does not
+establish network/secrets isolation or server-side branch protection. Use task-only
+fixtures and no personal connectors. Optional [hook receipts](hook-scope.md#opt-in-invocation-receipts)
+need an external private destination configured before session startup.
+
 ## Worktrees and sessions
 
 ```sh

@@ -1,0 +1,29 @@
+{
+  "evidence_kind": "independently recomputed expected bytes; no cloud artifact retrieval",
+  "fixtures": {
+    "ordinary_before": {
+      "bytes": "before\n",
+      "sha256": "9160d4be34c8695bd172a76c7c7966587ea5a4d991ad22c87b2b91af54aa9ebb"
+    },
+    "ordinary_after": {
+      "bytes": "after\n",
+      "sha256": "7b9a72466d3960eb2aacccfc848939453490db0678bd4725def3f789b891c919"
+    },
+    "shell_before": {
+      "bytes": "#!/usr/bin/env bash\necho before\n",
+      "sha256": "cad6f3d61df780c11b7507b09541ae7acbba777d345c0a69e8f3af7e2de61aac"
+    },
+    "shell_after": {
+      "bytes": "#!/usr/bin/env bash\nif true;then echo after;fi\n",
+      "sha256": "00164d3bd8e4bb430087a45e3e964f53ef05521e9fc1fe6f7a83be7959740c19"
+    },
+    "json_before": {
+      "bytes": "{\"before\":true}\n",
+      "sha256": "28fbc8bdf4deaeed0bfec088eb8da9f5c61fa9cde6fcf2a7e9454f69b5d2189b"
+    },
+    "json_after": {
+      "bytes": "{\"invalid\":}\n",
+      "sha256": "7ab4b803652e6e2061506d0adddcc7d490a4f73bb57133c762a551d65a25badf"
+    }
+  }
+}

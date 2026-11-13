@@ -83,6 +83,14 @@ invoking worktree at event time, never the installation checkout. Pre-push deleg
 to the generic destination guard, including deletes and multiple updates. Old
 worktrees without scripts/dev fail with an update/recovery instruction.
 
+Optional lifecycle invocation receipts live in the shared hooks module, with the
+CLI adapter supplying only allowlisted event/tool/exit/time/outcome metadata. An
+existing private external file and opt-in environment variable are required;
+recording never changes allow/deny/advisory semantics. See
+[receipt operation and evidence limits](hook-scope.md#opt-in-invocation-receipts).
+Installer errors distinguish invalid destinations from I/O failures and print the
+Git-resolved shared scope; preflight is not an atomic multi-file transaction.
+
 Local hooks are not a security boundary. Git options can bypass them; independently
 required protected-main CI is the merge boundary. Installation is not a CI dependency.
 

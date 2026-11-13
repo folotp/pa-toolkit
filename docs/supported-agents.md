@@ -15,7 +15,7 @@ is needed. Client configuration is development-only and excluded from runtime.
 | Surface | Discovery and launch | Native integration and limits | Current evidence |
 | --- | --- | --- | --- |
 | Codex CLI/local | `AGENTS.md`; `scripts/dev session codex` | `.codex/hooks.json` requires trusted project/definitions and enabled hooks. No trust or sandbox bypass in test runner | 0.167.2: ordinary trusted linked-root/subdirectory native delivery, diagnostics, detached denial and concurrency pass; independent ignored-config and main-native proof remain blocked |
-| Claude Code local | `CLAUDE.md` imports `AGENTS.md`; `scripts/dev session claude` | `.claude/settings.json`; native Read/Edit feedback and branch guards. Shell/MCP writes rely on Git/CI | 2.1.322: strengthened CLI suite passes root/subdirectory discovery, valid/defect edits, successful events, both diagnostics, main and detached denial; interactive/Desktop not certified |
+| Claude Code local | `CLAUDE.md` imports `AGENTS.md`; `scripts/dev session claude` | `.claude/settings.json`; native Read/Edit feedback and branch guards. Shell/MCP writes rely on Git/CI | 2.1.322: strengthened CLI suite passes root/subdirectory discovery, valid/defect edits, successful events, both diagnostics, main and detached denial; cloud 2.1.322 reports Edit/Write diagnostics and detached denial at 1e0a7f6; cloud discovery partial and Stop unproven; interactive/Desktop not certified |
 | GitHub Copilot on GitHub.com | Cloud agent and PR code review use `AGENTS.md` plus `.github/copilot-instructions.md` | GitHub-hosted checkout/review and required CI; no local Mac client, session launcher or local hook parity required | Hosted task creation returns 403; PR #30 review API returns 422 ACTOR_INELIGIBLE with no actual review observed; Mac CLI is NOT APPLICABLE |
 | Google Antigravity | Current rules documentation loads `AGENTS.md`; `scripts/dev session antigravity` invokes `agy` | PA selected CLI only (2026-11-12); installed 1.5.7; no native hook adapter is configured | CLI smoke plus root/subdirectory concurrent linked edits pass with actual read_file/edit_file events; App/IDE outside selected scope |
 | GitHub Actions | Workflow invokes `scripts/dev ci`; complete history and trusted baseline proof | Stable required Linux/macOS contexts; full main/schedule/release and conservative PR reduction. No LLM client/auth needed | Merged #30 exact-main run 43298112159 at 5b5fe08 passes both OSes with 86 tests, live specifications and actual archive; subsequent PRs require their own current-head results |
@@ -24,6 +24,14 @@ Antigravity's selected CLI-only scope does not restrict Codex or Claude Code. Th
 app/IDE/interactive/hosted scenarios require explicit surface selection and actual
 evidence; implemented CLI suites are partial acceptance. See the
 [surface matrix](verification/acceptance-surfaces-2026-11-12.md).
+
+User-run [cloud/desktop result review](verification/native-results-followup-2026-11-12.md)
+adds durable comment-backed evidence: Claude cloud reports native Edit/Write feedback
+and detached denial; Codex desktop attempt ran on the wrong cloud host and remains
+BLOCKED. The raw cloud artifacts were ephemeral. Git hooks are absent by default in
+a fresh clone; install them only after reviewing per-clone/shared destinations via
+the [cloud setup route](development.md#claude-code-cloud-setup). Git/index and required
+CI are the common committed-change gates, with optional per-client native feedback.
 
 Run `scripts/dev doctor` and the full/index commands regardless of the editing
 client. The launcher normalizes only its child cwd and forwards arguments; it does

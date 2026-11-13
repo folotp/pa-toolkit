@@ -10,6 +10,7 @@ from pathlib import Path
 import shlex
 import shutil
 import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -31,7 +32,11 @@ class RepositoryTests(unittest.TestCase):
         dev.ROOT = self.root
         self.addCleanup(setattr, dev, "ROOT", self.original_root)
         # Prevent parent Git hook variables from escaping into fixture repositories.
-        clean = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+        clean = {
+            k: v
+            for k, v in os.environ.items()
+            if not k.startswith("GIT_") and k != "PA_TOOLKIT_HOOK_TRACE"
+        }
         self.environment = patch.dict(os.environ, clean, clear=True)
         self.environment.start()
         self.addCleanup(self.environment.stop)
@@ -292,6 +297,128 @@ class RepositoryTests(unittest.TestCase):
         self.write("note.md", "![missing](absent.png)\n")
         with self.assertRaisesRegex(ValueError, "absent.png"):
             dev.links()
+
+    def test_cloud_harness_branch_keeps_index_and_push_protection(self):
+        self.git("switch", "-q", "-c", "claude/cloud-acceptance")
+        self.index_fixture()
+        dev.check_staged()
+        dev.pre_push(
+            io.StringIO(
+                "refs/heads/claude/cloud-acceptance abc refs/heads/claude/cloud-acceptance def\n"
+            )
+        )
+        with self.assertRaisesRegex(ValueError, "main push"):
+            dev.pre_push(
+                io.StringIO("refs/heads/claude/cloud-acceptance abc refs/heads/main def\n")
+            )
+
+    def test_claude_bindings_match_supported_file_payloads(self):
+        # This catches adapter/normalizer drift, not a new upstream tool name.
+        bindings = json.loads((SOURCE / ".claude/settings.json").read_text())["hooks"]
+        expected = {"Edit", "Write", "MultiEdit"}
+        for event in ("PreToolUse", "PostToolUse"):
+            self.assertEqual(set(bindings[event][0]["matcher"].split("|")), expected)
+        for tool in expected:
+            self.assertEqual(
+                dev.hook_paths({"tool_name": tool, "tool_input": {"file_path": "ordinary.py"}}),
+                [(self.root / "ordinary.py").resolve()],
+            )
+
+    def test_hook_receipts_preserve_exit_output_and_exclude_payloads(self):
+        log = Path(self.temp.name) / "events.jsonl"
+        log.touch(mode=0o600)
+        payload = {
+            "tool_name": "Edit",
+            "tool_input": {"file_path": "ordinary.py", "secret": "never record this"},
+        }
+        for event in ("start", "edit", "feedback", "stop"):
+            with (
+                patch.dict(os.environ, {"PA_TOOLKIT_HOOK_TRACE": str(log)}),
+                patch("sys.stdin", io.StringIO(json.dumps(payload))),
+                patch.object(dev, "shell_files", return_value=[]),
+                contextlib.redirect_stdout(io.StringIO()),
+            ):
+                dev.hook(event)
+        self.git("switch", "-q", "--detach")
+        with (
+            patch.dict(os.environ, {"PA_TOOLKIT_HOOK_TRACE": str(log)}),
+            patch("sys.stdin", io.StringIO(json.dumps(payload))),
+            self.assertRaisesRegex(ValueError, "main/detached"),
+        ):
+            dev.hook("edit")
+        records = [json.loads(line) for line in log.read_text().splitlines()]
+        self.assertEqual([r["exit"] for r in records], [0, 0, 0, 0, 2])
+        self.assertEqual(records[-1]["outcome"], "rejected")
+        self.assertNotIn("ordinary.py", log.read_text())
+        self.assertNotIn("never record", log.read_text())
+        self.assertEqual((self.root / "ordinary.py").read_text(), "value = 1\n")
+
+    def test_receipts_match_real_cli_advisory_and_rejection_exits(self):
+        log = Path(self.temp.name) / "cli-events.jsonl"
+        log.touch(mode=0o600)
+        env = dict(os.environ, PA_TOOLKIT_HOOK_TRACE=str(log))
+        cases = [
+            ("feedback", "{", 0, "advisory_unavailable"),
+            ("edit", '{"tool_name":[],"tool_input":{}}', 2, "rejected"),
+            ("start", "{}", 0, "completed"),
+            ("stop", '{"stop_hook_active":true}', 0, "completed"),
+        ]
+        for event, payload, code, outcome in cases:
+            result = subprocess.run(
+                [sys.executable, str(SOURCE / "scripts/dev.py"), "hook", event],
+                input=payload,
+                text=True,
+                capture_output=True,
+                env=env,
+            )
+            self.assertEqual(result.returncode, code, result.stderr)
+            record = json.loads(log.read_text().splitlines()[-1])
+            self.assertEqual((record["exit"], record["outcome"]), (code, outcome))
+            if event == "feedback":
+                self.assertIn("advisory unavailable", json.loads(result.stdout)["systemMessage"])
+
+    def test_trace_failures_do_not_change_allow_or_deny(self):
+        for trace in (
+            "relative.jsonl",
+            str(self.root / "forbidden.jsonl"),
+            str(Path(self.temp.name) / "missing.jsonl"),
+        ):
+            with (
+                patch.dict(os.environ, {"PA_TOOLKIT_HOOK_TRACE": trace}),
+                patch(
+                    "sys.stdin",
+                    io.StringIO('{"tool_name":"Edit","tool_input":{"file_path":"ordinary.py"}}'),
+                ),
+                contextlib.redirect_stderr(io.StringIO()) as errors,
+            ):
+                dev.hook("edit")
+                self.assertIn("receipt unavailable", errors.getvalue())
+        self.git("switch", "-q", "--detach")
+        with (
+            patch.dict(os.environ, {"PA_TOOLKIT_HOOK_TRACE": "relative.jsonl"}),
+            patch(
+                "sys.stdin",
+                io.StringIO('{"tool_name":"Edit","tool_input":{"file_path":"ordinary.py"}}'),
+            ),
+            contextlib.redirect_stderr(io.StringIO()),
+            self.assertRaisesRegex(ValueError, "main/detached"),
+        ):
+            dev.hook("edit")
+        self.assertFalse((self.root / "forbidden.jsonl").exists())
+
+    def test_installer_directory_destination_preflights_before_writing(self):
+        (self.root / ".git/hooks/pre-push").mkdir()
+        with self.assertRaisesRegex(ValueError, "not a regular file.*move it manually"):
+            dev.install_hooks()
+        self.assertFalse((self.root / ".git/hooks/pre-commit").exists())
+
+    def test_installer_permission_error_has_recovery_remedy(self):
+        # Inject the OS denial so root CI cannot turn a mode-bit test into a pass.
+        with (
+            patch.object(Path, "write_text", side_effect=PermissionError("denied")),
+            self.assertRaisesRegex(ValueError, "ownership/permissions.*core.hooksPath.*partial"),
+        ):
+            dev.install_hooks()
 
     def test_hook_multi_file_moves_deletes_subdir_and_outside(self):
         (self.root / "sub").mkdir()

@@ -2,18 +2,18 @@
 
 ## Current continuation
 
-Post-PR-32 [linked-worktree acceptance](linked-acceptance-2026-11-12.md) records
-clean 0e1d9be, Claude local 2.1.323 root/subdirectory linked concurrency and native
-production receipts/Stop, plus separate fresh main/detached denials. This supersedes
-the local linked-concurrency NOT RUN status below; cloud/desktop remain distinct.
+PR #33 is merged as c8f2b58 with passing exact-main Linux/Apple Silicon CI.
+The [post-PR32 cloud review](cloud-post-pr32-2026-11-13.md) adds native Edit/Write
+feedback at 0e1d9be, full expected-byte hash consistency, reported fresh readiness,
+and precise main/Stop prerequisites. Client identity conflicts remain unresolved;
+raw cloud artifacts were not retrieved. The matrix below uses the latest scoped
+evidence; historical baseline sections retain their recorded 5b5fe08 provenance.
 
-
-The [user-run result review](native-results-followup-2026-11-12.md) supersedes the
-cloud/desktop rows and awaiting-C02 language below. Claude cloud reports selected
-native passes at 1e0a7f6 with explicit artifact limits. The Codex desktop attempt
-ran on an inaccessible cloud executor, so desktop remains BLOCKED. PR #31 merged
-as 1e0a7f6 with full exact-main CI; its genuine reduced docs-only CI was observed.
-The remaining sections retain their original 5b5fe08 provenance.
+[Linked-worktree acceptance](linked-acceptance-2026-11-12.md) records Claude local
+2.1.323 linked concurrency and native production receipts/Stop at 0e1d9be, plus
+separate fresh main/detached denials. [Earlier cloud/desktop review](native-results-followup-2026-11-12.md)
+retains the older cloud detached denial and Codex desktop wrong-host blocker.
+C02 was observed on genuine docs-only PR #31; it is not awaiting first observation.
 
 ## Verified baseline
 
@@ -42,18 +42,18 @@ required by that selection; do not substitute local Claude Desktop execution for
 | Codex interactive terminal | NOT RUN | NOT RUN | NOT RUN | NOT RUN | `/hooks` review route exists; no blanket trust changes authorized |
 | Codex desktop | BLOCKED; returned test ran on cloud Linux, not the Mac | NOT RUN | NOT RUN | Mac fixture inaccessible from that executor | No local artifacts; prior UI tool denial remains separate |
 | Codex IDE / hosted | Outside selected product target | Outside selected product target | No local hook inference | Outside selected product target | PA selected desktop; this is a usage scope decision, not a passed test |
-| Claude Code CLI print | Fresh merged-source PASS root/subdirectory | Fresh PASS; two native sequential edits | Fresh main and detached PASS | Independent concurrent runs PASS; linked concurrency NOT RUN; prerequisite fixtures unit-tested | Shell/MCP native edit coverage unproven |
+| Claude Code CLI print | PASS at 0e1d9be, local 2.1.323 root/subdirectory | PASS; three sequential edits, full diagnostics and production receipts | Separate fresh main/detached PASS | Linked concurrency PASS, 15.906s process overlap; prerequisite fixtures unit-tested | Local CLI evidence does not certify cloud; shell/MCP native coverage unproven |
 | Claude Code interactive terminal | BLOCKED at folder trust prompt | NOT RUN | NOT RUN | Explicit native prerequisite observed | Selected “No, exit”; no trust settings changed |
-| Claude Code cloud through desktop or web | Root PARTIAL; A02 reported PASS | A03 and sequential A04 reported PASS | Detached/path escapes reported PASS; main NOT RUN | Cloud concurrency NOT RUN; missing/old actionlint controls reported PASS | Durable comment-backed witnesses; raw artifacts unavailable, Stop unproven |
+| Claude Code cloud through desktop or web | Root PARTIAL; A02 reported PASS at 0e1d9be; marker NOT RUN | A03/sequential A04 reported PASS; exact hashes consistent | Older detached/path-escape reported PASS; latest main BLOCKED before attempt | Readiness reported PASS with actionlint; Git hooks absent; concurrency NOT RUN | Comment-backed; raw artifacts unavailable; version conflict; trace unset and Stop unproven |
 | Antigravity CLI | Recorded PASS | Recorded smoke PASS | N/A, no adapter | Recorded overlapping linked edits PASS | App/IDE excluded by explicit selection |
 | Copilot hosted cloud agent | BLOCKED | BLOCKED | N/A local hook parity | Task create 403 on renewed attempt | No actual task created; no service activation authorized |
 | Copilot GitHub PR review | Separate reviewer scenario | Separate reviewer scenario | N/A local hook parity | Fresh PR #31 422 ACTOR_INELIGIBLE | No actual submitted Copilot review; entitlement/policy alternatives unresolved |
 
 G01–G03 and E02 failure controls are deterministic fixture coverage, not native
 model proof. S01–S03 require live-source receipts plus manual semantic review limits.
-P01/C01/C03 have merged-main hosted evidence above. C02 awaits observation of this
-genuine scope/status documentation PR; full fallback remains correct if required
-baseline proof is unavailable. No policy/routing relaxation is part of this change.
+P01/C01/C03 have merged-main hosted evidence; latest c8f2b58 CI is linked in the
+cloud review. C02 was observed on PR #31. Every new PR needs its own current-head
+checks; full fallback remains correct without compatible baseline proof. No policy/routing relaxation is part of this change.
 
 ## Priority access boundaries
 
@@ -142,4 +142,5 @@ subprocess intervals rather than whole suites. Both suites PASS; distinct Claude
 client processes in independent fixture repositories overlap by 11.374 seconds.
 The receipt retains every process cwd and monotonic interval, source hashes and
 native events. This proves overlapping client execution including tools, not
-simultaneous inference scheduling. Linked-worktree concurrency remains NOT RUN.
+simultaneous inference scheduling. This historical recording did not cover linked-worktree concurrency; the later
+0e1d9be local CLI recording above supplies that separate proof.

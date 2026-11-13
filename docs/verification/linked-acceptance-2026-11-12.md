@@ -38,7 +38,7 @@ exercise local CLI behavior, not Claude cloud or an interactive trust prompt.
 | A03 | PASS: native PostToolUse shell shfmt diff and JSON parser error, exact intentional defect bytes preserved |
 | A04 | PASS for three sequential Edit calls per checkout; no MultiEdit claim |
 | Lifecycle | PASS: each stream contains successful SessionStart, three PreToolUse, three PostToolUse and Stop responses, correlated with eight production receipts |
-| E01 | PASS: 16.451 seconds of overlapping actual client-process windows in different linked worktrees; branches, HEADs and changed paths match expectations |
+| E01 | PASS: 15.260 seconds of overlapping actual client-process windows in different linked worktrees; branches, HEADs and changed paths match expectations |
 | Source isolation | PASS: source HEAD, status and all exported source-file hashes unchanged |
 
 Production `scripts/dev.py` and bindings are copied unchanged. The new trace mode
@@ -51,9 +51,9 @@ both diagnostics and exact bytes. Model prose cannot substitute for hook respons
 The recorded overlap measures child process execution, including tool time. It is
 not a claim about simultaneous model inference. The runner removes only its own
 temporary repository/worktree after recording; all pre-existing fixtures are preserved.
-Earlier runs passed with 17.339 and 16.318 seconds of overlap. The tracked
+Earlier runs passed with 17.339, 16.318 and 16.451 seconds of overlap. The tracked
 after-review run uses per-invocation tool/response/receipt correlation and records
-16.451 seconds; its runner digest identifies the corrected harness.
+15.260 seconds; its runner digest identifies the corrected harness.
 
 ## Fresh Claude native branch denials
 
@@ -109,6 +109,21 @@ cover the review's two reproductions. An independent byte-integrity check also
 rejects corrupted/deleted fixtures even when the client fails, while unfinished
 fixtures still at their original bytes remain unproven rather than corrupt.
 
+The subsequent timeout/error review fixes retain partial stdout/stderr through the
+shared process-group termination/drain helper and parse those observations before
+classifying the run. A flushed native Read of AGENTS.md followed by a timeout is
+FAIL; a clean timeout or authentication error with only the runner's marker change
+is BLOCKED. Missing intended edits are exempted for any incomplete client run,
+while extra paths, changed HEADs and invalid bytes remain failures. Deterministic
+controls exercise these cases, plus text/byte timeout compatibility, actual SIGTERM
+drain output and the forced-SIGKILL drain path. Raw streams remain transient; only
+sanitized native observations are retained.
+
+The positive native refresh above has no timeout. Timeout/error behavior is
+separate deterministic evidence. With `--source` selecting an older checkout, the
+runner accepts the partial text/bytes that checkout's helper provides; the current
+shared helper additionally preserves output drained during termination.
+
 The source digest above identifies clean **production source**; `runner_sha256`
 identifies the feature harness separately. Documentation/tests added after a live
 run do not retroactively become tested production bytes. Current PR-head full/index
@@ -128,7 +143,7 @@ access request, denied UI route, paid activation or CLI-for-cloud substitution w
 ## Implementation validation
 
 Locked sync, doctor and the full shared gate pass in the new feature worktree,
-including 104 deterministic tests, current official-spec validation, source checks,
+including 107 deterministic tests, current official-spec validation, source checks,
 links, inventory and package contract. The actual-index gate and normal Git hooks
 must pass before the implementation commit; final-head Linux/Apple Silicon CI
 and configured review remain required. Those checks validate the feature harness,

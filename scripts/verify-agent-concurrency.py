@@ -19,6 +19,11 @@ import time
 import uuid
 
 
+def timeout_stream(value):
+    """Support older exporters' byte output as well as the shared text contract."""
+    return value.decode("utf-8", errors="replace") if isinstance(value, bytes) else (value or "")
+
+
 def structured_events(stream):
     """Ignore non-JSON progress lines; never treat narrative text as a tool event."""
     events = []
@@ -143,16 +148,16 @@ def fixture_bytes_outcome(before, expected, actual):
     return exact, invalid
 
 
-def session_violation(changed, allowed, before_head, after_head, timed_out):
-    """Observed extra paths/HEAD changes fail even when a client times out.
+def session_violation(changed, allowed, before_head, after_head, incomplete_run):
+    """Observed extra paths/HEAD changes fail even on timeout or client error.
 
-    Missing edits after a timeout are unproven, not an additional mutation failure.
+    Missing edits after an incomplete run are unproven, not a mutation failure.
     Branch identity is independently checked after both sessions finish.
     """
     return (
         before_head != after_head
         or bool(set(changed) - set(allowed))
-        or (not timed_out and set(changed) != set(allowed))
+        or (not incomplete_run and set(changed) != set(allowed))
     )
 
 
@@ -303,9 +308,11 @@ def main():
             timeout = False
             try:
                 result = probe.run_client(argv, cwd, env, args.timeout)
-            except subprocess.TimeoutExpired:
+            except subprocess.TimeoutExpired as error:
                 timeout = True
-                result = subprocess.CompletedProcess(argv, 1, "", "")
+                result = subprocess.CompletedProcess(
+                    argv, 1, timeout_stream(error.stdout), timeout_stream(error.stderr)
+                )
             end = time.monotonic()
             events = structured_events(result.stdout)
             observed = sorted(set(probe.native_tools(events)))
@@ -314,6 +321,7 @@ def main():
                 for e in events
                 if e.get("type") == "error"
                 or e.get("status") in ("ERROR", "FAILED", "AUTHENTICATION_REQUIRED")
+                or e.get("is_error") is True
             ]
             expected_contents = {"ordinary.txt": expected}
             if client == "claude":
@@ -345,8 +353,9 @@ def main():
                 ["smoke.json", "smoke.sh"] if client == "claude" else []
             )
             branch = probe.git(root, "branch", "--show-current")
+            incomplete_run = timeout or result.returncode != 0 or bool(errors)
             if invalid_bytes or session_violation(
-                diff, allowed_paths, initial, probe.git(root, "rev-parse", "HEAD"), timeout
+                diff, allowed_paths, initial, probe.git(root, "rev-parse", "HEAD"), incomplete_run
             ):
                 status = "FAIL"
             return {
@@ -354,6 +363,7 @@ def main():
                 "status": status,
                 "exit": result.returncode,
                 "timeout": timeout,
+                "incomplete_client_run": incomplete_run,
                 "discovery": discovery,
                 "exact_bytes": edits,
                 "unexpected_fixture_bytes": invalid_bytes,

@@ -36,6 +36,14 @@ while len(list(barrier.iterdir())) < 2:
         raise SystemExit("deterministic rendezvous timed out")
     time.sleep(.01)
 
+if mode == "auth-error":
+    print(json.dumps({"type":"error", "message":"deterministic authentication required"}), flush=True)
+    raise SystemExit(1)
+if mode in ("timeout-clean", "timeout-read-instructions"):
+    if mode == "timeout-read-instructions":
+        print(json.dumps({"type":"assistant","message":{"content":[{"type":"tool_use","name":"Read","input":{"file_path":str(root/"AGENTS.md")}}]}}), flush=True)
+    time.sleep(60)
+
 def hook(event, name, payload):
     env = dict(os.environ)
     if mode == "missing-receipts":
@@ -152,6 +160,11 @@ class ClaudeConcurrencyTests(unittest.TestCase):
         self.assertEqual(outcome(receipts=receipts[:-1]), "BLOCKED")
         self.assertEqual(outcome(receipts=receipts + [receipts[-1]]), "FAIL")
 
+    def test_timeout_stream_preserves_text_or_older_byte_output(self):
+        self.assertEqual(runner.timeout_stream(None), "")
+        self.assertEqual(runner.timeout_stream("observed"), "observed")
+        self.assertEqual(runner.timeout_stream(b"observed\xff"), "observed\ufffd")
+
     def test_unfinished_bytes_are_distinct_from_corruption_or_deletion(self):
         before = {"ordinary.txt": "before\n"}
         after = {"ordinary.txt": "after\n"}
@@ -215,6 +228,9 @@ class ClaudeConcurrencyTests(unittest.TestCase):
             for mode, expected in [
                 ("normal", "PASS"),
                 ("missing-receipts", "BLOCKED"),
+                ("auth-error", "BLOCKED"),
+                ("timeout-clean", "BLOCKED"),
+                ("timeout-read-instructions", "FAIL"),
                 ("bad-native-exit", "FAIL"),
                 ("missing-diagnostics", "FAIL"),
                 ("extra-edit", "FAIL"),
@@ -240,6 +256,8 @@ class ClaudeConcurrencyTests(unittest.TestCase):
                             "claude",
                             "--output",
                             str(output),
+                            "--timeout",
+                            "3" if mode.startswith("timeout-") else "20",
                         ],
                         cwd=ROOT,
                         env=env,
@@ -258,5 +276,11 @@ class ClaudeConcurrencyTests(unittest.TestCase):
                     for session in receipt["sessions"]:
                         self.assertEqual(session["status"], expected)
                         self.assertEqual(
-                            len(session["native_calls"]), 4 if mode == "extra-edit" else 3
+                            len(session["native_calls"]),
+                            {
+                                "extra-edit": 4,
+                                "auth-error": 0,
+                                "timeout-clean": 0,
+                                "timeout-read-instructions": 1,
+                            }.get(mode, 3),
                         )

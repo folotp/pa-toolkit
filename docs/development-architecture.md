@@ -46,7 +46,9 @@ independent ignored-config fixtures and main native denial remain blocked.
 ## Optional live-client acceptance
 
 `scripts/verify-agent.py` owns shared export/provenance, process-group timeouts,
-checkout inspection and single-client probes. `scripts/verify-agent-concurrency.py`
+checkout inspection and single-client probes. Its process-group timeout helper
+terminates/drains children and retains partial stdout/stderr in TimeoutExpired for
+sanitized classification; an unavailable client cannot erase earlier observations. `scripts/verify-agent-concurrency.py`
 reuses those helpers for overlapping runner-owned linked worktrees. Antigravity's
 default mode checks native edits; the opt-in Claude mode additionally correlates
 structured native hook responses with unchanged production invocation receipts.

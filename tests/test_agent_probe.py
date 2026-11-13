@@ -7,9 +7,10 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, call, patch
 
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location("agent_probe", ROOT / "scripts/verify-agent.py")
@@ -18,6 +19,38 @@ SPEC.loader.exec_module(probe)
 
 
 class PositiveAcceptanceTests(unittest.TestCase):
+    def test_timeout_retains_stdout_stderr_drained_during_termination(self):
+        code = (
+            "import signal,sys,time; "
+            "signal.signal(signal.SIGTERM, lambda *_: (print('termination-output',flush=True),sys.exit(0))); "
+            "print('before-timeout',flush=True); print('diagnostic',file=sys.stderr,flush=True); time.sleep(60)"
+        )
+        with self.assertRaises(subprocess.TimeoutExpired) as caught:
+            probe.run_client([sys.executable, "-c", code], ROOT, dict(os.environ), 0.5)
+        self.assertIn("before-timeout", caught.exception.stdout)
+        self.assertIn("termination-output", caught.exception.stdout)
+        self.assertIn("diagnostic", caught.exception.stderr)
+
+    def test_forced_kill_retains_final_drain_in_timeout_exception(self):
+        process = Mock(pid=12345)
+        process.communicate.side_effect = [
+            subprocess.TimeoutExpired("fixture", 1),
+            subprocess.TimeoutExpired("fixture", 5),
+            ("final output", "final error"),
+        ]
+        with (
+            patch.object(probe.subprocess, "Popen", return_value=process),
+            patch.object(probe.os, "killpg") as kill,
+        ):
+            with self.assertRaises(subprocess.TimeoutExpired) as caught:
+                probe.run_client(["fixture"], ROOT, {}, 1)
+        self.assertEqual(caught.exception.stdout, "final output")
+        self.assertEqual(caught.exception.stderr, "final error")
+        self.assertEqual(
+            kill.call_args_list,
+            [call(12345, probe.signal.SIGTERM), call(12345, probe.signal.SIGKILL)],
+        )
+
     def test_linked_main_blocker_preserves_an_observed_detached_guard_failure(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

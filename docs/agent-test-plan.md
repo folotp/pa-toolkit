@@ -190,8 +190,9 @@ files. Project settings are enabled; Read/Edit are the only available tools and 
 is empty. Each of the three Edit invocations needs a matching ordered pre/post
 native response and receipt pair with the Edit tool identity; duplicate invocations
 or mismatched tools fail. Missing telemetry is BLOCKED; observed unauthorized calls, failed hooks,
-incorrect bytes, unexpected paths/HEAD or source changes are FAIL. A timeout cannot
-hide observed changes. Temporary linked fixtures belong to the runner and are removed
+incorrect bytes, unexpected paths/HEAD or source changes are FAIL. Timeout/client-error handling retains partial native observations: a prohibited
+call before timeout fails, while unfinished work at original bytes remains BLOCKED.
+Extra paths, changed HEADs and corrupted/deleted fixture bytes still fail. Temporary linked fixtures belong to the runner and are removed
 after evidence is retained; existing user fixtures are untouched.
 
 Use `--source /path/to/clean/merged/checkout` to test that production snapshot from

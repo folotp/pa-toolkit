@@ -95,7 +95,12 @@ def export(source, root):
 
 
 def run_client(argv, cwd, env, timeout):
-    """Bound a whole client process group, including tool children, on timeout."""
+    """Bound the process group and retain all drained output on TimeoutExpired.
+
+    The exception's stdout/stderr are text, including output received during group
+    termination. Callers can classify observed violations before reporting BLOCKED;
+    raw streams remain transient and only sanitized evidence should be retained.
+    """
     process = subprocess.Popen(
         argv,
         cwd=cwd,
@@ -108,13 +113,20 @@ def run_client(argv, cwd, env, timeout):
     )
     try:
         out, err = process.communicate(timeout=timeout)
-    except subprocess.TimeoutExpired:
-        os.killpg(process.pid, signal.SIGTERM)
+    except subprocess.TimeoutExpired as error:
         try:
-            process.communicate(timeout=5)
+            os.killpg(process.pid, signal.SIGTERM)
+        except ProcessLookupError:
+            pass  # The group may have exited between timeout and termination.
+        try:
+            out, err = process.communicate(timeout=5)
         except subprocess.TimeoutExpired:
-            os.killpg(process.pid, signal.SIGKILL)
-            process.communicate()
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            out, err = process.communicate()
+        error.output, error.stderr = out, err
         raise
     return subprocess.CompletedProcess(argv, process.returncode, out, err)
 

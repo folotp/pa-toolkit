@@ -2,7 +2,7 @@
 
 [AGENTS.md](../AGENTS.md) is the canonical human/agent contract. Root CLAUDE.md imports
 it; Codex discovers it directly. [Setup and recovery](development.md),
-[client scope](hook-scope.md) and [acceptance evidence](verification/shared-ai-setup.md)
+[client scope](hook-scope.md) and [acceptance evidence](acceptance.md)
 complete the operational contract. Update implementation, source contracts, tests
 and documentation in the same PR. No private memory or conversation is required.
 
@@ -39,9 +39,9 @@ verification, Markdown links, README inventory, package-contract/link closure an
 all infrastructure tests. Required failures stop execution. Format is an explicit
 write operation. Lightweight client feedback checks syntax/shell style; it does not
 replace the complete gate. The Git index and CI independently cover shell/MCP/hosted
-writes outside native edit matchers. Current Codex native apply_patch delivery and diagnostics have
-[no-bypass linked-worktree evidence](verification/acceptance-cli-2026-11-12.md);
-independent ignored-config fixtures and main native denial remain blocked.
+writes outside native edit matchers. Recorded native coverage and remaining product-specific limitations are summarized
+in [acceptance evidence](acceptance.md). Configuration parsing and successful CI do
+not establish native delivery on an unobserved surface.
 
 ## Optional live-client acceptance
 
@@ -60,8 +60,8 @@ Model narratives, deterministic stubs and manual hook calls are distinct evidenc
 types. Actual client-process overlap is not model-inference scheduling proof.
 
 The [acceptance plan](agent-test-plan.md) defines scenarios and
-[post-PR-32 evidence](verification/linked-acceptance-2026-11-12.md) records scope,
-source/runner hashes and limits. Live model calls are optional acceptance work and
+[acceptance summary](acceptance.md) records scope and evidence limits; historical
+source/runner hashes remain in the linked issue and Git history. Live model calls are optional acceptance work and
 never part of deterministic CI. No client authentication or personal connector is
 required by the gate. Existing user fixtures are preserved; automatic cleanup is
 limited to repositories/worktrees created inside the runner's temporary directory.
@@ -70,8 +70,7 @@ limited to repositories/worktrees created inside the runner's temporary director
 
 Reusable mechanics now live in the versioned `tools/pa-devtools` package; toolkit is
 its first consumer. The [SDK, specification and CI contract](shared-devtools.md)
-explains ownership, wheel installation, exact-SHA adoption and the read-only Organon/
-marketplace comparison. No adjacent checkout is imported. Generic release orchestration
+explains ownership, wheel installation, exact-SHA adoption and consumer boundaries. No adjacent checkout is imported. Generic release orchestration
 remains in the existing driver/runbook.
 
 The official skills-ref core and Agent Plugins schema validate explicit profiles.
@@ -165,4 +164,5 @@ server migration. Current live readback is recorded in the acceptance report.
 | Hook lifecycle | Installer/body recognition and recovery docs | Unmanaged/shared/custom-path and old-branch tests |
 
 Recovery procedures belong in [development.md](development.md). Issue coordination
-and remaining client limits belong in the tracked [report](verification/shared-ai-setup.md).
+and accepted client limits are summarized in [acceptance](acceptance.md), with
+historical evidence retained in the linked issue and Git history.

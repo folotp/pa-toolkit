@@ -94,7 +94,7 @@ Development requires no vault/finance connection or AI client. Setup, dependency
 policy, architecture, native-hook limits, CI ownership and recovery live in the
 [development runbook](https://github.com/folotp/pa-toolkit/blob/main/docs/development.md),
 [architecture guide](https://github.com/folotp/pa-toolkit/blob/main/docs/development-architecture.md)
-and [verification report](https://github.com/folotp/pa-toolkit/blob/main/docs/verification/shared-ai-setup.md).
+and [acceptance summary](https://github.com/folotp/pa-toolkit/blob/main/docs/acceptance.md).
 Development configuration and adapters are excluded from the distributed plugin.
 
 ## Layout

@@ -156,3 +156,21 @@ denial remains BLOCKED; never force-checkout preserved primary main to finish th
 For E01, start two linked invocations concurrently with distinct fixtures/output paths;
 retain both receipts and execution-window overlap, and inspect each native outcome.
 See the [continuation report](verification/acceptance-cli-2026-11-12.md) for observed results.
+
+
+## User-run cloud/desktop results and new receipts
+
+Read the [result continuation](verification/native-results-followup-2026-11-12.md)
+before scheduling reruns. Cloud-native selected passes are comment-backed observations
+at 1e0a7f6; Codex's returned desktop attempt used the wrong execution host and proves
+no desktop behavior. Retain that distinction in every aggregate status.
+
+For a new native cloud/desktop session, establish actual host/product/root access
+before any fixture mutation. Plant the random marker outside the task prompt before
+startup and evaluate loaded instructions before reading files. A later explicit
+read is never discovery proof. Configure optional [invocation receipts](hook-scope.md#opt-in-invocation-receipts)
+in the parent environment before launch; record exact source hashes and correlate
+receipts with actual native tools/diagnostics and preserved bytes. A receipt from a
+manual hook call is deterministic evidence only. Do not change trust or substitute
+a CLI model to fill a selected product's missing telemetry. External Stop requests
+to commit deliberate defects must be declined and reported separately.

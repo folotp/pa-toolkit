@@ -1,5 +1,14 @@
 # Post-merge checkpoint and surface acceptance
 
+## Current continuation
+
+The [user-run result review](native-results-followup-2026-11-12.md) supersedes the
+cloud/desktop rows and awaiting-C02 language below. Claude cloud reports selected
+native passes at 1e0a7f6 with explicit artifact limits. The Codex desktop attempt
+ran on an inaccessible cloud executor, so desktop remains BLOCKED. PR #31 merged
+as 1e0a7f6 with full exact-main CI; its genuine reduced docs-only CI was observed.
+The remaining sections retain their original 5b5fe08 provenance.
+
 ## Verified baseline
 
 On 2026-11-12 local and remote main remained at
@@ -25,11 +34,11 @@ required by that selection; do not substitute local Claude Desktop execution for
 | --- | --- | --- | --- | --- | --- |
 | Codex CLI exec, ordinary configuration | Fresh merged-source PASS root/subdirectory | Fresh merged-source PASS with exact bytes/events | Fresh detached PASS; main BLOCKED | Linked concurrency PASS historically; independent trust BLOCKED | Interactive terminal is a separate entry point |
 | Codex interactive terminal | NOT RUN | NOT RUN | NOT RUN | NOT RUN | `/hooks` review route exists; no blanket trust changes authorized |
-| Codex desktop | BLOCKED by UI tool access denial | NOT RUN | NOT RUN | NOT RUN | Native app access explicitly denied for safety reasons |
+| Codex desktop | BLOCKED; returned test ran on cloud Linux, not the Mac | NOT RUN | NOT RUN | Mac fixture inaccessible from that executor | No local artifacts; prior UI tool denial remains separate |
 | Codex IDE / hosted | Outside selected product target | Outside selected product target | No local hook inference | Outside selected product target | PA selected desktop; this is a usage scope decision, not a passed test |
 | Claude Code CLI print | Fresh merged-source PASS root/subdirectory | Fresh PASS; two native sequential edits | Fresh main and detached PASS | Independent concurrent runs PASS; linked concurrency NOT RUN; prerequisite fixtures unit-tested | Shell/MCP native edit coverage unproven |
 | Claude Code interactive terminal | BLOCKED at folder trust prompt | NOT RUN | NOT RUN | Explicit native prerequisite observed | Selected “No, exit”; no trust settings changed |
-| Claude Code cloud through desktop or web | BLOCKED by desktop/browser access | NOT RUN | Check cloud adapter applicability | NOT RUN | Claude UI access not approved; browser host unavailable |
+| Claude Code cloud through desktop or web | Root PARTIAL; A02 reported PASS | A03 and sequential A04 reported PASS | Detached/path escapes reported PASS; main NOT RUN | Cloud concurrency NOT RUN; missing/old actionlint controls reported PASS | Durable comment-backed witnesses; raw artifacts unavailable, Stop unproven |
 | Antigravity CLI | Recorded PASS | Recorded smoke PASS | N/A, no adapter | Recorded overlapping linked edits PASS | App/IDE excluded by explicit selection |
 | Copilot hosted cloud agent | BLOCKED | BLOCKED | N/A local hook parity | Task create 403 on renewed attempt | No actual task created; no service activation authorized |
 | Copilot GitHub PR review | Separate reviewer scenario | Separate reviewer scenario | N/A local hook parity | Fresh PR #31 422 ACTOR_INELIGIBLE | No actual submitted Copilot review; entitlement/policy alternatives unresolved |

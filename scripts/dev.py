@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+from datetime import datetime, timezone
 import json
 import os
 from pathlib import Path
@@ -534,8 +535,12 @@ def hook_text(event):
 def install_hooks(uninstall=False):
     """Use shared all-destination preflight with toolkit managed-body recognition."""
     events = ("pre-commit", "pre-push")
+    paths = {e: hook_file(e) for e in events}
+    print("Git hook scope (shared by linked worktrees; honors core.hooksPath):", file=sys.stderr)
+    for path in paths.values():
+        print(f"  {path}", file=sys.stderr)
     shared_hooks.install(
-        {e: hook_file(e) for e in events},
+        paths,
         {e: hook_text(e) for e in events},
         lambda event, text: recognized_hook(text, event),
         uninstall,
@@ -579,14 +584,55 @@ def advisory(argv):
 
 
 def hook(event):
+    """Run one lifecycle invocation; optionally retain a minimal external receipt.
+
+    Recording is advisory: a missing/unwritable log cannot turn a denial into an
+    allow or block an otherwise allowed edit. Exit matches the CLI's error contract.
+    The receipt proves invocation only; manual calls are not native evidence.
+    """
+    payload = None
+    code, outcome = 1, "error"
+    try:
+        payload = json.load(sys.stdin)
+        require(isinstance(payload, dict), "Hook payload must be an object")
+        hook_output(event, payload)
+        code, outcome = 0, "completed"
+    except (ValueError, OSError, SyntaxError, subprocess.CalledProcessError):
+        code = 0 if event in ("stop", "feedback") else 2
+        outcome = "advisory_unavailable" if code == 0 else "rejected"
+        raise
+    finally:
+        trace = os.environ.get("PA_TOOLKIT_HOOK_TRACE")
+        if trace:
+            tool = payload.get("tool_name") if isinstance(payload, dict) else None
+            try:
+                shared_hooks.append_receipt(
+                    ROOT,
+                    trace,
+                    {
+                        "event": event,
+                        "tool": tool
+                        if isinstance(tool, str) and tool in shared_hooks.EDIT_TOOLS
+                        else None,
+                        "exit": code,
+                        "outcome": outcome,
+                        "observed_at_utc": datetime.now(timezone.utc).isoformat(),
+                    },
+                )
+            except (ValueError, OSError):
+                print(
+                    "Hook receipt unavailable: use an existing private regular file outside the checkout; see docs/hook-scope.md",
+                    file=sys.stderr,
+                )
+
+
+def hook_output(event, payload):
     """Thin lifecycle output contract; advisories never format or continue Stop.
 
     Lightweight launcher Python avoids environment downloads on every edit. Python
     syntax/JSON checks and external shell tools give feedback; full schemas/links/
     regressions remain in the mandatory Git/CI gate. Each message is <=4000 chars.
     """
-    payload = json.load(sys.stdin)
-    require(isinstance(payload, dict), "Hook payload must be an object")
     if event == "start":
         message = f"pa-toolkit development: {ROOT}; branch {git('branch', '--show-current') or 'DETACHED'}. Read AGENTS.md; scripts/dev check is the required gate. Use a named feature worktree before committing."
         print(

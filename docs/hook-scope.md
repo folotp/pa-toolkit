@@ -33,6 +33,13 @@ Pre-push checks remote destinations, including feature-to-main updates and delet
 ## Payloads and surfaces
 
 Claude matches `Edit|Write|MultiEdit`; these provide `tool_input.file_path`.
+NotebookEdit, arbitrary shell/MCP writes and future renamed tools are outside this
+matcher. The binding/normalizer regression test catches local drift only; it cannot
+discover a new upstream tool. Add a reviewed payload contract and native test before
+expanding coverage. MultiEdit was not exposed in the recorded cloud session.
+Use one session per checkout: commands find the session's Git root; editing a
+second worktree from that session is rejected as outside-root even if that other
+worktree has an allowed branch. Start a new session in the intended checkout.
 Codex matches `apply_patch|Edit|Write`; native apply_patch supplies its full patch in
 `tool_input.command`. Central normalization includes every Add/Update/Delete/Move-to
 header; move destinations cannot escape checking. Relative paths resolve against an
@@ -77,3 +84,57 @@ Rechecked 2026-11-10:
 - [Claude skill reference](https://code.claude.com/docs/en/skills): legacy supported fields.
 - [Anthropic skill authoring guidance](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices):
   structural field boundaries versus the broader semantic audit tracked in #14.
+
+
+## Opt-in invocation receipts
+
+Set `PA_TOOLKIT_HOOK_TRACE` in the environment inherited by a fresh client to an
+absolute path to an **existing private regular file outside the checkout**. For
+example, after choosing an external directory you own:
+
+```sh
+(umask 077; touch /absolute/external/events.jsonl)
+chmod 600 /absolute/external/events.jsonl
+export PA_TOOLKIT_HOOK_TRACE=/absolute/external/events.jsonl
+./scripts/dev session claude
+```
+
+For cloud, use a task-private external scratch directory and the environment's
+supported setup mechanism before launching the acceptance session. Do not assume
+an export in an agent's child shell propagates back to its already running client.
+No project setting or trust is changed by recording. Unset the variable for normal
+work; no file is created by the adapter. Final symlinks, hard links, non-regular
+files, files readable by other users and files owned by another uid are refused.
+macOS/Linux append locking serializes concurrent writers. Lock acquisition retries
+for at most 0.25 seconds; contention then reports an unavailable receipt and retains
+the hook result instead of waiting for the client timeout.
+
+Each JSONL record contains UTC time, toolkit event (`start`, `edit`, `feedback`,
+`stop`), an allowlisted native tool name (otherwise null), CLI exit code and outcome
+(`completed`, `rejected`, `advisory_unavailable`, or unexpected `error`). No payload,
+file path/content, diagnostic, prompt or configuration is retained. Feedback/Stop
+errors retain their existing advisory exit 0; edit/start errors retain exit 2.
+Repeat Stop suppression is recorded as completed without emitting advice. An
+unwritable/unsafe trace destination emits a stderr remedy and preserves the hook's
+original result. Invocation receipts are optional and never a gate dependency.
+
+A manual `scripts/dev hook` invocation writes the same receipt, so a receipt alone
+cannot establish native delivery. Pair it with the exact client/version/session,
+source hashes, actual tool call, visible diagnostics and target bytes. Missing
+records leave delivery unproven. The existing disposable CLI observer still records
+bounded diagnostics separately and remains explicitly fixture-only. These receipts
+have deterministic coverage; fresh desktop/cloud delivery is still required.
+
+## Claude cloud limits and external hooks
+
+The consolidated [cloud report](verification/native-results-followup-2026-11-12.md)
+records native Edit/Write feedback and detached denial on 1e0a7f6. It exposes selected
+context/errors, not raw hook inputs or exit codes. Toolkit Stop delivery remains
+unwitnessed there. PostToolUse context cannot require an agent to fix a defect;
+Git/index checks and required CI are the committed-change enforcement layers.
+
+Environment-level hooks can coexist with repository hooks. A Stop request to commit
+intentional fixtures does not override the acceptance task: preserve byte-identical
+external evidence, report the conflicting hook, and do not commit defects. Do not
+disable a hook or delete a live fixture without authorization. A manual Stop call
+or absence of later advice does not prove the repository Stop adapter ran.

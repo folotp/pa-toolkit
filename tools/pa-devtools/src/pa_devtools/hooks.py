@@ -1,9 +1,17 @@
 """Shared native edit normalization and all-destination hook installation."""
 
+import fcntl
+import json
+import os
 from pathlib import Path
+import stat
 import re
+import time
 
 from .source import require
+
+
+EDIT_TOOLS = frozenset(("apply_patch", "Write", "Edit", "MultiEdit"))
 
 
 def hook_paths(root, payload):
@@ -57,17 +65,78 @@ def install(paths, bodies, recognized, uninstall=False):
     for event, path in paths.items():
         require(not path.is_symlink(), f"Preserving unmanaged hook symlink: {path}")
         if path.exists():
-            content = path.read_text()
+            require(
+                path.is_file(),
+                f"Hook destination is not a regular file: {path}; move it manually before retrying",
+            )
+            try:
+                content = path.read_text()
+            except OSError as error:
+                raise ValueError(
+                    f"Cannot read hook destination {path}; check ownership/permissions before retrying"
+                ) from error
             accepted = content == bodies[event] if uninstall else recognized(event, content)
             require(
                 accepted,
                 f"Preserving unmanaged hook: {path}; compose manually per docs/development.md",
             )
     for event, path in paths.items():
-        if uninstall:
-            path.unlink(missing_ok=True)
-        else:
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(bodies[event])
-            path.chmod(0o755)
+        try:
+            if uninstall:
+                path.unlink(missing_ok=True)
+            else:
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(bodies[event])
+                path.chmod(0o755)
+        except OSError as error:
+            raise ValueError(
+                f"Cannot {'remove' if uninstall else 'install'} hook {path}; check destination ownership/permissions and core.hooksPath; inspect both hooks before retrying (writes may be partial)"
+            ) from error
         print(f"{'Removed' if uninstall else 'Installed'} {path}")
+
+
+def append_receipt(root, destination, record):
+    """Append one receipt to an opt-in, existing private file outside the checkout.
+
+    Unix (supported macOS/Linux) append/lock semantics serialize concurrent writers.
+    No directories/files are created, symlinks are refused, and no payload, path,
+    diagnostic, prompt or configuration is recorded. Errors belong to the advisory
+    caller; recording must never override the lifecycle's enforcement outcome.
+    """
+    path = Path(destination)
+    require(path.is_absolute(), "Receipt path must be absolute")
+    try:
+        resolved = path.resolve(strict=True)
+    except (OSError, RuntimeError) as error:
+        # Python 3.9-3.12 use RuntimeError for a symlink loop; newer launchers
+        # use OSError. Strict resolution also refuses unresolved loops on every
+        # supported version. Observation must not replace the hook outcome.
+        raise ValueError("Receipt path cannot be resolved") from error
+    require(not resolved.is_relative_to(root.resolve()), "Receipt must stay outside source")
+    descriptor = os.open(path, os.O_WRONLY | os.O_APPEND | os.O_NOFOLLOW | os.O_NONBLOCK)
+    try:
+        info = os.fstat(descriptor)
+        require(
+            stat.S_ISREG(info.st_mode)
+            and info.st_uid == os.getuid()
+            and info.st_mode & 0o077 == 0
+            and info.st_nlink == 1,
+            "Receipt must be a private regular file owned by this user",
+        )
+        value = (json.dumps(record, separators=(",", ":")) + "\n").encode()
+        # Observation must finish well inside the clients' 15-second timeout,
+        # even if another writer is suspended while holding the file lock.
+        deadline = time.monotonic() + 0.25
+        while True:
+            try:
+                fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except BlockingIOError:
+                require(time.monotonic() < deadline, "Receipt lock unavailable")
+                time.sleep(0.005)
+        try:
+            require(os.write(descriptor, value) == len(value), "Incomplete receipt write")
+        finally:
+            fcntl.flock(descriptor, fcntl.LOCK_UN)
+    finally:
+        os.close(descriptor)

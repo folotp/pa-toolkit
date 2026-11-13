@@ -15,10 +15,11 @@ is needed. Client configuration is development-only and excluded from runtime.
 | Surface | Discovery and launch | Native integration and limits | Current evidence |
 | --- | --- | --- | --- |
 | Codex CLI/local | `AGENTS.md`; `scripts/dev session codex` | `.codex/hooks.json` requires trusted project/definitions and enabled hooks. No trust or sandbox bypass in test runner | 0.167.2: fresh 0e1d9be trusted linked delivery/diagnostics/detached denial plus 11 matching production receipts; prior concurrency pass; independent ignored-config and main-native proof remain blocked |
-| Claude Code local | `CLAUDE.md` imports `AGENTS.md`; `scripts/dev session claude` | `.claude/settings.json`; native Read/Edit feedback and branch guards. Shell/MCP writes rely on Git/CI | 2.1.323: fresh 0e1d9be root/subdirectory linked concurrency, unmodified production receipts/Stop, diagnostics and separate main/detached denial pass; cloud 2.1.322 reports Edit/Write diagnostics and detached denial at 1e0a7f6; cloud discovery partial and Stop unproven; interactive/Desktop not certified |
+| Claude Code local | `CLAUDE.md` imports `AGENTS.md`; `scripts/dev session claude` | `.claude/settings.json`; native Read/Edit feedback and branch guards. Shell/MCP writes rely on Git/CI | 2.1.323: fresh 0e1d9be root/subdirectory linked concurrency, unmodified production receipts/Stop, diagnostics and separate main/detached denial pass; interactive/Desktop not certified |
+| Claude Code cloud via desktop/web | Actual cloud checkout and startup instructions; local CLI launch is separate | Project Edit/Write feedback reported; Git hooks absent in latest task; parent tracing unset | Post-PR32 report at 0e1d9be: readiness and native diagnostics reported PASS; binary 2.1.323 conflicts with environment 2.1.42; marker/main/Stop/concurrency incomplete |
 | GitHub Copilot on GitHub.com | Cloud agent and PR code review use `AGENTS.md` plus `.github/copilot-instructions.md` | GitHub-hosted checkout/review and required CI; no local Mac client, session launcher or local hook parity required | Hosted task creation returns 403; PR #30 review API returns 422 ACTOR_INELIGIBLE with no actual review observed; Mac CLI is NOT APPLICABLE |
 | Google Antigravity | Current rules documentation loads `AGENTS.md`; `scripts/dev session antigravity` invokes `agy` | PA selected CLI only (2026-11-12); installed 1.5.7; no native hook adapter is configured | CLI smoke plus root/subdirectory concurrent linked edits pass with actual read_file/edit_file events; App/IDE outside selected scope |
-| GitHub Actions | Workflow invokes `scripts/dev ci`; complete history and trusted baseline proof | Stable required Linux/macOS contexts; full main/schedule/release and conservative PR reduction. No LLM client/auth needed | Merged #30 exact-main run 43298112159 at 5b5fe08 passes both OSes with 86 tests, live specifications and actual archive; subsequent PRs require their own current-head results |
+| GitHub Actions | Workflow invokes `scripts/dev ci`; complete history and trusted baseline proof | Stable required Linux/macOS contexts; full main/schedule/release and conservative PR reduction. No LLM client/auth needed | Merged #33 exact-main run 43362071694 at c8f2b58 passes both OSes with 109 tests, live specifications and actual archive; subsequent PRs require their own current-head results |
 
 Antigravity's selected CLI-only scope does not restrict Codex or Claude Code. Their
 app/IDE/interactive/hosted scenarios require explicit surface selection and actual
@@ -81,3 +82,10 @@ records fresh Claude local 2.1.323 native delivery against clean merged source,
 including production receipt/stream correlation and actual client-process overlap.
 This resolves the local linked-concurrency gap; selected cloud evidence remains
 separate and incomplete.
+
+
+Latest [post-PR32 cloud report review](verification/cloud-post-pr32-2026-11-13.md)
+records native evidence and identity/telemetry limits separately from the local CLI.
+The [focused cloud follow-up](verification/claude-cloud-followup.md) addresses the
+lagging local-main prerequisite and pre-start marker/receipt setup without global
+trust changes, fixture cleanup or a CLI substitute.

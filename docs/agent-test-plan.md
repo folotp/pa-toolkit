@@ -202,3 +202,19 @@ helpers always come from the current harness checkout, never the selected older 
 [post-PR-32 recording](verification/linked-acceptance-2026-11-12.md) establishes local
 Claude 2.1.323 linked-worktree concurrency and production receipt delivery, with
 fresh local main/detached denials recorded separately. It does not certify cloud.
+
+
+## Cloud post-PR32 result intake
+
+The [latest cloud review](verification/cloud-post-pr32-2026-11-13.md) reports
+readiness and selected native Edit/Write diagnostics at 0e1d9be. Main was not
+attempted because local main lagged; trace was unset, and the running client version
+conflicts with its environment claim. Preserve those as prerequisites/uncertainties,
+not product failures or passed scenarios. Doctor does not prove Git hooks are installed.
+
+The [copyable cloud continuation](verification/claude-cloud-followup.md) scopes a
+local-main fast-forward to the original task HEAD in the task-owned clone only,
+with ancestor/clean-index/other-worktree checks and normal branch restoration.
+Fresh discovery and Stop receipt evidence require supported setup before client
+startup; a child-shell export or marker added after loading cannot retroactively
+establish either. No global trust/permission change or local-CLI substitution.

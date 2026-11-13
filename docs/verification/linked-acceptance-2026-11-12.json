@@ -81,10 +81,10 @@
     "client": "claude",
     "version": "2.1.323 (Claude Code)",
     "surface": "local CLI print",
-    "observed_at_utc": "2026-11-13T03:10:56.866951+00:00",
+    "observed_at_utc": "2026-11-13T03:23:49.638650+00:00",
     "source_base_commit": "0e1d9be81f05beb1d0d2f5b1f619eead1a73f567",
     "source_dirty": false,
-    "runner_sha256": "a44def9abfdde78518d1b97ecc91737c76490f9ef9e66f059b564a46fb571b60",
+    "runner_sha256": "04503bd778317427ba5e69c5d35964b1f33726d4d3487a5ba91be627ae5324d3",
     "fixture_observer": false,
     "native_hooks": "production receipts plus native client stream",
     "app_ide": "NOT_RUN: separate selected surface",
@@ -98,6 +98,7 @@
         "timeout": false,
         "discovery": true,
         "exact_bytes": true,
+        "unexpected_fixture_bytes": false,
         "tools": [
           "Edit",
           "Read"
@@ -110,8 +111,8 @@
           "smoke.json",
           "smoke.sh"
         ],
-        "start_monotonic": 0.703484458,
-        "end_monotonic": 17.984619583,
+        "start_monotonic": 0.603064375,
+        "end_monotonic": 17.213011541,
         "native_calls": [
           {
             "tool": "Read",
@@ -241,60 +242,60 @@
             "tool": null,
             "exit": 0,
             "outcome": "completed",
-            "observed_at_utc": "2026-11-13T03:10:58.263873+00:00"
+            "observed_at_utc": "2026-11-13T03:23:50.655013+00:00"
           },
           {
             "event": "edit",
             "tool": "Edit",
             "exit": 0,
             "outcome": "completed",
-            "observed_at_utc": "2026-11-13T03:11:04.054742+00:00"
+            "observed_at_utc": "2026-11-13T03:23:55.964195+00:00"
           },
           {
             "event": "feedback",
             "tool": "Edit",
             "exit": 0,
             "outcome": "completed",
-            "observed_at_utc": "2026-11-13T03:11:04.139352+00:00"
+            "observed_at_utc": "2026-11-13T03:23:56.040052+00:00"
           },
           {
             "event": "edit",
             "tool": "Edit",
             "exit": 0,
             "outcome": "completed",
-            "observed_at_utc": "2026-11-13T03:11:06.315569+00:00"
+            "observed_at_utc": "2026-11-13T03:23:58.177523+00:00"
           },
           {
             "event": "feedback",
             "tool": "Edit",
             "exit": 0,
             "outcome": "completed",
-            "observed_at_utc": "2026-11-13T03:11:06.438903+00:00"
+            "observed_at_utc": "2026-11-13T03:23:58.312760+00:00"
           },
           {
             "event": "edit",
             "tool": "Edit",
             "exit": 0,
             "outcome": "completed",
-            "observed_at_utc": "2026-11-13T03:11:08.572174+00:00"
+            "observed_at_utc": "2026-11-13T03:24:00.432624+00:00"
           },
           {
             "event": "feedback",
             "tool": "Edit",
             "exit": 0,
             "outcome": "completed",
-            "observed_at_utc": "2026-11-13T03:11:08.642414+00:00"
+            "observed_at_utc": "2026-11-13T03:24:00.506820+00:00"
           },
           {
             "event": "stop",
             "tool": null,
             "exit": 0,
             "outcome": "completed",
-            "observed_at_utc": "2026-11-13T03:11:14.566862+00:00"
+            "observed_at_utc": "2026-11-13T03:24:06.585354+00:00"
           }
         ],
         "fixture_hashes": {
-          "AGENTS.md": "b0f5e6cf6d678735fe176e1fb26939d34a69958b8e8712b1440fcf5bd2741584",
+          "AGENTS.md": "a89f888af4a56903faf8dd1d964bf8645ddc08e86489b692d995021bde0a8cfd",
           "ordinary.txt": "e01388238cb0e117af0484cbe3b2688ce43f5cdf1ad103a4282ba008d95bec78",
           "smoke.json": "7ab4b803652e6e2061506d0adddcc7d490a4f73bb57133c762a551d65a25badf",
           "smoke.sh": "00164d3bd8e4bb430087a45e3e964f53ef05521e9fc1fe6f7a83be7959740c19"
@@ -307,6 +308,7 @@
         "timeout": false,
         "discovery": true,
         "exact_bytes": true,
+        "unexpected_fixture_bytes": false,
         "tools": [
           "Edit",
           "Read"
@@ -319,8 +321,8 @@
           "smoke.json",
           "smoke.sh"
         ],
-        "start_monotonic": 0.703573875,
-        "end_monotonic": 17.021896541,
+        "start_monotonic": 0.603138041,
+        "end_monotonic": 17.054306166,
         "native_calls": [
           {
             "tool": "Read",
@@ -450,67 +452,67 @@
             "tool": null,
             "exit": 0,
             "outcome": "completed",
-            "observed_at_utc": "2026-11-13T03:10:58.263940+00:00"
+            "observed_at_utc": "2026-11-13T03:23:50.655133+00:00"
           },
           {
             "event": "edit",
             "tool": "Edit",
             "exit": 0,
             "outcome": "completed",
-            "observed_at_utc": "2026-11-13T03:11:04.313498+00:00"
+            "observed_at_utc": "2026-11-13T03:23:55.994856+00:00"
           },
           {
             "event": "feedback",
             "tool": "Edit",
             "exit": 0,
             "outcome": "completed",
-            "observed_at_utc": "2026-11-13T03:11:04.394513+00:00"
+            "observed_at_utc": "2026-11-13T03:23:56.069679+00:00"
           },
           {
             "event": "edit",
             "tool": "Edit",
             "exit": 0,
             "outcome": "completed",
-            "observed_at_utc": "2026-11-13T03:11:06.519952+00:00"
+            "observed_at_utc": "2026-11-13T03:23:58.208872+00:00"
           },
           {
             "event": "feedback",
             "tool": "Edit",
             "exit": 0,
             "outcome": "completed",
-            "observed_at_utc": "2026-11-13T03:11:06.621349+00:00"
+            "observed_at_utc": "2026-11-13T03:23:58.312151+00:00"
           },
           {
             "event": "edit",
             "tool": "Edit",
             "exit": 0,
             "outcome": "completed",
-            "observed_at_utc": "2026-11-13T03:11:08.773044+00:00"
+            "observed_at_utc": "2026-11-13T03:24:00.456473+00:00"
           },
           {
             "event": "feedback",
             "tool": "Edit",
             "exit": 0,
             "outcome": "completed",
-            "observed_at_utc": "2026-11-13T03:11:08.844986+00:00"
+            "observed_at_utc": "2026-11-13T03:24:00.530158+00:00"
           },
           {
             "event": "stop",
             "tool": null,
             "exit": 0,
             "outcome": "completed",
-            "observed_at_utc": "2026-11-13T03:11:13.537120+00:00"
+            "observed_at_utc": "2026-11-13T03:24:06.407125+00:00"
           }
         ],
         "fixture_hashes": {
-          "AGENTS.md": "dfdc499d9449ab2b62006e993c5e4790c9b871144404c28304079bc4d51bccf2",
+          "AGENTS.md": "c82e20ea98911a4ee725b8ecfa4595b730251b4086e63702368247390499d85d",
           "ordinary.txt": "4bfc4fb8871b6a4ef76dea32f01f15e2902cf16773269925633cef9fbdd4a26f",
           "smoke.json": "7ab4b803652e6e2061506d0adddcc7d490a4f73bb57133c762a551d65a25badf",
           "smoke.sh": "00164d3bd8e4bb430087a45e3e964f53ef05521e9fc1fe6f7a83be7959740c19"
         }
       }
     ],
-    "overlap_seconds": 16.318322666,
+    "overlap_seconds": 16.451168125,
     "independent_branches": true,
     "source_unchanged": true,
     "cleanup": "Runner-owned disposable repository/worktree removed; source and pre-existing worktrees untouched"

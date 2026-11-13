@@ -45,7 +45,8 @@ def hook(event, name, payload):
     code = 2 if mode == "bad-native-exit" and event == "feedback" else result.returncode
     output = "diagnostic suppressed" if mode == "missing-diagnostics" and event == "feedback" else result.stdout
     print(json.dumps({"type":"system","subtype":"hook_response","hook_event":name,
-                      "stdout":output,"stderr":result.stderr,"exit_code":code,"outcome":"success"}))
+                      "stdout":output,"stderr":result.stderr,"exit_code":code,"outcome":"success",
+                      "hook_name":name+(":Edit" if event in ("edit","feedback") else "")}))
 
 hook("start", "SessionStart", {})
 for name, content in [("ordinary.txt", expected+"\n"),
@@ -54,10 +55,26 @@ for name, content in [("ordinary.txt", expected+"\n"),
     payload = {"tool_name":"Edit","tool_input":{"file_path":str(root/name)}}
     print(json.dumps({"type":"assistant","message":{"content":[{"type":"tool_use","name":"Edit","input":{"file_path":str(root/name)}}]}}))
     hook("edit", "PreToolUse", payload)
+    if mode == "corrupt-client-error" and name == "ordinary.txt":
+        content = "unexpected bytes\n"
     (root/name).write_text(content)
     hook("feedback", "PostToolUse", payload)
 hook("stop", "Stop", {})
 print(json.dumps({"type":"assistant","message":{"content":[{"type":"text","text":marker}]}}))
+if mode == "extra-edit":
+    print(json.dumps({"type":"assistant","message":{"content":[{"type":"tool_use","name":"Edit","input":{"file_path":str(root/"ordinary.txt")}}]}}))
+if mode == "wrong-receipt-tool":
+    trace = Path(os.environ["PA_TOOLKIT_HOOK_TRACE"])
+    records = [json.loads(line) for line in trace.read_text().splitlines()]
+    for record in records:
+        if record["event"] in ("edit", "feedback"):
+            record["tool"] = "Write"
+    trace.write_text("".join(json.dumps(record)+"\n" for record in records))
+if mode == "deleted-client-error":
+    (root/"ordinary.txt").unlink()
+if mode in ("corrupt-client-error", "deleted-client-error"):
+    raise SystemExit(1)
+
 """
 
 
@@ -66,7 +83,15 @@ class ClaudeConcurrencyTests(unittest.TestCase):
         targets = ("ordinary.txt", "smoke.sh", "smoke.json")
         calls = [{"tool": "Edit", "path": name} for name in targets]
         events = ["start", "edit", "feedback", "edit", "feedback", "edit", "feedback", "stop"]
-        receipts = [{"event": name, "exit": 0, "outcome": "completed"} for name in events]
+        receipts = [
+            {
+                "event": name,
+                "tool": "Edit" if name in {"edit", "feedback"} else None,
+                "exit": 0,
+                "outcome": "completed",
+            }
+            for name in events
+        ]
         native_names = {
             "start": "SessionStart",
             "edit": "PreToolUse",
@@ -76,6 +101,7 @@ class ClaudeConcurrencyTests(unittest.TestCase):
         responses = [
             {
                 "hook_event": native_names[name],
+                "hook_name": native_names[name] + (":Edit" if name in {"edit", "feedback"} else ""),
                 "stdout": "shfmt: smoke.sh; Expecting value" if name == "feedback" else "",
                 "exit_code": 0,
                 "outcome": "success",
@@ -102,6 +128,41 @@ class ClaudeConcurrencyTests(unittest.TestCase):
         for response in missing:
             response["stdout"] = "model narrative is not hook diagnostic proof"
         self.assertEqual(outcome(responses=missing), "FAIL")
+
+    def test_each_edit_requires_its_own_matching_hook_tool_sequence(self):
+        calls, responses, receipts = self.witness()
+
+        def outcome(calls=calls, responses=responses, receipts=receipts, code=0):
+            return runner.claude_outcome(code, True, True, calls, responses, receipts, [])
+
+        self.assertEqual(outcome(calls=calls + [calls[0]]), "FAIL")
+        self.assertEqual(outcome(calls=calls + [calls[0]], code=1), "FAIL")
+        wrong_tool = copy.deepcopy(receipts)
+        wrong_tool[1]["tool"] = "Write"
+        self.assertEqual(outcome(receipts=wrong_tool), "FAIL")
+        wrong_native = copy.deepcopy(responses)
+        wrong_native[1]["hook_name"] = "PreToolUse:Write"
+        self.assertEqual(outcome(responses=wrong_native), "FAIL")
+        swapped = copy.deepcopy(receipts)
+        swapped[1], swapped[2] = swapped[2], swapped[1]
+        self.assertEqual(outcome(receipts=swapped), "FAIL")
+        swapped_native = copy.deepcopy(responses)
+        swapped_native[1], swapped_native[2] = swapped_native[2], swapped_native[1]
+        self.assertEqual(outcome(responses=swapped_native), "FAIL")
+        self.assertEqual(outcome(receipts=receipts[:-1]), "BLOCKED")
+        self.assertEqual(outcome(receipts=receipts + [receipts[-1]]), "FAIL")
+
+    def test_unfinished_bytes_are_distinct_from_corruption_or_deletion(self):
+        before = {"ordinary.txt": "before\n"}
+        after = {"ordinary.txt": "after\n"}
+        self.assertEqual(runner.fixture_bytes_outcome(before, after, before), (False, False))
+        self.assertEqual(runner.fixture_bytes_outcome(before, after, after), (True, False))
+        self.assertEqual(
+            runner.fixture_bytes_outcome(before, after, {"ordinary.txt": "wrong\n"}), (False, True)
+        )
+        self.assertEqual(
+            runner.fixture_bytes_outcome(before, after, {"ordinary.txt": None}), (False, True)
+        )
 
     def test_timeout_never_hides_head_or_extra_path_changes(self):
         self.assertFalse(
@@ -156,6 +217,10 @@ class ClaudeConcurrencyTests(unittest.TestCase):
                 ("missing-receipts", "BLOCKED"),
                 ("bad-native-exit", "FAIL"),
                 ("missing-diagnostics", "FAIL"),
+                ("extra-edit", "FAIL"),
+                ("wrong-receipt-tool", "FAIL"),
+                ("corrupt-client-error", "FAIL"),
+                ("deleted-client-error", "FAIL"),
             ]:
                 with self.subTest(mode=mode):
                     barrier = temp / mode
@@ -192,4 +257,6 @@ class ClaudeConcurrencyTests(unittest.TestCase):
                     self.assertGreater(receipt["overlap_seconds"], 0)
                     for session in receipt["sessions"]:
                         self.assertEqual(session["status"], expected)
-                        self.assertEqual(len(session["native_calls"]), 3)
+                        self.assertEqual(
+                            len(session["native_calls"]), 4 if mode == "extra-edit" else 3
+                        )

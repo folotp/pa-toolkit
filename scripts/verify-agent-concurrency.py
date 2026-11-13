@@ -88,31 +88,59 @@ def claude_outcome(exit_code, discovery, edits, calls, responses, receipts, erro
         for r in responses
     ):
         return "FAIL"
+    edit_calls = [call for call in calls if call["tool"] == "Edit"]
+    # A set loses duplicate invocations. Every intended target must be edited once,
+    # with exactly one pre/post pair; an extra unwitnessed call is an observed FAIL.
+    if len(edit_calls) > len(targets) or len({c["path"] for c in edit_calls}) != len(edit_calls):
+        return "FAIL"
+    if any(r.get("event") in {"edit", "feedback"} and r.get("tool") != "Edit" for r in receipts):
+        return "FAIL"
+    if any(r.get("event") in {"start", "stop"} and r.get("tool") is not None for r in receipts):
+        return "FAIL"
+    if any(
+        r.get("hook_event") in {"PreToolUse", "PostToolUse"}
+        and r.get("hook_name", "").partition(":")[2] != "Edit"
+        for r in responses
+    ):
+        return "FAIL"
     if exit_code or errors:
         return "BLOCKED"
     if not discovery or not edits:
         return "FAIL"
-    if not receipts or not responses:
+    if len(edit_calls) != len(targets):
         return "BLOCKED"
-    edited = {c["path"] for c in calls if c["tool"] == "Edit"}
-    native = {r.get("event") for r in receipts}
-    if edited != targets or not {"start", "edit", "feedback", "stop"} <= native:
+    expected_receipts = [("start", None)]
+    expected_responses = ["SessionStart"]
+    for call in edit_calls:
+        expected_receipts.extend([("edit", call["tool"]), ("feedback", call["tool"])])
+        expected_responses.extend(["PreToolUse", "PostToolUse"])
+    expected_receipts.append(("stop", None))
+    expected_responses.append("Stop")
+    if len(receipts) < len(expected_receipts) or len(responses) < len(expected_responses):
         return "BLOCKED"
-    if (
-        sum(r.get("event") == "edit" for r in receipts) != 3
-        or sum(r.get("event") == "feedback" for r in receipts) != 3
-    ):
+    if [(r.get("event"), r.get("tool")) for r in receipts] != expected_receipts:
         return "FAIL"
-    for name, count in {"SessionStart": 1, "PreToolUse": 3, "PostToolUse": 3, "Stop": 1}.items():
-        selected = [r for r in responses if r["hook_event"] == name]
-        if len(selected) != count or any(
-            r.get("exit_code") != 0 or r.get("outcome") != "success" for r in selected
-        ):
-            return "BLOCKED"
+    if [r.get("hook_event") for r in responses] != expected_responses:
+        return "FAIL"
+    if any(r.get("exit_code") != 0 or r.get("outcome") != "success" for r in responses):
+        return "BLOCKED"
     feedback = "\n".join(r["stdout"] for r in responses if r["hook_event"] == "PostToolUse")
     if not ("shfmt:" in feedback and "smoke.sh" in feedback and "Expecting value" in feedback):
         return "FAIL"
     return "PASS"
+
+
+def fixture_bytes_outcome(before, expected, actual):
+    """Distinguish unfinished work from observed corruption on client failure.
+
+    A timeout/auth failure can leave a fixture at its original bytes. Any third
+    value or deletion is an observed violation and must not be hidden as BLOCKED.
+    """
+    exact = actual == expected
+    invalid = any(
+        actual.get(name) not in (original, expected[name]) for name, original in before.items()
+    )
+    return exact, invalid
 
 
 def session_violation(changed, allowed, before_head, after_head, timed_out):
@@ -174,10 +202,16 @@ def main():
         a = temporary / "root"
         a.mkdir()
         hashes = probe.export(source, a)
-        (a / "ordinary.txt").write_text("before\n")
+        before = {"ordinary.txt": "before\n"}
         if client == "claude":
-            (a / "smoke.sh").write_text("#!/usr/bin/env bash\necho before\n")
-            (a / "smoke.json").write_text('{"before":true}\n')
+            before.update(
+                {
+                    "smoke.sh": "#!/usr/bin/env bash\necho before\n",
+                    "smoke.json": '{"before":true}\n',
+                }
+            )
+        for name, content in before.items():
+            (a / name).write_text(content)
         prefix = "chore/acceptance-" + ("agy" if client == "antigravity" else "claude")
         probe.git(a, "init", "-q", "-b", prefix + "-a")
         probe.git(a, "add", ".")
@@ -281,14 +315,19 @@ def main():
                 if e.get("type") == "error"
                 or e.get("status") in ("ERROR", "FAILED", "AUTHENTICATION_REQUIRED")
             ]
-            edits = (root / "ordinary.txt").read_text() == expected
+            expected_contents = {"ordinary.txt": expected}
             if client == "claude":
-                edits = (
-                    edits
-                    and (root / "smoke.sh").read_text()
-                    == "#!/usr/bin/env bash\nif true;then echo after;fi\n"
-                    and (root / "smoke.json").read_text() == '{"invalid":}\n'
+                expected_contents.update(
+                    {
+                        "smoke.sh": "#!/usr/bin/env bash\nif true;then echo after;fi\n",
+                        "smoke.json": '{"invalid":}\n',
+                    }
                 )
+            actual = {
+                name: (root / name).read_text() if (root / name).is_file() else None
+                for name in before
+            }
+            edits, invalid_bytes = fixture_bytes_outcome(before, expected_contents, actual)
             discovery = marker in result.stdout
             calls, responses, shapes = (
                 claude_witnesses(events, root) if client == "claude" else ([], [], [])
@@ -306,7 +345,7 @@ def main():
                 ["smoke.json", "smoke.sh"] if client == "claude" else []
             )
             branch = probe.git(root, "branch", "--show-current")
-            if session_violation(
+            if invalid_bytes or session_violation(
                 diff, allowed_paths, initial, probe.git(root, "rev-parse", "HEAD"), timeout
             ):
                 status = "FAIL"
@@ -317,6 +356,7 @@ def main():
                 "timeout": timeout,
                 "discovery": discovery,
                 "exact_bytes": edits,
+                "unexpected_fixture_bytes": invalid_bytes,
                 "tools": observed,
                 "errors": errors,
                 "branch": branch,

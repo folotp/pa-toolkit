@@ -95,7 +95,12 @@ def export(source, root):
 
 
 def run_client(argv, cwd, env, timeout):
-    """Bound a whole client process group, including tool children, on timeout."""
+    """Bound the process group and retain all drained output on TimeoutExpired.
+
+    The exception's stdout/stderr are text, including output received during group
+    termination. Callers can classify observed violations before reporting BLOCKED;
+    raw streams remain transient and only sanitized evidence should be retained.
+    """
     process = subprocess.Popen(
         argv,
         cwd=cwd,
@@ -108,13 +113,20 @@ def run_client(argv, cwd, env, timeout):
     )
     try:
         out, err = process.communicate(timeout=timeout)
-    except subprocess.TimeoutExpired:
-        os.killpg(process.pid, signal.SIGTERM)
+    except subprocess.TimeoutExpired as error:
         try:
-            process.communicate(timeout=5)
+            os.killpg(process.pid, signal.SIGTERM)
+        except ProcessLookupError:
+            pass  # The group may have exited between timeout and termination.
+        try:
+            out, err = process.communicate(timeout=5)
         except subprocess.TimeoutExpired:
-            os.killpg(process.pid, signal.SIGKILL)
-            process.communicate()
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            out, err = process.communicate()
+        error.output, error.stderr = out, err
         raise
     return subprocess.CompletedProcess(argv, process.returncode, out, err)
 
@@ -208,6 +220,28 @@ def prerequisites():
     return failures
 
 
+def diagnostic_coverage(feedback):
+    """Check the complete expected shell diff/lint and JSON diagnostic by path.
+
+    Shared by single-client observer and concurrency native-stream adapters. Headers
+    or model prose alone cannot certify the formatter body was actually delivered.
+    """
+    shell = any(
+        "smoke.sh" in event.get("paths", [])
+        and "shfmt: diff " in event.get("stdout", "")
+        and "-if true;then echo after;fi" in event["stdout"]
+        and "+if true; then echo after; fi" in event["stdout"]
+        and "ShellCheck: passed" in event["stdout"]
+        for event in feedback
+    )
+    invalid_json = any(
+        "smoke.json" in event.get("paths", [])
+        and "Expecting value: line 1 column 12" in event.get("stdout", "")
+        for event in feedback
+    )
+    return shell, invalid_json
+
+
 def positive_result(events, edits, discovery, client_exit, blockers=()):
     """Require successful events and path-specific detection of BOTH deliberate defects.
 
@@ -242,19 +276,7 @@ def positive_result(events, edits, discovery, client_exit, blockers=()):
     if not delivery:
         return "BLOCKED", delivery, "NOT_PROVEN: native delivery incomplete"
     feedback = [event for event in events if event["event"] == "feedback"]
-    shell = any(
-        "smoke.sh" in event.get("paths", [])
-        and "shfmt: diff " in event.get("stdout", "")
-        and "-if true;then echo after;fi" in event["stdout"]
-        and "+if true; then echo after; fi" in event["stdout"]
-        and "ShellCheck: passed" in event["stdout"]
-        for event in feedback
-    )
-    invalid_json = any(
-        "smoke.json" in event.get("paths", [])
-        and "Expecting value: line 1 column 12" in event.get("stdout", "")
-        for event in feedback
-    )
+    shell, invalid_json = diagnostic_coverage(feedback)
     if not shell or not invalid_json:
         return (
             "FAIL",

@@ -275,3 +275,11 @@ trust and still reports the untested main-native guard as BLOCKED. Antigravity's
 target is CLI only; `python3 scripts/verify-agent-concurrency.py --output /outside/source/antigravity.json`
 tests overlapping root/subdirectory native edits with the sandbox enabled. These are
 optional model-backed probes, separate from the deterministic development gate.
+
+
+For Claude local linked-worktree independence and unmodified production receipt
+verification, run `python3 scripts/verify-agent-concurrency.py --client claude
+--output /outside/source/claude-linked.json`. The
+[acceptance plan](agent-test-plan.md#claude-linked-worktree-concurrency-and-production-receipts)
+describes telemetry, process-overlap and source provenance requirements. CLI evidence
+remains distinct from Claude cloud launched through desktop/web.

@@ -14,8 +14,8 @@ is needed. Client configuration is development-only and excluded from runtime.
 
 | Surface | Discovery and launch | Native integration and limits | Current evidence |
 | --- | --- | --- | --- |
-| Codex CLI/local | `AGENTS.md`; `scripts/dev session codex` | `.codex/hooks.json` requires trusted project/definitions and enabled hooks. No trust or sandbox bypass in test runner | 0.167.2: ordinary trusted linked-root/subdirectory native delivery, diagnostics, detached denial and concurrency pass; independent ignored-config and main-native proof remain blocked |
-| Claude Code local | `CLAUDE.md` imports `AGENTS.md`; `scripts/dev session claude` | `.claude/settings.json`; native Read/Edit feedback and branch guards. Shell/MCP writes rely on Git/CI | 2.1.322: strengthened CLI suite passes root/subdirectory discovery, valid/defect edits, successful events, both diagnostics, main and detached denial; cloud 2.1.322 reports Edit/Write diagnostics and detached denial at 1e0a7f6; cloud discovery partial and Stop unproven; interactive/Desktop not certified |
+| Codex CLI/local | `AGENTS.md`; `scripts/dev session codex` | `.codex/hooks.json` requires trusted project/definitions and enabled hooks. No trust or sandbox bypass in test runner | 0.167.2: fresh 0e1d9be trusted linked delivery/diagnostics/detached denial plus 11 matching production receipts; prior concurrency pass; independent ignored-config and main-native proof remain blocked |
+| Claude Code local | `CLAUDE.md` imports `AGENTS.md`; `scripts/dev session claude` | `.claude/settings.json`; native Read/Edit feedback and branch guards. Shell/MCP writes rely on Git/CI | 2.1.323: fresh 0e1d9be root/subdirectory linked concurrency, unmodified production receipts/Stop, diagnostics and separate main/detached denial pass; cloud 2.1.322 reports Edit/Write diagnostics and detached denial at 1e0a7f6; cloud discovery partial and Stop unproven; interactive/Desktop not certified |
 | GitHub Copilot on GitHub.com | Cloud agent and PR code review use `AGENTS.md` plus `.github/copilot-instructions.md` | GitHub-hosted checkout/review and required CI; no local Mac client, session launcher or local hook parity required | Hosted task creation returns 403; PR #30 review API returns 422 ACTOR_INELIGIBLE with no actual review observed; Mac CLI is NOT APPLICABLE |
 | Google Antigravity | Current rules documentation loads `AGENTS.md`; `scripts/dev session antigravity` invokes `agy` | PA selected CLI only (2026-11-12); installed 1.5.7; no native hook adapter is configured | CLI smoke plus root/subdirectory concurrent linked edits pass with actual read_file/edit_file events; App/IDE outside selected scope |
 | GitHub Actions | Workflow invokes `scripts/dev ci`; complete history and trusted baseline proof | Stable required Linux/macOS contexts; full main/schedule/release and conservative PR reduction. No LLM client/auth needed | Merged #30 exact-main run 43298112159 at 5b5fe08 passes both OSes with 86 tests, live specifications and actual archive; subsequent PRs require their own current-head results |
@@ -74,3 +74,10 @@ The disposable observer is explicitly labelled and production discovery/configur
 must still be tested separately on the intended real surface.
 
 Current continuation: [2026-11-12 CLI acceptance](verification/acceptance-cli-2026-11-12.md), including actual native events, source hashes and exact access blockers.
+
+
+Post-PR-32 [linked-worktree evidence](verification/linked-acceptance-2026-11-12.md)
+records fresh Claude local 2.1.323 native delivery against clean merged source,
+including production receipt/stream correlation and actual client-process overlap.
+This resolves the local linked-concurrency gap; selected cloud evidence remains
+separate and incomplete.

@@ -123,7 +123,8 @@ cannot establish native delivery. Pair it with the exact client/version/session,
 source hashes, actual tool call, visible diagnostics and target bytes. Missing
 records leave delivery unproven. The existing disposable CLI observer still records
 bounded diagnostics separately and remains explicitly fixture-only. These receipts
-have deterministic coverage; fresh desktop/cloud delivery is still required.
+have deterministic coverage and [fresh local CLI delivery](verification/linked-acceptance-2026-11-12.md).
+Desktop/cloud delivery is still required on those selected surfaces.
 
 ## Claude cloud limits and external hooks
 

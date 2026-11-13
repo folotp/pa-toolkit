@@ -2,6 +2,12 @@
 
 ## Current continuation
 
+Post-PR-32 [linked-worktree acceptance](linked-acceptance-2026-11-12.md) records
+clean 0e1d9be, Claude local 2.1.323 root/subdirectory linked concurrency and native
+production receipts/Stop, plus separate fresh main/detached denials. This supersedes
+the local linked-concurrency NOT RUN status below; cloud/desktop remain distinct.
+
+
 The [user-run result review](native-results-followup-2026-11-12.md) supersedes the
 cloud/desktop rows and awaiting-C02 language below. Claude cloud reports selected
 native passes at 1e0a7f6 with explicit artifact limits. The Codex desktop attempt

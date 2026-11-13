@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import stat
 import re
+import time
 
 from .source import require
 
@@ -123,7 +124,16 @@ def append_receipt(root, destination, record):
             "Receipt must be a private regular file owned by this user",
         )
         value = (json.dumps(record, separators=(",", ":")) + "\n").encode()
-        fcntl.flock(descriptor, fcntl.LOCK_EX)
+        # Observation must finish well inside the clients' 15-second timeout,
+        # even if another writer is suspended while holding the file lock.
+        deadline = time.monotonic() + 0.25
+        while True:
+            try:
+                fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except BlockingIOError:
+                require(time.monotonic() < deadline, "Receipt lock unavailable")
+                time.sleep(0.005)
         try:
             require(os.write(descriptor, value) == len(value), "Incomplete receipt write")
         finally:

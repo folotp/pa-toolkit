@@ -105,7 +105,9 @@ an export in an agent's child shell propagates back to its already running clien
 No project setting or trust is changed by recording. Unset the variable for normal
 work; no file is created by the adapter. Final symlinks, hard links, non-regular
 files, files readable by other users and files owned by another uid are refused.
-macOS/Linux append locking serializes concurrent writers.
+macOS/Linux append locking serializes concurrent writers. Lock acquisition retries
+for at most 0.25 seconds; contention then reports an unavailable receipt and retains
+the hook result instead of waiting for the client timeout.
 
 Each JSONL record contains UTC time, toolkit event (`start`, `edit`, `feedback`,
 `stop`), an allowlisted native tool name (otherwise null), CLI exit code and outcome

@@ -1,6 +1,7 @@
 """Development contracts in disposable repos; no user index, vault or client required."""
 
 import contextlib
+import fcntl
 import importlib.util
 import io
 import json
@@ -376,6 +377,37 @@ class RepositoryTests(unittest.TestCase):
             self.assertEqual((record["exit"], record["outcome"]), (code, outcome))
             if event == "feedback":
                 self.assertIn("advisory unavailable", json.loads(result.stdout)["systemMessage"])
+
+    def test_locked_receipt_preserves_real_cli_exit_and_output(self):
+        log = Path(self.temp.name) / "locked.jsonl"
+        log.touch(mode=0o600)
+        env = dict(os.environ, PA_TOOLKIT_HOOK_TRACE=str(log))
+        payload = json.dumps(
+            {"tool_name": "Edit", "tool_input": {"file_path": str(self.root / "ordinary.py")}}
+        )
+        with log.open("a") as holder:
+            fcntl.flock(holder, fcntl.LOCK_EX)
+            try:
+                for event, code in (("edit", 2), ("feedback", 0)):
+                    result = subprocess.run(
+                        [sys.executable, str(SOURCE / "scripts/dev.py"), "hook", event],
+                        input=payload,
+                        text=True,
+                        capture_output=True,
+                        env=env,
+                        timeout=5,
+                    )
+                    self.assertEqual(result.returncode, code, result.stderr)
+                    self.assertIn("Hook receipt unavailable", result.stderr)
+                    if event == "edit":
+                        self.assertIn("outside repository", result.stderr)
+                    else:
+                        self.assertIn(
+                            "advisory unavailable", json.loads(result.stdout)["systemMessage"]
+                        )
+            finally:
+                fcntl.flock(holder, fcntl.LOCK_UN)
+        self.assertEqual(log.read_bytes(), b"")
 
     def test_symlink_loop_receipt_preserves_real_cli_exit_and_output(self):
         loop = Path(self.temp.name) / "loop"

@@ -43,6 +43,23 @@ writes outside native edit matchers. Current Codex native apply_patch delivery a
 [no-bypass linked-worktree evidence](verification/acceptance-cli-2026-11-12.md);
 independent ignored-config fixtures and main native denial remain blocked.
 
+## Optional live-client acceptance
+
+`scripts/verify-agent.py` owns shared export/provenance, process-group timeouts,
+checkout inspection and single-client probes. `scripts/verify-agent-concurrency.py`
+reuses those helpers for overlapping runner-owned linked worktrees. Antigravity's
+default mode checks native edits; the opt-in Claude mode additionally correlates
+structured native hook responses with unchanged production invocation receipts.
+Model narratives, deterministic stubs and manual hook calls are distinct evidence
+types. Actual client-process overlap is not model-inference scheduling proof.
+
+The [acceptance plan](agent-test-plan.md) defines scenarios and
+[post-PR-32 evidence](verification/linked-acceptance-2026-11-12.md) records scope,
+source/runner hashes and limits. Live model calls are optional acceptance work and
+never part of deterministic CI. No client authentication or personal connector is
+required by the gate. Existing user fixtures are preserved; automatic cleanup is
+limited to repositories/worktrees created inside the runner's temporary directory.
+
 ## Reuse and intentional differences from Organon
 
 Reusable mechanics now live in the versioned `tools/pa-devtools` package; toolkit is

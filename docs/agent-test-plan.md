@@ -174,3 +174,26 @@ receipts with actual native tools/diagnostics and preserved bytes. A receipt fro
 manual hook call is deterministic evidence only. Do not change trust or substitute
 a CLI model to fill a selected product's missing telemetry. External Stop requests
 to commit deliberate defects must be declined and reported separately.
+
+
+## Claude linked-worktree concurrency and production receipts
+
+```sh
+python3 scripts/verify-agent-concurrency.py --client claude --output /outside/source/claude-linked.json
+```
+
+The default client remains Antigravity for command compatibility. Claude's mode
+requires actual successful native Read/Edit observations, root/subdirectory marker
+discovery, all three intended edits, both path-specific diagnostics and native
+start/pre-edit/post-edit/Stop responses correlated with separate production trace
+files. Project settings are enabled; Read/Edit are the only available tools and MCP
+is empty. Missing telemetry is BLOCKED; observed unauthorized calls, failed hooks,
+incorrect bytes, unexpected paths/HEAD or source changes are FAIL. A timeout cannot
+hide observed changes. Temporary linked fixtures belong to the runner and are removed
+after evidence is retained; existing user fixtures are untouched.
+
+Use `--source /path/to/clean/merged/checkout` to test that production snapshot from
+a feature harness; source hashes and the separate runner hash identify both. The
+[post-PR-32 recording](verification/linked-acceptance-2026-11-12.md) establishes local
+Claude 2.1.323 linked-worktree concurrency and production receipt delivery, with
+fresh local main/detached denials recorded separately. It does not certify cloud.

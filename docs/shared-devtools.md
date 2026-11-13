@@ -130,18 +130,15 @@ release driver, one full extension preflight and a real archive dry-run. Release
 preflight never calls the selector or reuses PR evidence. This does not implement
 cross-run release attestation reuse or issue #20's release-depth UX.
 
-## Organon and marketplace adoption plan
+## Consumer adoption
 
-Both reference repositories are read-only during this implementation. Organon's
-current engine duplicates parsers, index isolation and hook mechanics; its provenance,
-protected-reference, connector, token and vault rules remain domain-owned. Marketplace
-#13 needs its existing online validator, protected bot workflow and pin policy kept
-intact. Do not run its real bumper, change manifests, or modify its named preserved
-stash while testing shared infrastructure.
+Consumers adopt the SDK in separate authorized PRs. Retain each repository's own
+parsers/policy extensions, protected references, connectors, publication workflows,
+credentials and live-operation boundaries. Shared mechanics do not authorize edits
+to another repository or certify its native clients.
 
-After this SDK is merged through its own PR, each consumer can adopt in a separate
-authorized PR. Select an exact reviewed **merged** toolkit commit, never this feature
-branch, a moving tag, or a filesystem sibling. Use a Git dependency shaped as
+Select an exact reviewed **merged** toolkit commit, never a moving feature branch,
+tag or filesystem sibling. Use a dependency shaped as
 `pa-devtools[checks] @ git+https://github.com/folotp/pa-toolkit@<merged-40-char-SHA>#subdirectory=tools/pa-devtools`,
 lock transitives and install through that consumer's managed environment. For Python
 3.9 launcher operations before optional checks dependencies exist, bootstrap the SDK
@@ -158,4 +155,6 @@ restoring the prior reviewed SDK SHA/lock through a normal PR, preserving protec
 This is an adoption contract and plan, not a claim that consumers are migrated or a
 public SDK artifact exists.
 
-Verification and limitations are recorded in the [SDK report](verification/shared-devtools.md).
+The [acceptance summary](acceptance.md) links historical SDK verification. A new
+consumer must verify its own pinned installation, wheel resources and repository
+contracts; earlier toolkit checks are not consumer acceptance.

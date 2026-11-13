@@ -92,13 +92,12 @@ claimed. See the [authoritative-spec contract](shared-devtools.md#live-authorita
 
 ## Claude Code cloud setup
 
-A new cloud clone does not inherit another clone's Git hooks. The recorded cloud
-run initially lacked actionlint; a task-local v1.7.12 install fixed that container
-only. PA reported updating the environment definition separately; this repository
-has not verified persistence in a fresh environment. Configure the environment's
-setup with the Linux prerequisites above, pinned actionlint v1.7.12 (for example
-the Go install command), its binary directory on PATH, and `uv sync --locked`.
-Do not silently upgrade clients or weaken checks to complete setup.
+A new cloud clone does not inherit another clone's Git hooks. Configure the
+supported startup environment with the Linux prerequisites above, pinned actionlint
+v1.7.12 (for example the Go install command), its binary directory on PATH, and
+`uv sync --locked`. Verify readiness in the actual new session; an earlier successful
+container does not establish future environment persistence. Do not upgrade clients
+or weaken checks merely to complete an acceptance run.
 
 Before installing Git hooks, inspect `git rev-parse --git-common-dir`,
 `git config --show-origin --get core.hooksPath` (exit 1 means unset), and
@@ -127,10 +126,9 @@ feat/fix/chore/perf/docs prefixes for branches it creates. Preserve the platform
 task branch and keep each session in its own checkout.
 
 Cloud acceptance is development tooling only; finance/gatekeeper skills needing
-personal connectors are outside these fixtures. The report observed an ephemeral
-Linux container running as root and outbound HTTPS through a proxy. It does not
-establish network/secrets isolation or server-side branch protection. Use task-only
-fixtures and no personal connectors. Optional [hook receipts](hook-scope.md#opt-in-invocation-receipts)
+personal connectors are outside these fixtures. Record actual execution mode and
+network/secrets isolation limits separately from native hooks or Git protection.
+Use task-only fixtures and no personal connectors. Optional [hook receipts](hook-scope.md#opt-in-invocation-receipts)
 need an external private destination configured before session startup.
 
 ## Worktrees and sessions

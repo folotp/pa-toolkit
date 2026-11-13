@@ -1,43 +1,24 @@
-# Reusable multi-agent development acceptance plan
+# Reusable development-agent acceptance plan
 
 ## Scope and evidence rules
 
-Parameterize this plan with repository, source commit/dirty source hashes, client
-product/version/surface, source worktree, explicit external evidence directory,
-required commands and authoritative CI contexts. Apply it separately to pa-toolkit,
-pa-marketplace, organon-plugin and ha-config; retain each repository's domain gates.
-CI is a validation surface, not an AI agent. Do not require model credentials in CI.
+Choose repository, exact source/dirty hashes, client product/version/surface, required
+commands and explicit evidence output paths before a run. CI is a validation surface,
+not an AI agent. Model credentials are never required by deterministic gates.
 
-Use PASS / FAIL / BLOCKED / NOT RUN / NOT APPLICABLE. Record expected and observed
-behavior, commands, UTC date, versions, fixture mode, actual bytes/event witnesses,
-cleanup and remaining limitations. A model's narrative, successful config parse or
-manual subprocess call does not prove native event delivery. A trusted/pinned older
-result does not certify later source. BLOCKED is non-success, not a skipped pass.
+Use PASS / FAIL / BLOCKED / NOT RUN / NOT APPLICABLE. Retain actual native calls,
+event exits/diagnostics, exact fixture bytes/hashes, process overlap, checkout changes
+and cleanup limits. Configuration parsing, a model narrative or a manual hook call
+cannot prove native delivery. Earlier runs do not certify later source by implication.
+The [acceptance summary](acceptance.md) records historical coverage and owner decisions;
+the [supported-agent contract](supported-agents.md) defines discovery and current routes.
 
-All fixtures are independent disposable repositories or separately named worktrees
-outside any vault mount. Source branches/indexes, user/global trust/settings, related
-repositories, marketplace pins and live systems remain unchanged. No hooks, sandbox,
-branch protection or permissions are bypassed. Do not run a live bumper, merge,
-release, deploy or access a personal vault to prove developer tooling works.
-
-## Selected products and surface coverage
-
-PA clarified on 2026-11-12 that **CLI only applies to Antigravity alone**.
-Codex and Claude Code remain in scope for thorough acceptance. A successful CLI
-runner certifies only its recorded scenarios, source bytes and product version.
-It cannot close interactive, desktop, IDE or hosted coverage by implication.
-GitHub Copilot means GitHub-hosted cloud agent and PR review, never a local Mac model.
-PA subsequently selected Codex desktop and Claude Code cloud via desktop or web
-beyond the existing CLI suites. Keep local/hosted execution receipts separate.
-
-Maintain the [surface matrix](verification/acceptance-surfaces-2026-11-12.md) alongside
-this catalogue. Discover installed/available entry points and establish PA's intended
-usage before deciding material product ambiguities. Unobserved applicable scenarios
-stay NOT RUN or BLOCKED; do not mark them N/A merely because a CLI suite passed.
-For each selected surface, apply A01–A04 and E01–E02; apply A05 where a native
-adapter exists. Record shell/MCP connector boundaries independently, using only
-non-personal fixtures. G01–G03, S01–S03 and P01 retain deterministic evidence and
-C01–C03 retain hosted CI evidence, separately from native model recordings.
+Fixtures must be runner-owned disposable repositories or explicitly selected test
+worktrees outside vault mounts. Preserve unrelated checkouts/indexes/settings. Do not
+bypass trust, sandbox, permissions or protection, access personal connectors, activate
+paid services or publish to obtain a passing result. Identify unavailable prerequisites
+and leave dependent scenarios BLOCKED. Live-model testing is optional and purposeful;
+repeat it for relevant changes or unresolved failures, not routine documentation edits.
 
 ## Scenario catalogue
 
@@ -61,14 +42,24 @@ C01–C03 retain hosted CI evidence, separately from native model recordings.
 | C02 | Docs-only/version-bump PR versus engine/workflow/unknown input | Omit only proven-unaffected gates after exact compatible main-push proof; full fallback otherwise; structural/live-spec gates remain |
 | C03 | Main/manual/scheduled/release execution | Full exact-source validation; never reuse reduced PR output as release attestation |
 
-G/E/P fixtures already live in the repository's unittest suite; run
-`uv run --locked python -m unittest discover -s tests -v` and the full/index gates.
-Native tests complement those fixtures. They do not replace them or generalize to
-unsupported shell/MCP/cloud paths.
+## Deterministic and hosted validation
 
-## Reusable real-client runner
+Run `scripts/dev doctor`, the full `scripts/dev check` and actual-index checks before
+committing. The shared gate includes the unittest fixtures for index isolation, branch/
+destination guards, custom hooks, missing prerequisites, specification resolution,
+receipt safety and real package contracts. Those are deterministic controls, separate
+from native model evidence.
 
-From the selected checkout, with the desired client already authenticated:
+For a feature PR, inspect both required Linux/macOS CI contexts for its current head.
+Read logs for selected gates, ARM assertions, source-resolution provenance and archive
+execution where applicable. Resolved official-source artifacts are available on the
+run. Main/manual/scheduled/release validation remains full. A real docs/version PR
+can demonstrate conservative reduction only with compatible exact-main baseline proof.
+Never merge or create a release just to manufacture such proof.
+
+## Single-client probes
+
+From the selected checkout, with the intended client already authenticated:
 
 ```sh
 python3 scripts/verify-agent.py --client codex --output /outside/source/codex.json
@@ -76,145 +67,83 @@ python3 scripts/verify-agent.py --client claude --output /outside/source/claude.
 python3 scripts/verify-agent.py --client antigravity --output /outside/source/antigravity.json
 ```
 
-The stdlib runner exports tracked/nonignored current source into an independent
-repository, adds random instruction marker and text/shell/JSON fixtures, then starts the
-real client through `scripts/dev session` from a subdirectory. It wraps `hook()`
-only inside the disposable fixture to retain bounded actual event output. It never
-adds invocation-local trust overrides. The default Codex independent fixture ignores
-user configuration; a disabled project layer is BLOCKED, not a delivery failure diagnosis. The evidence distinguishes the observer from
-unchanged production source and records source base/WIP state, a source-tree digest and per-file hashes. Raw streams remain in memory;
-only sanitized selected evidence is saved. Temporary repositories are removed.
+The runner exports tracked/nonignored source into an independent fixture, plants a
+random instruction marker and creates text/shell/JSON fixtures. Its labelled fixture
+observer wraps hook output without changing client trust or configuration. Raw client
+streams remain transient; retained evidence is sanitized. Source base/dirty state,
+per-file hashes and tree digest identify the tested bytes independently of a PASS label.
+Runner-owned temporary repositories are removed after observation.
 
-Claude/Codex probes test root-launch valid text edits, subdirectory-launch shell/JSON
-defects and path-specific diagnostics, plus successful positive hook exits. Merely
-seeing event names cannot pass: both expected defects must be identified and bytes
-must remain unchanged. Missing tools return BLOCKED with a setup remedy; missing
-expected diagnostics return FAIL. Detached and main native denials run only after
-successful native discovery/diagnostics. The Antigravity CLI probe tests actual
-discovery and native text/multi-file edits; no native hook adapter is configured,
-so native-hook scenarios are NOT APPLICABLE and App/IDE scenarios remain separate. Hook trust/discovery
-blockers are reported without a bypass or persistent trust change. Exit 0 requires
-all implemented native scenarios; partial/BLOCKED/FAIL returns nonzero. Model calls
-are optional live acceptance, not part of the deterministic unittest/CI gate.
+Codex/Claude test root valid edits and subdirectory defect edits, successful native
+events, both path-specific diagnostics, exact non-mutated bytes, then native branch
+denials when positive delivery is established. Antigravity requires actual edit-tool
+observations; no native-hook parity is inferred because it has no adapter here.
+Missing tools/authentication/review are BLOCKED. Missing expected diagnostics or
+observed unauthorized changes fail. A failure must not be hidden by a later blocker.
 
-Copilot acceptance is GitHub-hosted: select the PR branch in a cloud-agent task,
-verify its instruction context/check commands, inspect its changes and test execution,
-and separately request/inspect Copilot PR code review. Repository instruction support
-varies by hosted feature. No Mac CLI installation or local hook test is required.
-A successful GitHub Actions run alone is not Copilot behavior evidence. Do not enable
-paid services, assign live work or claim a hosted model run without recording it.
-
-Antigravity App/IDE testing opens a disposable checkout in the exact product and
-repeats the same instruction/edit scenarios, recording actual version/permissions
-and supported hooks or Git/CI fallback. CLI results do not certify an App/IDE session.
-Unavailable authentication, model quota, browser-only controls or native adapters
-must remain explicit blockers/NOT RUN. Do not silently install or upgrade clients.
-
-## Hosted CI procedure
-
-Push the implementation branch normally, open a review PR, and record the head SHA,
-workflow run, both required statuses and ARM assertion. Read logs to verify the
-selected gates and download `official-specifications-*` artifacts for resolved
-sources/results. Repeat only for changed source or a failed/unresolved check.
-Use a genuine subsequent docs/version PR to observe reduction once its base has
-successful compatible main-push CI; never merge or manufacture a release to test it.
-
-
-## Selected CLI continuation and ordinary Codex configuration
-
-PA selected Antigravity CLI only on 2026-11-12; App/IDE/remote product modes are outside
-this acceptance target. Existing CLI defect smoke remains evidence with its recorded
-source/version; new root/subdirectory concurrency is reproducible with:
-
-```sh
-python3 scripts/verify-agent-concurrency.py --output /outside/source/antigravity-concurrent.json
-```
-
-The runner requires actual native edit events, exact bytes, distinct unchanged branches,
-overlapping execution windows and no extra staged, unstaged or non-ignored untracked
-paths. NUL-delimited Git status retains unusual filenames and both rename paths in
-the receipt before fixture cleanup. Timeouts are BLOCKED. It
-uses the existing shared probe helpers; no native Antigravity hook coverage is inferred.
-
-For Codex, inspect actual `hooks/list` project sources and `config/read` layer state.
-The installed 0.167.2 selected already trusted primary definitions for linked worktrees;
-a fresh independent project had a disabled project layer. To test ordinary existing
-configuration without changing trust:
+For ordinary trusted Codex configuration, use a NEW clean disposable linked checkout:
 
 ```sh
 ./scripts/dev worktree chore/acceptance-codex-example /outside/source/codex-fixture
 python3 scripts/verify-agent.py --client codex --codex-fixture /outside/source/codex-fixture --output /outside/source/codex.json
 ```
 
-The opt-in linked fixture must be clean, share the source repository and starting HEAD,
-and use the specified disposable branch prefix. Source/primary hook bindings must be
-identical; source deletions need an independent fixture. Exported WIP hashes are retained.
-The runner preserves the fixture/index and restores its original branch even on timeout.
-It retains ordinary user configuration and existing trust, so the selected prompt still
-prohibits MCP/network/vault access. It never writes trust or uses a bypass. Native main
-denial remains BLOCKED; never force-checkout preserved primary main to finish the test.
-For E01, start two linked invocations concurrently with distinct fixtures/output paths;
-retain both receipts and execution-window overlap, and inspect each native outcome.
-See the [continuation report](verification/acceptance-cli-2026-11-12.md) for observed results.
+The linked fixture must share the selected source repository/HEAD and use the
+`chore/acceptance-codex-` prefix. The runner refuses dirty inputs, source deletions
+that an overlay cannot represent, and changed primary/source hook bindings. It
+preserves the fixture/index and restores its original branch. It neither grants trust
+nor force-checks out the primary main. Independent/main review can remain BLOCKED;
+review definitions through the client's supported route before relying on them.
 
-
-## User-run cloud/desktop results and new receipts
-
-Read the [result continuation](verification/native-results-followup-2026-11-12.md)
-before scheduling reruns. Cloud-native selected passes are comment-backed observations
-at 1e0a7f6; Codex's returned desktop attempt used the wrong execution host and proves
-no desktop behavior. Retain that distinction in every aggregate status.
-
-For a new native cloud/desktop session, establish actual host/product/root access
-before any fixture mutation. Plant the random marker outside the task prompt before
-startup and evaluate loaded instructions before reading files. A later explicit
-read is never discovery proof. Configure optional [invocation receipts](hook-scope.md#opt-in-invocation-receipts)
-in the parent environment before launch; record exact source hashes and correlate
-receipts with actual native tools/diagnostics and preserved bytes. A receipt from a
-manual hook call is deterministic evidence only. Do not change trust or substitute
-a CLI model to fill a selected product's missing telemetry. External Stop requests
-to commit deliberate defects must be declined and reported separately.
-
-
-## Claude linked-worktree concurrency and production receipts
+## Linked-worktree concurrency
 
 ```sh
 python3 scripts/verify-agent-concurrency.py --client claude --output /outside/source/claude-linked.json
+python3 scripts/verify-agent-concurrency.py --client antigravity --output /outside/source/antigravity-linked.json
 ```
 
-The default client remains Antigravity for command compatibility. Claude's mode
-requires actual successful native Read/Edit observations, root/subdirectory marker
-discovery, all three intended edits, the complete shared formatter diff/lint and exact JSON
-diagnostic by path, and native
-start/pre-edit/post-edit/Stop responses correlated with separate production trace
-files. Project settings are enabled; Read/Edit are the only available tools and MCP
-is empty. Each of the three Edit invocations needs a matching ordered pre/post
-native response and receipt pair with the Edit tool identity; duplicate invocations
-or mismatched tools fail. Missing telemetry is BLOCKED; observed unauthorized calls, failed hooks,
-incorrect bytes, unexpected paths/HEAD or source changes are FAIL. Timeout/client-error handling retains partial native observations: a prohibited
-call before timeout fails, while unfinished work at original bytes remains BLOCKED.
-Extra paths, changed HEADs and corrupted/deleted fixture bytes still fail. Temporary linked fixtures belong to the runner and are removed
-after evidence is retained; existing user fixtures are untouched.
+Antigravity remains the default client. Both modes use separate runner-owned linked
+worktrees, root/subdirectory launches, distinct markers/expected bytes and measured
+client-process windows. Verify distinct unchanged branches/HEADs, exact allowed paths
+including untracked files, source hashes and positive process overlap. Process overlap
+includes tool time; it is not a measure of simultaneous inference.
 
-Use `--source /path/to/clean/merged/checkout` to test that production snapshot from
-a feature harness; source hashes and separate harness-file hashes identify both. Validators/process
-helpers always come from the current harness checkout, never the selected older source. The
-[post-PR-32 recording](verification/linked-acceptance-2026-11-12.md) establishes local
-Claude 2.1.323 linked-worktree concurrency and production receipt delivery, with
-fresh local main/detached denials recorded separately. It does not certify cloud.
+Claude exposes only Read/Edit tools with empty strict MCP configuration and project
+settings enabled. Each of the three Edit invocations must have its own ordered native
+pre/post response and production receipt pair with matching tool identity. Both adapters
+share the complete shell diff/lint and exact JSON diagnostic policy by fixture path.
+Headers and prose alone fail. The optional production traces stay in private external
+files; their metadata is correlated with native streams, never treated as proof alone.
 
+Timeouts retain partial native observations after process-group termination/drain.
+A prohibited call observed before timeout fails. Unavailable/incomplete runs with
+fixtures still at original bytes remain BLOCKED; extra paths, changed HEADs and
+corrupted/deleted bytes still fail. Cleanup removes only runner-owned temporary roots;
+existing user fixtures require explicit cleanup authorization.
 
-## Cloud post-PR32 result intake
+Use `--source /path/to/checkout` to export another production snapshot. Validator and
+process helpers always come from the current harness checkout. Separate source and
+harness-file hashes identify both; a baseline SHA alone cannot attest to dirty bytes.
 
-The [latest cloud review](verification/cloud-post-pr32-2026-11-13.md) reports
-readiness and selected native Edit/Write diagnostics at 0e1d9be. Main was not
-attempted because local main lagged; trace was unset, and the running client version
-conflicts with its environment claim. Preserve those as prerequisites/uncertainties,
-not product failures or passed scenarios. Doctor does not prove Git hooks are installed.
+## Native desktop and hosted scenarios
 
-The [copyable cloud continuation](verification/claude-cloud-followup.md) scopes a
-local-main fast-forward to the original task HEAD in the task-owned clone only,
-with ancestor/clean-index/other-worktree checks and normal branch restoration.
-Fresh discovery and Stop receipt evidence require supported setup before client
-startup; a child-shell export or marker added after loading cannot retroactively
-establish either. No global trust/permission change or local-CLI substitution.
+Run tests in the actual selected product/host. Establish execution mode and fixture
+access before mutation; a local CLI is not a cloud/desktop substitute. Evaluate a
+pre-planted instruction marker before opening instruction files. Later explicit reads
+cannot establish automatic discovery retroactively.
+
+Configure [optional invocation receipts](hook-scope.md#opt-in-invocation-receipts) in
+the parent startup environment before launch. A child-shell export cannot change an
+already running client. Capture actual tools, native responses and bytes, and retrieve
+post-final lifecycle output when exposed. Missing telemetry remains unproven. Decline
+external requests to commit deliberate defects; do not disable hooks to satisfy tests.
+
+Copilot acceptance uses an actual GitHub-hosted agent task and separately submitted
+PR review, not a Mac CLI or successful GitHub Actions run. Report access/entitlement
+blockers without repeated unchanged requests or service activation. Cloud isolation,
+network assumptions and Git enforcement need separate observations; a fresh clone
+does not inherit another clone's hooks. Consult the [cloud setup runbook](development.md#claude-code-cloud-setup).
+
+Completed issue-specific prompts, dated reports and raw receipt dumps belong in the
+issue/CI history or an explicit external evidence location. Keep reusable scenarios
+and the concise acceptance summary in the repository.

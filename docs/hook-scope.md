@@ -2,8 +2,8 @@
 
 These bindings are source-only development adapters. None ship in the plugin archive.
 The [shared architecture](development-architecture.md) and [setup/recovery](development.md)
-cover mandatory Git/CI gates; [verification](verification/shared-ai-setup.md) records
-actual fresh-client observations separately from parsed configuration.
+cover mandatory Git/CI gates; [acceptance](acceptance.md) records native coverage and limitations separately from
+parsed configuration.
 
 ## Shared behavior
 
@@ -47,37 +47,32 @@ absolute payload cwd, dot segments and symlinks are resolved, and paths outside 
 active root fail. These are edit-path checks, not a full patch grammar implementation.
 Tool execution remains responsible for patch validity.
 
-The installed Codex 0.167.0 code-mode host delivered canonical apply_patch hooks
-even when the native patch was invoked through functions.exec; that specific path
-was verified with a real two-file patch. Arbitrary shell writes, MCP writes, other
-nested orchestration and hosted/cloud editing paths are outside the verified scope. Native repository hooks on those surfaces are unverified.
-Use mandatory Git index checking and required Linux/macOS CI for every committed path.
-No claim of hook coverage follows from configuration parsing, user trust or a model's
-statement that advice changed the file: inspect actual event delivery and file bytes.
+Arbitrary shell/MCP writes, nested orchestration and hosted/desktop paths outside
+observed native tool delivery retain Git/index/CI enforcement. A configured adapter,
+trusted project or model narrative does not establish event delivery; inspect actual
+native calls, feedback and unchanged bytes.
 
-Codex CLI 0.167.2 was rechecked on 2026-11-12: read-only `hooks/list` selects
-primary-checkout definitions for linked root/subdirectory launches. Existing trusted
-definitions delivered actual native start/edit/feedback/stop events, both path-specific
-diagnostics and detached denial in the selected disposable worktrees. The independent
-ignored-user-config fixture has a disabled project layer and no project hooks; that
-route remains BLOCKED. No trust or sandbox bypass was used. Main native denial remains
-BLOCKED because primary main is preserved. See the [current evidence](verification/acceptance-cli-2026-11-12.md).
+Codex linked roots can select primary-checkout definitions. Inspect the selected
+project/configuration layer and exact hook definitions through the client's supported
+review route. An independent project with disabled settings remains a prerequisite
+blocker; never copy trust or force-checkout a preserved main to manufacture a pass.
+Recorded product/version coverage is in the [acceptance summary](acceptance.md).
 
 Use `--codex-fixture` only with a newly created, clean, explicitly disposable linked
 `chore/acceptance-codex-*` checkout. The runner retains normal existing configuration,
 never grants trust, refuses changed source/primary hook bindings and preserves the
 fixture and original branch. Review changed definitions in the client when needed;
 do not manufacture a pass by copying trust or changing global project settings.
-Earlier 2026-11-10 bypass-assisted recordings remain historical. Shell/MCP paths and
-other surfaces retain Git/index/CI enforcement; no native claim follows from those gates.
+Shell/MCP paths and unobserved surfaces retain Git/index/CI enforcement; no native
+claim follows from those gates.
 
 
 ## Official contracts
 
-Rechecked 2026-11-10:
+Recheck the relevant authority when changing adapter behavior:
 
 - [OpenAI lifecycle hooks](https://learn.chatgpt.com/docs/hooks?site_variant=chatgpt):
-  repo-local hooks, native tool_input.command, JSON context and invocation-local trust.
+  project hooks, native tool inputs, event output and supported trust/review routes.
 - [Claude hooks reference](https://code.claude.com/docs/en/hooks): file-tool inputs,
   exit 2 PreToolUse blocking, event-specific JSON context and Stop loop semantics.
 - [Claude memory discovery](https://code.claude.com/docs/en/memory): canonical import.
@@ -123,16 +118,16 @@ cannot establish native delivery. Pair it with the exact client/version/session,
 source hashes, actual tool call, visible diagnostics and target bytes. Missing
 records leave delivery unproven. The existing disposable CLI observer still records
 bounded diagnostics separately and remains explicitly fixture-only. These receipts
-have deterministic coverage and [fresh local CLI delivery](verification/linked-acceptance-2026-11-12.md).
-Desktop/cloud delivery is still required on those selected surfaces.
+have deterministic coverage and [recorded local CLI delivery](acceptance.md). Desktop/cloud delivery must be
+observed separately before claiming equivalent coverage there.
 
 ## Claude cloud limits and external hooks
 
-The consolidated [cloud report](verification/native-results-followup-2026-11-12.md)
-records native Edit/Write feedback and detached denial on 1e0a7f6. It exposes selected
-context/errors, not raw hook inputs or exit codes. Toolkit Stop delivery remains
-unwitnessed there. PostToolUse context cannot require an agent to fix a defect;
-Git/index checks and required CI are the committed-change enforcement layers.
+Cloud surfaces can expose selected injected context/errors without raw hook payloads
+or exit codes. Record exactly what is visible. Local CLI evidence does not establish
+cloud Stop or main-denial delivery. PostToolUse context cannot force an agent to fix
+a defect; Git/index checks and required CI enforce committed changes. Git hooks are
+per-clone setup, not a property inherited from another container's successful test.
 
 Environment-level hooks can coexist with repository hooks. A Stop request to commit
 intentional fixtures does not override the acceptance task: preserve byte-identical

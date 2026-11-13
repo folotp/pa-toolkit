@@ -184,7 +184,8 @@ python3 scripts/verify-agent-concurrency.py --client claude --output /outside/so
 
 The default client remains Antigravity for command compatibility. Claude's mode
 requires actual successful native Read/Edit observations, root/subdirectory marker
-discovery, all three intended edits, both path-specific diagnostics and native
+discovery, all three intended edits, the complete shared formatter diff/lint and exact JSON
+diagnostic by path, and native
 start/pre-edit/post-edit/Stop responses correlated with separate production trace
 files. Project settings are enabled; Read/Edit are the only available tools and MCP
 is empty. Each of the three Edit invocations needs a matching ordered pre/post
@@ -196,7 +197,8 @@ Extra paths, changed HEADs and corrupted/deleted fixture bytes still fail. Tempo
 after evidence is retained; existing user fixtures are untouched.
 
 Use `--source /path/to/clean/merged/checkout` to test that production snapshot from
-a feature harness; source hashes and the separate runner hash identify both. The
+a feature harness; source hashes and separate harness-file hashes identify both. Validators/process
+helpers always come from the current harness checkout, never the selected older source. The
 [post-PR-32 recording](verification/linked-acceptance-2026-11-12.md) establishes local
 Claude 2.1.323 linked-worktree concurrency and production receipt delivery, with
 fresh local main/detached denials recorded separately. It does not certify cloud.

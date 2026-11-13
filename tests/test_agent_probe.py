@@ -51,6 +51,16 @@ class PositiveAcceptanceTests(unittest.TestCase):
             [call(12345, probe.signal.SIGTERM), call(12345, probe.signal.SIGKILL)],
         )
 
+    def test_shared_diagnostic_policy_requires_complete_shell_diff_by_path(self):
+        feedback = [event for event in self.events() if event["event"] == "feedback"]
+        self.assertEqual(probe.diagnostic_coverage(feedback), (True, True))
+        truncated = copy.deepcopy(feedback)
+        truncated[0]["stdout"] = "shfmt: diff smoke.sh"
+        self.assertEqual(probe.diagnostic_coverage(truncated), (False, True))
+        wrong_path = copy.deepcopy(feedback)
+        wrong_path[0]["paths"] = ["ordinary.txt"]
+        self.assertEqual(probe.diagnostic_coverage(wrong_path), (False, True))
+
     def test_linked_main_blocker_preserves_an_observed_detached_guard_failure(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

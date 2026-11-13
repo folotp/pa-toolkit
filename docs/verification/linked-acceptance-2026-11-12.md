@@ -38,7 +38,7 @@ exercise local CLI behavior, not Claude cloud or an interactive trust prompt.
 | A03 | PASS: native PostToolUse shell shfmt diff and JSON parser error, exact intentional defect bytes preserved |
 | A04 | PASS for three sequential Edit calls per checkout; no MultiEdit claim |
 | Lifecycle | PASS: each stream contains successful SessionStart, three PreToolUse, three PostToolUse and Stop responses, correlated with eight production receipts |
-| E01 | PASS: 15.260 seconds of overlapping actual client-process windows in different linked worktrees; branches, HEADs and changed paths match expectations |
+| E01 | PASS: 15.906 seconds of overlapping actual client-process windows in different linked worktrees; branches, HEADs and changed paths match expectations |
 | Source isolation | PASS: source HEAD, status and all exported source-file hashes unchanged |
 
 Production `scripts/dev.py` and bindings are copied unchanged. The new trace mode
@@ -46,14 +46,17 @@ records invocation metadata in separate private external files, without injectin
 an observer into either checkout. Native structured responses provide diagnostics
 that the minimal trace deliberately omits. A receipt alone is insufficient; passing
 requires native Edit path coverage, successful response/receipt exits and outcomes,
-both diagnostics and exact bytes. Model prose cannot substitute for hook responses.
+both diagnostics and exact bytes. Model prose cannot substitute for hook responses. Single-client and concurrency
+adapters share `diagnostic_coverage`: require the expected removed/added shell
+lines, ShellCheck success and the exact JSON diagnostic on the corresponding path.
+Header-only formatter output fails in both unit and end-to-end controls.
 
 The recorded overlap measures child process execution, including tool time. It is
 not a claim about simultaneous model inference. The runner removes only its own
 temporary repository/worktree after recording; all pre-existing fixtures are preserved.
-Earlier runs passed with 17.339, 16.318 and 16.451 seconds of overlap. The tracked
+Earlier runs passed with 17.339, 16.318, 16.451 and 15.260 seconds of overlap. The tracked
 after-review run uses per-invocation tool/response/receipt correlation and records
-15.260 seconds; its runner digest identifies the corrected harness.
+15.906 seconds; its runner digest identifies the corrected harness.
 
 ## Fresh Claude native branch denials
 
@@ -120,12 +123,13 @@ drain output and the forced-SIGKILL drain path. Raw streams remain transient; on
 sanitized native observations are retained.
 
 The positive native refresh above has no timeout. Timeout/error behavior is
-separate deterministic evidence. With `--source` selecting an older checkout, the
-runner accepts the partial text/bytes that checkout's helper provides; the current
-shared helper additionally preserves output drained during termination.
+separate deterministic evidence. The harness consistently loads its own shared validator/process helper, including
+when `--source` selects an older production snapshot. `harness_hashes` records both
+executed harness files; source hashes identify exported production independently.
+Python byte/text timeout output is normalized without discarding observations.
 
 The source digest above identifies clean **production source**; `runner_sha256`
-identifies the feature harness separately. Documentation/tests added after a live
+and `harness_hashes` identify the feature runner and its shared helper separately. Documentation/tests added after a live
 run do not retroactively become tested production bytes. Current PR-head full/index
 and hosted Linux/Apple Silicon gates are still required for the implementation.
 
@@ -143,7 +147,7 @@ access request, denied UI route, paid activation or CLI-for-cloud substitution w
 ## Implementation validation
 
 Locked sync, doctor and the full shared gate pass in the new feature worktree,
-including 107 deterministic tests, current official-spec validation, source checks,
+including 109 deterministic tests, current official-spec validation, source checks,
 links, inventory and package contract. The actual-index gate and normal Git hooks
 must pass before the implementation commit; final-head Linux/Apple Silicon CI
 and configured review remain required. Those checks validate the feature harness,

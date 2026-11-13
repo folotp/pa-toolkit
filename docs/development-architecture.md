@@ -49,7 +49,11 @@ independent ignored-config fixtures and main native denial remain blocked.
 checkout inspection and single-client probes. Its process-group timeout helper
 terminates/drains children and retains partial stdout/stderr in TimeoutExpired for
 sanitized classification; an unavailable client cannot erase earlier observations. `scripts/verify-agent-concurrency.py`
-reuses those helpers for overlapping runner-owned linked worktrees. Antigravity's
+reuses those helpers for overlapping runner-owned linked worktrees. Both entry
+points use one path-specific diagnostic policy, requiring the complete expected
+formatter diff/lint and JSON error rather than headers alone. The harness loads
+its own helpers; `--source` chooses only the exported production snapshot, and
+separate source/harness hashes retain provenance. Antigravity's
 default mode checks native edits; the opt-in Claude mode additionally correlates
 structured native hook responses with unchanged production invocation receipts.
 Model narratives, deterministic stubs and manual hook calls are distinct evidence

@@ -220,6 +220,28 @@ def prerequisites():
     return failures
 
 
+def diagnostic_coverage(feedback):
+    """Check the complete expected shell diff/lint and JSON diagnostic by path.
+
+    Shared by single-client observer and concurrency native-stream adapters. Headers
+    or model prose alone cannot certify the formatter body was actually delivered.
+    """
+    shell = any(
+        "smoke.sh" in event.get("paths", [])
+        and "shfmt: diff " in event.get("stdout", "")
+        and "-if true;then echo after;fi" in event["stdout"]
+        and "+if true; then echo after; fi" in event["stdout"]
+        and "ShellCheck: passed" in event["stdout"]
+        for event in feedback
+    )
+    invalid_json = any(
+        "smoke.json" in event.get("paths", [])
+        and "Expecting value: line 1 column 12" in event.get("stdout", "")
+        for event in feedback
+    )
+    return shell, invalid_json
+
+
 def positive_result(events, edits, discovery, client_exit, blockers=()):
     """Require successful events and path-specific detection of BOTH deliberate defects.
 
@@ -254,19 +276,7 @@ def positive_result(events, edits, discovery, client_exit, blockers=()):
     if not delivery:
         return "BLOCKED", delivery, "NOT_PROVEN: native delivery incomplete"
     feedback = [event for event in events if event["event"] == "feedback"]
-    shell = any(
-        "smoke.sh" in event.get("paths", [])
-        and "shfmt: diff " in event.get("stdout", "")
-        and "-if true;then echo after;fi" in event["stdout"]
-        and "+if true; then echo after; fi" in event["stdout"]
-        and "ShellCheck: passed" in event["stdout"]
-        for event in feedback
-    )
-    invalid_json = any(
-        "smoke.json" in event.get("paths", [])
-        and "Expecting value: line 1 column 12" in event.get("stdout", "")
-        for event in feedback
-    )
+    shell, invalid_json = diagnostic_coverage(feedback)
     if not shell or not invalid_json:
         return (
             "FAIL",

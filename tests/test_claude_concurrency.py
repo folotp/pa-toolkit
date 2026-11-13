@@ -52,6 +52,8 @@ def hook(event, name, payload):
                             text=True, capture_output=True, env=env, check=True)
     code = 2 if mode == "bad-native-exit" and event == "feedback" else result.returncode
     output = "diagnostic suppressed" if mode == "missing-diagnostics" and event == "feedback" else result.stdout
+    if mode == "header-only-diagnostics" and event == "feedback":
+        output = "shfmt: diff smoke.sh\nExpecting value: line 1 column 12 (char 11)"
     print(json.dumps({"type":"system","subtype":"hook_response","hook_event":name,
                       "stdout":output,"stderr":result.stderr,"exit_code":code,"outcome":"success",
                       "hook_name":name+(":Edit" if event in ("edit","feedback") else "")}))
@@ -110,7 +112,9 @@ class ClaudeConcurrencyTests(unittest.TestCase):
             {
                 "hook_event": native_names[name],
                 "hook_name": native_names[name] + (":Edit" if name in {"edit", "feedback"} else ""),
-                "stdout": "shfmt: smoke.sh; Expecting value" if name == "feedback" else "",
+                "stdout": "shfmt: diff smoke.sh\n-if true;then echo after;fi\n+if true; then echo after; fi\nShellCheck: passed\nExpecting value: line 1 column 12 (char 11)"
+                if name == "feedback"
+                else "",
                 "exit_code": 0,
                 "outcome": "success",
             }
@@ -136,6 +140,17 @@ class ClaudeConcurrencyTests(unittest.TestCase):
         for response in missing:
             response["stdout"] = "model narrative is not hook diagnostic proof"
         self.assertEqual(outcome(responses=missing), "FAIL")
+
+    def test_formatter_headers_without_diff_body_cannot_pass(self):
+        calls, responses, receipts = self.witness()
+        for response in responses:
+            if response["hook_event"] == "PostToolUse":
+                response["stdout"] = (
+                    "shfmt: diff smoke.sh\nExpecting value: line 1 column 12 (char 11)"
+                )
+        self.assertEqual(
+            runner.claude_outcome(0, True, True, calls, responses, receipts, []), "FAIL"
+        )
 
     def test_each_edit_requires_its_own_matching_hook_tool_sequence(self):
         calls, responses, receipts = self.witness()
@@ -233,6 +248,7 @@ class ClaudeConcurrencyTests(unittest.TestCase):
                 ("timeout-read-instructions", "FAIL"),
                 ("bad-native-exit", "FAIL"),
                 ("missing-diagnostics", "FAIL"),
+                ("header-only-diagnostics", "FAIL"),
                 ("extra-edit", "FAIL"),
                 ("wrong-receipt-tool", "FAIL"),
                 ("corrupt-client-error", "FAIL"),

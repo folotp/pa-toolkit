@@ -19,8 +19,16 @@ import time
 import uuid
 
 
+# --source chooses exported production bytes, never an older validator implementation.
+# Both harness entry points share this checkout's authoritative evidence policy.
+HELPER = Path(__file__).with_name("verify-agent.py")
+SPEC = importlib.util.spec_from_file_location("probe", HELPER)
+probe = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(probe)
+
+
 def timeout_stream(value):
-    """Support older exporters' byte output as well as the shared text contract."""
+    """Support Python's byte timeout output as well as the shared text contract."""
     return value.decode("utf-8", errors="replace") if isinstance(value, bytes) else (value or "")
 
 
@@ -129,8 +137,13 @@ def claude_outcome(exit_code, discovery, edits, calls, responses, receipts, erro
         return "FAIL"
     if any(r.get("exit_code") != 0 or r.get("outcome") != "success" for r in responses):
         return "BLOCKED"
-    feedback = "\n".join(r["stdout"] for r in responses if r["hook_event"] == "PostToolUse")
-    if not ("shfmt:" in feedback and "smoke.sh" in feedback and "Expecting value" in feedback):
+    post = [r for r in responses if r["hook_event"] == "PostToolUse"]
+    feedback = [
+        {"paths": [call["path"]], "stdout": response["stdout"]}
+        for call, response in zip(edit_calls, post)
+    ]
+    shell, invalid_json = probe.diagnostic_coverage(feedback)
+    if not shell or not invalid_json:
         return "FAIL"
     return "PASS"
 
@@ -171,9 +184,6 @@ def main():
     source = args.source.resolve()
     if args.output.resolve().is_relative_to(source):
         parser.error("Evidence output must be outside source")
-    spec = importlib.util.spec_from_file_location("probe", source / "scripts/verify-agent.py")
-    probe = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(probe)
     client = args.client
     executable = "agy" if client == "antigravity" else "claude"
     report = {
@@ -184,6 +194,10 @@ def main():
         "source_base_commit": probe.git(source, "rev-parse", "HEAD"),
         "source_dirty": bool(probe.git(source, "status", "--porcelain")),
         "runner_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        "harness_hashes": {
+            path.name: hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in (Path(__file__), HELPER)
+        },
         "fixture_observer": False,
         "native_hooks": "production receipts plus native client stream"
         if client == "claude"
